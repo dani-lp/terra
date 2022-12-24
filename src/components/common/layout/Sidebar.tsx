@@ -10,8 +10,11 @@ import {
   RocketLaunchIcon,
   UserIcon
 } from '@heroicons/react/24/outline';
+import { Montserrat } from '@next/font/google';
 import { classNames } from '@/const';
 import { useTranslation } from 'next-i18next';
+
+const montserrat = Montserrat({ subsets: ['latin'] });
 
 export type NavigationItem = {
   key: string;
@@ -80,9 +83,11 @@ const SidebarNavigation = () => {
 const Logo = () => {
   return (
     <Link href="/">
-      <div className="flex items-center justify-center gap-6 p-2 pt-4">
+      <div className="flex items-center justify-center gap-6 px-2 py-4">
         <Image src="/logo.png" alt="logo" width={50} height={50} />
-        <h1 className="text-5xl font-bold uppercase">Terra</h1>
+        <h1 className={classNames("text-5xl font-bold uppercase", montserrat.className)}>
+          Terra
+        </h1>
       </div>
     </Link>
   );
@@ -92,7 +97,7 @@ export const Sidebar = () => {
   return (
     <nav className="bg-white w-72 h-screen fixed shadow-md px-1">
       <div className="flex flex-col justify-between h-full divide-y-2 divide-gray-200">
-        <div className="flex flex-col gap-4 divide-y-2 divide-gray-200">
+        <div className="flex flex-col gap-0 divide-y-2 divide-gray-200">
           <Logo />
           <SidebarNavigation />
         </div>
