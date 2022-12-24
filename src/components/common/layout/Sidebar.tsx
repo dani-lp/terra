@@ -13,10 +13,11 @@ import {
 import { classNames } from '@/const';
 import { useTranslation } from 'next-i18next';
 
-type NavigationItem = {
+export type NavigationItem = {
   key: string;
   to: string;
   icon: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
+  number?: number;
 };
 
 type NavigationItemProps = {
@@ -26,10 +27,10 @@ type NavigationItemProps = {
 
 const navigationItems: NavigationItem[] = [
   { key: "home", to: "/", icon: HomeIcon },
-  { key: "development", to: "/dev", icon: BugAntIcon },
+  { key: "development", to: "/dev", icon: BugAntIcon, number: 10 },
   { key: "challenges", to: "/challenges", icon: RocketLaunchIcon },
   { key: "organizations", to: "/organizations", icon: BuildingOffice2Icon },
-  { key: "drafts", to: "/drafts", icon: PaperClipIcon },
+  { key: "drafts", to: "/drafts", icon: PaperClipIcon, number: 8 },
 ];
 
 const NavigationItem = ({ item, active }: NavigationItemProps) => {
@@ -40,12 +41,22 @@ const NavigationItem = ({ item, active }: NavigationItemProps) => {
       href={item.to}
       key={item.key}
       className={classNames(
-        "flex items-center justify-start gap-2 px-3 py-2 rounded-lg transition-colors duration-200",
+        "flex items-center justify-between gap-2 px-3 py-2 rounded-lg transition-colors duration-200 group",
         active ? "bg-black text-white" : "bg-white hover:bg-neutral-100 text-black"
       )}
     >
-      <item.icon className="w-6" />
-      {t(`sidebar.items.${item.key}`)}
+      <div className="flex items-center justify-center gap-2">
+        <item.icon className="w-6" />
+        {t(`sidebar.items.${item.key}`)}
+      </div>
+      {item.number !== undefined && (
+        <div className={classNames(
+          "text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200",
+          active ? "bg-neutral-700" : "bg-neutral-200 group-hover:bg-neutral-300"
+        )}>
+          {item.number}
+        </div>
+      )}
     </Link>
   );
 };
