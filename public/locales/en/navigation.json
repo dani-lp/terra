@@ -1,0 +1,11 @@
+{
+  "sidebar": {
+    "items": {
+      "home": "Home",
+      "development": "Development",
+      "challenges": "Challenges",
+      "organizations": "Organizations",
+      "drafts": "Drafts"
+    }
+  }
+}

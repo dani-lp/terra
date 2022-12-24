@@ -3,6 +3,7 @@ import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import type { NextPage } from 'next';
 import * as React from 'react';
+import { appWithTranslation } from 'next-i18next'
 
 import { trpc } from '../utils/trpc';
 
@@ -30,4 +31,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   );
 };
 
-export default trpc.withTRPC(MyApp);
+const I18nApp = appWithTranslation(MyApp);
+const TRPCApp = trpc.withTRPC(I18nApp);
+
+export default TRPCApp;

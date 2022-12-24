@@ -11,6 +11,7 @@ import {
   UserIcon
 } from '@heroicons/react/24/outline';
 import { classNames } from '@/const';
+import { useTranslation } from 'next-i18next';
 
 type NavigationItem = {
   key: string;
@@ -24,27 +25,30 @@ type NavigationItemProps = {
 };
 
 const navigationItems: NavigationItem[] = [
-  { key: "Home", to: "/", icon: HomeIcon },
-  { key: "Development", to: "/dev", icon: BugAntIcon },
-  { key: "Challenges", to: "/challenges", icon: RocketLaunchIcon },
-  { key: "Organizations", to: "/organizations", icon: BuildingOffice2Icon },
-  { key: "Drafts", to: "/drafts", icon: PaperClipIcon },
+  { key: "home", to: "/", icon: HomeIcon },
+  { key: "development", to: "/dev", icon: BugAntIcon },
+  { key: "challenges", to: "/challenges", icon: RocketLaunchIcon },
+  { key: "organizations", to: "/organizations", icon: BuildingOffice2Icon },
+  { key: "drafts", to: "/drafts", icon: PaperClipIcon },
 ];
 
-const NavigationItem = ({ item, active }: NavigationItemProps) => (
-  <Link
-    href={item.to}
-    key={item.key}
-    className={classNames(
-      "flex items-center justify-start gap-2 px-3 py-2 rounded-lg transition-colors duration-200",
-      active ? "bg-black text-white" : "bg-white hover:bg-neutral-100 text-black"
-    )}
-  >
-    <item.icon className="w-6" />
-    {item.key}
-  </Link>
+const NavigationItem = ({ item, active }: NavigationItemProps) => {
+  const { t } = useTranslation('navigation');
 
-);
+  return (
+    <Link
+      href={item.to}
+      key={item.key}
+      className={classNames(
+        "flex items-center justify-start gap-2 px-3 py-2 rounded-lg transition-colors duration-200",
+        active ? "bg-black text-white" : "bg-white hover:bg-neutral-100 text-black"
+      )}
+    >
+      <item.icon className="w-6" />
+      {t(`sidebar.items.${item.key}`)}
+    </Link>
+  );
+};
 
 const SidebarNavigation = () => {
   const router = useRouter();
