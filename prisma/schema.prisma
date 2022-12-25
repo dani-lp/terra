@@ -49,13 +49,14 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String       @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?      @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  userDetails   UserDetails?
 }
 
 model VerificationToken {
@@ -64,4 +65,72 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+enum Role {
+  ADMIN
+  PLAYER
+  ORGANIZATION
+}
+
+model UserDetails {
+  id               String            @id @default(cuid())
+  role             Role
+  user             User              @relation(fields: [id], references: [id], onDelete: Cascade)
+  userId           String
+  adminData        AdminData?
+  playerData       PlayerData?
+  organizationData OrganizationData?
+}
+
+model AdminData {
+  id            String      @id @default(cuid())
+  userDetails   UserDetails @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)
+  userDetailsId String      @unique
+}
+
+model PlayerData {
+  id                 String      @id @default(cuid())
+  enrolledChallenges Challenge[]
+  userDetails        UserDetails @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)
+  userDetailsId      String      @unique
+}
+
+model OrganizationData {
+  id                String      @id @default(cuid())
+  name              String
+  description       String
+  image             String
+  website           String
+  phone             String?
+  address           String?
+  city              String?
+  state             String?
+  zip               String?
+  country           String
+  userDetails       UserDetails @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)
+  userDetailsId     String      @unique
+  createdChallenges Challenge[]
+}
+
+// TODO: add challenge rewards functionality
+model Challenge {
+  id                 String              @id @default(cuid())
+  name               String
+  description        String
+  image              String?
+  startDate          DateTime
+  endDate            DateTime
+  location           String?
+  isDraft            Boolean             @default(true)
+  organizationData   OrganizationData    @relation(fields: [organizationDataId], references: [id], onDelete: Cascade)
+  organizationDataId String
+  ChallengeCategory  ChallengeCategory[]
+  enrolledPlayers    PlayerData[]
+}
+
+model ChallengeCategory {
+  id         String      @id @default(cuid())
+  name       String
+  challenges Challenge[]
 }
