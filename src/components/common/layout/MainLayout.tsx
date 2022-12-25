@@ -13,7 +13,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
     <>
       <Sidebar />
       <main className={classNames(
-        "bg-neutral-100 w-full h-screen pl-72",
+        'bg-neutral-100 w-full h-screen pl-72',
         inter.className,
       )}>
         {children}
