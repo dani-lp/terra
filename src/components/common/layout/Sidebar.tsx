@@ -13,6 +13,7 @@ import {
 import { Montserrat } from '@next/font/google';
 import { classNames } from '@/const';
 import { useTranslation } from 'next-i18next';
+import { useSession } from 'next-auth/react';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -94,6 +95,8 @@ const Logo = () => {
 };
 
 export const Sidebar = () => {
+  const { data: session } = useSession();
+
   return (
     <nav className="bg-white w-72 h-screen fixed shadow-md px-1">
       <div className="flex flex-col justify-between h-full divide-y-2 divide-gray-200">
@@ -108,7 +111,9 @@ export const Sidebar = () => {
                 <Image src="/logo.png" alt="logo" width={36} height={36} />
               </div>
               <div className="flex flex-col items-start justify-center text-sm">
-                <span className="font-bold">John Doe</span>
+                <span className="font-bold">
+                  {session?.user?.name ?? "John Doe"}
+                </span>
                 <span className="text-neutral-700">Administrator</span>
               </div>
             </div>
