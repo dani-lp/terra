@@ -31,10 +31,10 @@ type NavigationItemProps = {
 
 const navigationItems: NavigationItem[] = [
   { key: 'home', to: '/', icon: HomeIcon },
-  { key: 'development', to: '/dev', icon: BugAntIcon, number: 10 },
   { key: 'challenges', to: '/challenges', icon: RocketLaunchIcon },
   { key: 'organizations', to: '/organizations', icon: BuildingOffice2Icon },
-  { key: 'drafts', to: '/drafts', icon: PaperClipIcon, number: 8 },
+  { key: 'drafts', to: '/drafts', icon: PaperClipIcon },
+  { key: 'development', to: '/dev', icon: BugAntIcon },
 ];
 
 const NavigationItem = ({ item, active }: NavigationItemProps) => {
@@ -96,6 +96,7 @@ const Logo = () => {
 
 export const Sidebar = () => {
   const { data: session } = useSession();
+  const { t } = useTranslation('common');
 
   return (
     <nav className="bg-white w-72 h-screen fixed shadow-md px-1">
@@ -107,14 +108,25 @@ export const Sidebar = () => {
         <div className="p-2 flex flex-col gap-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-left gap-2">
-              <div className="border border-neutral-700 p-0.5 rounded-lg overflow-hidden bg-purple-500">
-                <Image src="/logo.png" alt="logo" width={36} height={36} />
+              <div className="border border-neutral-400 p-0.5 rounded-xl overflow-hidden">
+                <Image
+                  src={session?.user?.image ?? '/logo.png'}
+                  alt="logo"
+                  width={38}
+                  height={38}
+                  className="rounded-lg"
+                />
               </div>
               <div className="flex flex-col items-start justify-center text-sm">
                 <span className="font-bold">
                   {session?.user?.name ?? 'John Doe'}
                 </span>
-                <span className="text-neutral-700">Administrator</span>
+                <span className="text-neutral-700">
+                  {session?.user?.role
+                    ? t(`roles.${session.user.role}`)
+                    : t('roles.PLAYER')
+                  }
+                </span>
               </div>
             </div>
             <div className="flex items-center justify-center gap-2 p-2">

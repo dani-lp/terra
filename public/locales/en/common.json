@@ -1,1 +1,7 @@
-{}
+{
+    "roles": {
+        "ADMIN": "Administrator",
+        "PLAYER": "Player",
+        "ORGANIZATION": "Organization"
+    }
+}
