@@ -33,7 +33,7 @@ export const SelectField = <T extends SelectOption>({ selected, setSelected, opt
           <Listbox.Label className="block text-sm font-medium text-gray-700">Assigned to</Listbox.Label>
           <div className="relative mt-1">
             <Listbox.Button className={classNames(
-              'relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pr-10 text-left shadow-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm',
+              'relative w-full cursor-default rounded-lg border border-gray-300 bg-white py-2 pr-10 text-left shadow-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm',
               'image' in selected ? 'pl-3' : '',
             )}>
               <span className="flex items-center">
@@ -60,7 +60,7 @@ export const SelectField = <T extends SelectOption>({ selected, setSelected, opt
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-lg bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {options.map((option) => (
                   <Listbox.Option
                     key={option.id}
