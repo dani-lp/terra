@@ -29,3 +29,8 @@ export const WithTitle = Template.bind({});
 WithTitle.args = {
   title: 'Title',
 };
+
+export const Wide = Template.bind({});
+Wide.args = {
+  className: 'max-w-xl',
+};
