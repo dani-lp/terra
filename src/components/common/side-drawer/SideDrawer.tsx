@@ -9,6 +9,7 @@ type SideDrawerProps = {
   setOpen: (open: boolean) => void;
   title?: string;
   children: React.ReactNode;
+  className?: string;
   srCloseLabel?: string;
 };
 
@@ -17,6 +18,7 @@ export const SideDrawer = ({
   setOpen,
   title,
   children,
+  className = '',
   srCloseLabel
 }: SideDrawerProps) => {
   return (
@@ -46,7 +48,7 @@ export const SideDrawer = ({
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
+                <Dialog.Panel className={`pointer-events-auto w-screen max-w-md ${className}`}>
                   <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
                     <div className="px-4 sm:px-6">
                       <div className="flex items-start justify-between">
