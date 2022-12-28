@@ -23,14 +23,15 @@ type SelectFieldProps<T extends SelectOption> = {
   options: T[];
   selected: ExtractImage<T>;
   setSelected: (value: ExtractImage<T>) => void;
+  label?: string;
 };
 
-export const SelectField = <T extends SelectOption>({ selected, setSelected, options }: SelectFieldProps<T>) => {
+export const SelectField = <T extends SelectOption>({ selected, setSelected, options, label }: SelectFieldProps<T>) => {
   return (
     <Listbox value={selected} onChange={setSelected}>
       {({ open }) => (
         <>
-          <Listbox.Label className="block text-sm font-medium text-gray-700">Assigned to</Listbox.Label>
+          {label && <Listbox.Label className="block text-sm font-medium text-gray-700">{label}</Listbox.Label>}
           <div className="relative mt-1">
             <Listbox.Button className={classNames(
               'relative w-full cursor-default rounded-lg border border-gray-300 bg-white py-2 pr-10 text-left shadow-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm',

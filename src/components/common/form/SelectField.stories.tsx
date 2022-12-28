@@ -56,3 +56,9 @@ WithImage.args = {
   options: optionsWithImage,
   selected: optionsWithImage[0],
 }
+
+export const WithLabel = Template.bind({});
+WithLabel.args = {
+  options,
+  label: 'Select an option',
+}
