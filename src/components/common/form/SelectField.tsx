@@ -5,6 +5,8 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { classNames } from '@/const/helpers';
 
 
+type Icon = (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
+
 export type SelectOption = {
   id: string;
   label: string;
@@ -13,6 +15,10 @@ export type SelectOption = {
 export type SelectOptionWithImage = SelectOption & {
   image: string;
   alt: string;
+};
+
+export type SelectOptionWithIcon = SelectOption & {
+  icon: Icon;
 };
 
 type ExtractImage<T> = T extends { image: string }
@@ -26,6 +32,10 @@ type SelectFieldProps<T extends SelectOption> = {
   label?: string;
 };
 
+const SelectOptionIcon = (props: { icon: Icon }) => (
+  <props.icon className="h-5 w-5" />
+);
+
 export const SelectField = <T extends SelectOption>({ selected, setSelected, options, label }: SelectFieldProps<T>) => {
   return (
     <Listbox value={selected} onChange={setSelected}>
@@ -35,7 +45,7 @@ export const SelectField = <T extends SelectOption>({ selected, setSelected, opt
           <div className="relative mt-1">
             <Listbox.Button className={classNames(
               'relative w-full cursor-default rounded-lg border border-gray-300 bg-white py-2 pr-10 text-left shadow-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm',
-              'image' in selected ? 'pl-3' : '',
+              'image' in selected || 'icon' in selected ? 'pl-3' : '',
             )}>
               <span className="flex items-center">
                 {'image' in selected && (
@@ -47,6 +57,7 @@ export const SelectField = <T extends SelectOption>({ selected, setSelected, opt
                     className="h-6 w-6 flex-shrink-0 rounded-full"
                   />
                 )}
+                {'icon' in selected && <SelectOptionIcon icon={selected.icon as Icon} />}
                 <span className="ml-3 block truncate">{selected.label}</span>
               </span>
               <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
@@ -69,7 +80,7 @@ export const SelectField = <T extends SelectOption>({ selected, setSelected, opt
                       classNames(
                         active ? 'text-white bg-black' : 'text-gray-900',
                         'relative cursor-default select-none py-2 pr-9',
-                        'image' in option ? 'pl-3' : '',
+                        'image' in option || 'icon' in option ? 'pl-3' : '',
                       )
                     }
                     value={option}
@@ -86,6 +97,7 @@ export const SelectField = <T extends SelectOption>({ selected, setSelected, opt
                               className="h-6 w-6 flex-shrink-0 rounded-full"
                             />
                           )}
+                          {'icon' in option && <SelectOptionIcon icon={option.icon as Icon} />}
                           <span
                             className={classNames(selected ? 'font-semibold' : 'font-normal', 'ml-3 block truncate')}
                           >

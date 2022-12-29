@@ -1,10 +1,16 @@
 import * as React from 'react';
 import type { ComponentMeta, ComponentStory } from '@storybook/react';
+import { 
+  BellIcon,
+  BookmarkIcon,
+  UserIcon,
+} from '@heroicons/react/24/solid';
 
 import {
   SelectField,
   type SelectOptionWithImage,
-  type SelectOption
+  type SelectOption,
+  type SelectOptionWithIcon
 } from './SelectField';
 
 export default {
@@ -33,7 +39,6 @@ const options: SelectOption[] = [
   { id: '8', label: 'Option 8' },
 ];
 
-
 const optionsWithImage: SelectOptionWithImage[] = [
   { id: '1', label: 'Option 1', image: '/logo.png', alt: 'Img 1' },
   { id: '2', label: 'Option 2', image: '/logo.png', alt: 'Img 2' },
@@ -45,20 +50,32 @@ const optionsWithImage: SelectOptionWithImage[] = [
   { id: '8', label: 'Option 8', image: '/logo.png', alt: 'Img 8' },
 ];
 
+const optionsWithIcon: SelectOptionWithIcon[] = [
+  { id: '1', label: 'People', icon: UserIcon },
+  { id: '2', label: 'Notifications', icon: BellIcon },
+  { id: '3', label: 'Bookmarks', icon: BookmarkIcon },
+];
+
 export const Default = Template.bind({});
 Default.args = {
   options,
   selected: options[0],
-}
+};
 
 export const WithImage = Template.bind({});
 WithImage.args = {
   options: optionsWithImage,
   selected: optionsWithImage[0],
-}
+};
+
+export const WithIcon = Template.bind({});
+WithIcon.args = {
+  options: optionsWithIcon,
+  selected: optionsWithIcon[0],
+};
 
 export const WithLabel = Template.bind({});
 WithLabel.args = {
   options,
   label: 'Select an option',
-}
+};
