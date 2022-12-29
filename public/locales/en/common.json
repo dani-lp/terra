@@ -1,7 +1,20 @@
 {
   "a11y": {
     "openSidebar": "Open sidebar",
-    "closeSidebar": "Close sidebar"
+    "closeSidebar": "Close sidebar",
+    "selectATab": "Select a tab"
+  },
+  "settings": {
+    "descriptions": {
+      "profileDescription": "This information will be displayed publicly. Be careful what you share!",
+      "accountDescription": "Private information, only visible to you.",
+      "notificationsDescription": ""
+    },
+    "tabs": {
+      "profile" : "Profile",
+      "account" : "Account",
+      "notifications": "Notifications"
+    }
   },
   "roles": {
     "ADMIN": "Administrator",

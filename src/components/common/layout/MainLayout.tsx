@@ -37,7 +37,8 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
               className="-mr-3 inline-flex h-12 w-12 items-center justify-center rounded-lg text-neutral-500 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-neutral-500"
               onClick={() => setSidebarOpen(true)}
             >
-              <span className="sr-only">{t('a11y.openSidebar')}</span>
+              {/* TODO this causes an hydration error in the client for some reason? */}
+              {/* <span className="sr-only">{t('a11y.openSidebar')}</span> */}
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
