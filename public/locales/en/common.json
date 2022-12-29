@@ -1,7 +1,11 @@
 {
-    "roles": {
-        "ADMIN": "Administrator",
-        "PLAYER": "Player",
-        "ORGANIZATION": "Organization"
-    }
+  "a11y": {
+    "openSidebar": "Open sidebar",
+    "closeSidebar": "Close sidebar"
+  },
+  "roles": {
+    "ADMIN": "Administrator",
+    "PLAYER": "Player",
+    "ORGANIZATION": "Organization"
+  }
 }

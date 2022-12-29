@@ -69,7 +69,7 @@ const SidebarNavigation = () => {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col gap-3 p-2">
+    <nav className="flex flex-col gap-3 p-2">
       {navigationItems.map((item) => (
         <NavigationItem
           key={item.key}
@@ -77,7 +77,7 @@ const SidebarNavigation = () => {
           active={router.pathname === item.to}
         />
       ))}
-    </div>
+    </nav>
   );
 };
 
@@ -99,7 +99,7 @@ export const Sidebar = () => {
   const { t } = useTranslation('common');
 
   return (
-    <nav className="bg-white w-72 h-screen fixed shadow-md px-1">
+    <aside className="bg-white w-72 h-screen fixed shadow-md px-1">
       <div className="flex flex-col justify-between h-full divide-y-2 divide-gray-200">
         <div className="flex flex-col gap-0 divide-y-2 divide-gray-200">
           <Logo />
@@ -140,6 +140,6 @@ export const Sidebar = () => {
           </div>
         </div>
       </div>
-    </nav>
+    </aside>
   );
 };
