@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { SelectField, type SelectOptionWithIcon } from '../../form';
-import { Modal } from '../../modal';
 import {
   BellIcon,
   Cog6ToothIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/solid';
 import { classNames } from '@/const';
-import { 
+import { SelectField, type SelectOptionWithIcon } from '../../form';
+import { Modal } from '../../modal';
+import {
   AccountSettings,
   ProfileSettings,
   NotificationSettings,
 } from './content';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 
 type SettingsModalProps = {
@@ -27,7 +28,7 @@ const tabs: SelectOptionWithIcon[] = [
   { id: '3', label: 'notifications', icon: BellIcon },
 ];
 
-const sections: { [key: string ]: () => JSX.Element} = {
+const sections: { [key: string]: () => JSX.Element } = {
   '1': ProfileSettings,
   '2': AccountSettings,
   '3': NotificationSettings,
@@ -42,7 +43,17 @@ export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
 
   return (
     <Modal open={open} setOpen={setOpen} fullScreen className="flex flex-col items-start justify-start sm:h-96">
-      <h2 className="text-2xl font-bold mb-1">Settings</h2>
+      <div className="flex items-center justify-between w-full mb-2">
+        <h2 className="text-2xl font-bold mb-1">Settings</h2>
+        <button
+          type="button"
+          className="ml-1 flex h-10 w-10 items-center justify-center rounded-lg focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black"
+          onClick={() => setOpen(false)}
+        >
+          <span className="sr-only">{t('a11y.closeSidebar')}</span>
+          <XMarkIcon className="h-6 w-6 text-black" aria-hidden="true" />
+        </button>
+      </div>
 
       <div className="sm:hidden w-full">
         <SelectField
@@ -64,7 +75,7 @@ export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
                 onClick={() => setSelectedTabKey(tab.id)}
                 className={classNames(
                   tab.id === selectedTabKey
-                    ? 'border-indigo-500 text-indigo-600'
+                    ? 'border-black text-black'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
                   'group inline-flex items-center py-4 px-1 border-b-2 font-medium text-sm cursor-pointer'
                 )}
@@ -72,7 +83,7 @@ export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
               >
                 <tab.icon
                   className={classNames(
-                    tab.id === selectedTabKey ? 'text-indigo-500' : 'text-gray-400 group-hover:text-gray-500',
+                    tab.id === selectedTabKey ? 'text-black' : 'text-gray-400 group-hover:text-gray-500',
                     '-ml-0.5 mr-2 h-5 w-5'
                   )}
                   aria-hidden="true"
@@ -83,8 +94,9 @@ export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
           </nav>
         </div>
       </div>
-
-      <SelectedSection />
+      <div className="py-2">
+        <SelectedSection />
+      </div>
     </Modal>
   )
 };

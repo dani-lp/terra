@@ -20,7 +20,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <>
-      <div className="lg:hidden">
+      <div className={classNames('lg:hidden', inter.className)}>
         <div className="fixed h-16 w-screen flex items-center justify-between border-b border-neutral-200 bg-white px-4 py-1.5">
           <div>
             <Image
@@ -46,7 +46,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
       </div>
 
       <Transition.Root show={sidebarOpen} as={React.Fragment}>
-        <Dialog as="div" className="relative z-40 lg:hidden" onClose={setSidebarOpen}>
+        <Dialog as="div" className={classNames('relative z-40 lg:hidden', inter.className)} onClose={setSidebarOpen}>
           <Transition.Child
             as={React.Fragment}
             enter="transition-opacity ease-linear duration-300"
