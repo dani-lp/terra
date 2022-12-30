@@ -28,8 +28,7 @@ export const Modal = ({ open, setOpen, children, className, fullScreen = false }
 
         <div className="fixed inset-0 z-50 overflow-y-auto">
           <div className={classNames(
-            'flex min-h-full items-end justify-center text-center sm:items-center sm:p-0',
-            fullScreen ? 'p-0 sm:p-4' : 'p-4',
+            'flex min-h-full items-end justify-center text-center sm:items-center p-0',
           )}>
             <Transition.Child
               as={React.Fragment}
@@ -41,9 +40,9 @@ export const Modal = ({ open, setOpen, children, className, fullScreen = false }
               leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
             >
               <Dialog.Panel className={classNames(
-                'relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6',
+                'relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8',
                 className,
-                fullScreen ? 'h-screen w-screen rounded-none shadow-none sm:shadow-xl sm:max-w-sm sm:w-full sm:h-full sm:rounded-lg' : '',
+                fullScreen ? 'h-screen w-screen rounded-none shadow-none sm:h-[620px] sm:shadow-xl sm:w-auto sm:rounded-lg' : '',
               )}>
                 {children}
               </Dialog.Panel>

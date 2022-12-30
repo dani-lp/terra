@@ -135,6 +135,7 @@ export const Sidebar = () => {
                 </div>
               </div>
               <div className="flex items-center justify-center gap-2 p-2">
+                {/* TODO redirect to use profile */}
                 <div className="hover:bg-black hover:text-white p-1 transition-colors rounded-lg cursor-pointer">
                   <UserIcon className="w-6" />
                 </div>
