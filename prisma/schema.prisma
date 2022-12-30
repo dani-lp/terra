@@ -77,7 +77,7 @@ model UserDetails {
   id               String            @id @default(cuid())
   role             Role
   user             User              @relation(fields: [id], references: [id], onDelete: Cascade)
-  userId           String
+  userId           String            @unique
   adminData        AdminData?
   playerData       PlayerData?
   organizationData OrganizationData?
