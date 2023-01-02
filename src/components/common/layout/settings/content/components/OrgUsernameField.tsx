@@ -1,4 +1,9 @@
-export const OrgUsernameField = () => {
+type OrgUsernameFieldProps = {
+  value: string;
+  onChange: (value: string) => void;
+};
+
+export const OrgUsernameField = ({ value, onChange }: OrgUsernameFieldProps) => {
   return (
     <label htmlFor="username" className="block text-sm font-medium text-gray-700">
       Username
@@ -12,7 +17,8 @@ export const OrgUsernameField = () => {
           id="username"
           autoComplete="username"
           className="block w-full min-w-0 flex-grow rounded-none rounded-r-lg border-gray-300 focus:border-black focus:ring-black sm:text-sm"
-          // defaultValue={session?.user?.name ?? ''}
+          value={value}
+          onChange={(e) => onChange(e.currentTarget.value)}
         />
       </div>
     </label>

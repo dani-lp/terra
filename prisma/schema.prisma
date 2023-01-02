@@ -79,6 +79,8 @@ enum Role {
 model UserDetails {
   id               String            @id @default(cuid())
   role             Role
+  username         String?           @unique
+  about            String?
   user             User              @relation(fields: [id], references: [id], onDelete: Cascade)
   userId           String            @unique
   adminData        AdminData?
@@ -104,7 +106,6 @@ model PlayerData {
 model OrganizationData {
   id                String      @id @default(cuid())
   name              String
-  description       String
   image             String
   website           String
   phone             String?

@@ -1,10 +1,15 @@
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
-import { OrgUsernameField } from './components/OrgUsernameField';
 import { InputField, TextareaField } from '@/components/common';
+import { OrgUsernameField } from './components/OrgUsernameField';
+
+import { useUsername, useAbout, useSettingsActions } from '@/store/useSettingsStore';
 
 export const ProfileSettings = () => {
+  const username = useUsername();
+  const about = useAbout();
+  const { setUsername, setAbout } = useSettingsActions();
   const { data: session } = useSession();
   const { t } = useTranslation('common');
 
@@ -25,12 +30,17 @@ export const ProfileSettings = () => {
           <div>
             {session.user.role === 'ORGANIZATION'
               ? (
-                <OrgUsernameField />
+                <OrgUsernameField
+                  value={username}
+                  onChange={setUsername}
+                />
               )
               : (
                 <InputField
                   label="Username"
                   className="h-[42px]"
+                  value={username}
+                  onChange={(e) => setUsername(e.currentTarget.value)}
                 />
               )
             }
@@ -42,6 +52,8 @@ export const ProfileSettings = () => {
               label="About"
               name="About"
               rows={3}
+              value={about ?? ''}
+              onChange={(e) => setAbout(e.currentTarget.value)}
             />
             {/* TODO translate this */}
             <p className="mt-2 text-sm text-gray-500">

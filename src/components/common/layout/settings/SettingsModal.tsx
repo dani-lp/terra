@@ -6,15 +6,19 @@ import {
   UserCircleIcon,
 } from '@heroicons/react/24/solid';
 import { classNames } from '@/const';
-import { SelectField, type SelectOptionWithIcon } from '../../form';
-import { Modal } from '../../modal';
 import {
   AccountSettings,
   ProfileSettings,
   NotificationSettings,
 } from './content';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+
 import { Button } from '../../button';
+import { SelectField, type SelectOptionWithIcon } from '../../form';
+import { Modal } from '../../modal';
+
+import { trpc } from '@/utils/trpc';
+import { useSettingsActions } from '@/store/useSettingsStore';
 
 
 type SettingsModalProps = {
@@ -36,8 +40,10 @@ const sections: { [key: string]: () => JSX.Element } = {
 };
 
 export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
+  const { data, isLoading, isError, error } = trpc.user.getUserData.useQuery();
   const [selectedTabKey, setSelectedTabKey] = React.useState<string>('1');
   const { t } = useTranslation('common');
+  const { load } = useSettingsActions();
 
   const selectedTab = tabs.find((tab) => tab.id === selectedTabKey) || { ...tabs[0], label: t(`settings.tabs.${tabs[0]?.label}`) } as SelectOptionWithIcon;
   const SelectedSection = sections[selectedTabKey] ?? ProfileSettings;
@@ -46,6 +52,16 @@ export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
     e.preventDefault();
     setOpen(false);
   };
+
+  // TODO might be a better idea to load data only when the modal gets opened
+  React.useEffect(() => {
+    if (data && !isLoading && !isError) {
+      load(data);
+      console.log('Loaded data');
+    } else if (isError) {
+      console.error(error);
+    }
+  }, [data, isLoading, isError, error, load]);
 
   return (
     <Modal open={open} setOpen={setOpen} fullScreen className="sm:w-[600px]">

@@ -30,6 +30,8 @@ export default async function handler(
             },
             userId: user.id,
             role: 'PLAYER',
+            username: user.name,
+            about: '',
             playerData: {
               create: {}
             },
