@@ -54,7 +54,7 @@ export const SelectField = <T extends SelectOption>({ selected, setSelected, opt
                     height={24}
                     width={24}
                     alt=""
-                    className="h-6 w-6 flex-shrink-0 rounded-full"
+                    className="h-6 w-6 shrink-0 rounded-full"
                   />
                 )}
                 {'icon' in selected && <SelectOptionIcon icon={selected.icon as Icon} />}
@@ -94,7 +94,7 @@ export const SelectField = <T extends SelectOption>({ selected, setSelected, opt
                               height={24}
                               width={24}
                               alt=""
-                              className="h-6 w-6 flex-shrink-0 rounded-full"
+                              className="h-6 w-6 shrink-0 rounded-full"
                             />
                           )}
                           {'icon' in option && <SelectOptionIcon icon={option.icon as Icon} />}

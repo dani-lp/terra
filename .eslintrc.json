@@ -3,10 +3,19 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint"],
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
+  "plugins": ["@typescript-eslint", "tailwindcss"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:tailwindcss/recommended"
+  ],
   "rules": {
     "@typescript-eslint/consistent-type-imports": "warn",
     "quotes": ["error", "single", { "avoidEscape": true }]
+  },
+  "settings": {
+    "tailwindcss": {
+      "callees": ["cn"]
+    }
   }
 }

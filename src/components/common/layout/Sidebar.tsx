@@ -99,16 +99,16 @@ export const Sidebar = () => {
   const { t } = useTranslation('common');
 
   return (
-    <aside className="bg-white w-72 h-screen fixed shadow-md px-1">
-      <div className="flex flex-col justify-between h-full divide-y-2 divide-gray-200">
+    <aside className="fixed h-screen w-72 bg-white px-1 shadow-md">
+      <div className="flex h-full flex-col justify-between divide-y-2 divide-gray-200">
         <div className="flex flex-col gap-0 divide-y-2 divide-gray-200">
           <Logo />
           <SidebarNavigation />
         </div>
-        <div className="p-2 flex flex-col gap-2">
+        <div className="flex flex-col gap-2 p-2">
           <div className="flex items-center justify-between">
-            <div className="flex items-center justify-left gap-2">
-              <div className="border border-neutral-400 p-0.5 rounded-xl overflow-hidden">
+            <div className="justify-left flex items-center gap-2">
+              <div className="overflow-hidden rounded-xl border border-neutral-400 p-0.5">
                 <Image
                   src={session?.user?.image ?? '/logo.png'}
                   alt="logo"
@@ -130,10 +130,10 @@ export const Sidebar = () => {
               </div>
             </div>
             <div className="flex items-center justify-center gap-2 p-2">
-              <div className="hover:bg-black hover:text-white p-1 transition-colors rounded-lg cursor-pointer">
+              <div className="cursor-pointer rounded-lg p-1 transition-colors hover:bg-black hover:text-white">
                 <UserIcon className="w-6" />
               </div>
-              <div className="hover:bg-black hover:text-white p-1 transition-colors rounded-lg cursor-pointer">
+              <div className="cursor-pointer rounded-lg p-1 transition-colors hover:bg-black hover:text-white">
                 <Cog6ToothIcon className="w-6" />
               </div>
             </div>

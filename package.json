@@ -7,6 +7,7 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "start": "next start",
     "storybook": "start-storybook -p 6006 -s ./public",
     "build-storybook": "build-storybook -s public"
@@ -22,6 +23,7 @@
     "@trpc/next": "^10.0.0",
     "@trpc/react-query": "^10.0.0",
     "@trpc/server": "^10.0.0",
+    "clsx": "^1.2.1",
     "i18next": "^22.4.6",
     "next": "13.0.2",
     "next-auth": "^4.15.1",
@@ -30,6 +32,7 @@
     "react-dom": "18.2.0",
     "react-i18next": "^12.1.1",
     "superjson": "1.9.1",
+    "tailwind-merge": "^1.8.1",
     "zod": "^3.18.0"
   },
   "devDependencies": {
@@ -53,6 +56,7 @@
     "eslint": "^8.26.0",
     "eslint-config-next": "13.0.2",
     "eslint-plugin-storybook": "^0.6.8",
+    "eslint-plugin-tailwindcss": "^3.8.0",
     "postcss": "^8.4.14",
     "prettier": "^2.7.1",
     "prettier-plugin-tailwindcss": "^0.1.13",
