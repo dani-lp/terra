@@ -23,10 +23,10 @@ export const ProfileSettings = () => {
   // TODO translate labels
   return (
     <div className="h-full w-full">
-      <span className="text-sm sm:text-base text-neutral-500">{t('settings.descriptions.profileDescription')}</span>
+      <span className="text-sm text-neutral-500 sm:text-base">{t('settings.descriptions.profileDescription')}</span>
 
       <div className="mt-6 flex flex-col lg:flex-row">
-        <div className="flex-grow space-y-6">
+        <div className="grow space-y-6">
           <div>
             {session.user.role === 'ORGANIZATION'
               ? (
@@ -62,14 +62,14 @@ export const ProfileSettings = () => {
           </div>
         </div>
 
-        <div className="mt-6 flex-grow lg:mt-0 lg:ml-6 lg:flex-shrink-0 lg:flex-grow-0">
+        <div className="mt-6 grow lg:mt-0 lg:ml-6 lg:shrink-0 lg:grow-0">
           <p className="text-sm font-medium text-gray-700" aria-hidden="true">
             Photo
           </p>
           <div className="mt-1 lg:hidden">
             <div className="flex items-center">
               <div
-                className="inline-block h-12 w-12 flex-shrink-0 overflow-hidden rounded-full"
+                className="inline-block h-12 w-12 shrink-0 overflow-hidden rounded-full"
                 aria-hidden="true"
               >
                 <Image

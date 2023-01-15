@@ -16,7 +16,7 @@ export const OrgUsernameField = ({ value, onChange }: OrgUsernameFieldProps) => 
           name="username"
           id="username"
           autoComplete="username"
-          className="block w-full min-w-0 flex-grow rounded-none rounded-r-lg border-gray-300 focus:border-black focus:ring-black sm:text-sm"
+          className="block w-full min-w-0 grow rounded-none rounded-r-lg border-gray-300 focus:border-black focus:ring-black sm:text-sm"
           value={value}
           onChange={(e) => onChange(e.currentTarget.value)}
         />

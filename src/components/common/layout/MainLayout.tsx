@@ -21,7 +21,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <>
       <div className={classNames('lg:hidden', inter.className)}>
-        <div className="fixed h-16 w-screen flex items-center justify-between border-b border-neutral-200 bg-white px-4 py-1.5">
+        <div className="fixed flex h-16 w-screen items-center justify-between border-b border-neutral-200 bg-white px-4 py-1.5">
           <div>
             <Image
               className="h-8 w-auto"
@@ -93,7 +93,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
                 <Sidebar />
               </Dialog.Panel>
             </Transition.Child>
-            <div className="w-14 flex-shrink-0" aria-hidden="true">
+            <div className="w-14 shrink-0" aria-hidden="true">
               {/* Force sidebar to shrink to fit close icon */}
             </div>
           </div>

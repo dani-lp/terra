@@ -13,7 +13,7 @@ const Dev: NextPageWithLayout = () => {
       <Head>
         <title>Terra - Dev</title>
       </Head>
-      <div className='w-full h-full p-2 flex flex-col items-start justify-start gap-4'>
+      <div className='flex h-full w-full flex-col items-start justify-start gap-4 p-2'>
         <Link href="/auth/signin">
           <Button>Sign in</Button>
         </Link>

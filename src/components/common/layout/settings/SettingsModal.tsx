@@ -65,11 +65,11 @@ export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
 
   return (
     <Modal open={open} setOpen={setOpen} fullScreen className="sm:w-[600px]">
-      <form onSubmit={handleSubmit} className="flex flex-col items-start justify-between h-full w-full">
-        <div className="flex flex-col items-start justify-center w-full p-4 sm:p-6">
-          <div className="flex items-center justify-between w-full">
+      <form onSubmit={handleSubmit} className="flex h-full w-full flex-col items-start justify-between">
+        <div className="flex w-full flex-col items-start justify-center p-4 sm:p-6">
+          <div className="flex w-full items-center justify-between">
             {/* TODO translate */}
-            <h2 className="text-2xl font-bold mb-1">Settings</h2>
+            <h2 className="mb-1 text-2xl font-bold">Settings</h2>
             <button
               type="button"
               className="ml-1 flex h-10 w-10 items-center justify-center rounded-lg focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black"
@@ -80,7 +80,7 @@ export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
             </button>
           </div>
 
-          <div className="sm:hidden w-full">
+          <div className="w-full sm:hidden">
             <SelectField
               label={t('a11y.selectATab') || ''}
               hideLabel
@@ -91,7 +91,7 @@ export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
             />
           </div>
 
-          <div className="hidden sm:block w-full">
+          <div className="hidden w-full sm:block">
             <div className="border-b border-gray-200">
               <nav className="-mb-px flex space-x-8" aria-label="Tabs">
                 {tabs.map((tab) => (
@@ -121,11 +121,11 @@ export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
           </div>
         </div>
 
-        <div className="overflow-auto px-4 sm:px-6 w-full">
+        <div className="w-full overflow-auto px-4 sm:px-6">
           <SelectedSection />
         </div>
 
-        <div className="mt-auto flex justify-end py-4 px-4 sm:px-8 w-full border-t-2 border-gray-100">
+        <div className="mt-auto flex w-full justify-end border-t-2 border-gray-100 p-4 sm:px-8">
           <Button variant="inverse" onClick={() => setOpen(false)}>
             Cancel
           </Button>
