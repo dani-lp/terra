@@ -5,19 +5,20 @@ import {
   type FieldWrapperPassThroughProps 
 } from './FieldWrapper';
 
-type InputFieldProps = FieldWrapperPassThroughProps & React.InputHTMLAttributes<HTMLInputElement> & {
+type TextareaFieldProps = FieldWrapperPassThroughProps & React.InputHTMLAttributes<HTMLTextAreaElement> & {
   className?: string;
   wrapperClassName?: string;
+  rows?: number;
   children?: React.ReactNode;
 };
 
-export const InputField = (
+export const TextareaField = (
   {
     id,
-    type = 'text',
     label,
     name,
     value,
+    rows = 5,
     required = false,
     disabled = false,
     onChange,
@@ -26,13 +27,13 @@ export const InputField = (
     placeholder = '',
     autoFocus = false,
     children
-  }: InputFieldProps) => {
+  }: TextareaFieldProps) => {
   return (
     <FieldWrapper label={label} className={wrapperClassName}>
-      <input
+      <textarea
         id={id}
-        type={type}
-        className={`my-0 mb-2 block h-9 w-full rounded-lg border border-neutral-300 py-2 px-3 text-sm placeholder:text-neutral-400 hover:border-neutral-400 focus:border-neutral-300 focus:outline-none focus:ring-2 focus:ring-black ${className}`}
+        rows={rows}
+        className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm ${className}`}
         name={name}
         value={value}
         required={required}

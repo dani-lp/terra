@@ -20,7 +20,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <>
-      <div className="lg:hidden">
+      <div className={classNames('lg:hidden', inter.className)}>
         <div className="fixed flex h-16 w-screen items-center justify-between border-b border-neutral-200 bg-white px-4 py-1.5">
           <div>
             <Image
@@ -37,7 +37,8 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
               className="-mr-3 inline-flex h-12 w-12 items-center justify-center rounded-lg text-neutral-500 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-neutral-500"
               onClick={() => setSidebarOpen(true)}
             >
-              <span className="sr-only">{t('a11y.openSidebar')}</span>
+              {/* TODO this causes an hydration error in the client for some reason? */}
+              {/* <span className="sr-only">{t('a11y.openSidebar')}</span> */}
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>
@@ -45,7 +46,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
       </div>
 
       <Transition.Root show={sidebarOpen} as={React.Fragment}>
-        <Dialog as="div" className="relative z-40 lg:hidden" onClose={setSidebarOpen}>
+        <Dialog as="div" className={classNames('relative z-40 lg:hidden', inter.className)} onClose={setSidebarOpen}>
           <Transition.Child
             as={React.Fragment}
             enter="transition-opacity ease-linear duration-300"
