@@ -17,6 +17,7 @@ import { useTranslation } from 'next-i18next';
 import { useSession } from 'next-auth/react';
 import { SettingsModal } from './settings/SettingsModal';
 import { useSidebarActions } from '@/store/useSidebarStore';
+import { urls } from '@/const/urls';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -33,11 +34,11 @@ type NavigationItemProps = {
 };
 
 const navigationItems: NavigationItem[] = [
-  { key: 'home', to: '/', icon: HomeIcon },
-  { key: 'challenges', to: '/challenges', icon: RocketLaunchIcon },
-  { key: 'organizations', to: '/organizations', icon: BuildingOffice2Icon },
-  { key: 'drafts', to: '/drafts', icon: PaperClipIcon },
-  { key: 'development', to: '/dev', icon: BugAntIcon },
+  { key: 'home', to: urls.HOME, icon: HomeIcon },
+  { key: 'challenges', to: urls.CHALLENGES, icon: RocketLaunchIcon },
+  { key: 'organizations', to: urls.ORGANIZATIONS, icon: BuildingOffice2Icon },
+  { key: 'drafts', to: urls.DRAFTS, icon: PaperClipIcon },
+  { key: 'development', to: urls.DEVELOPMENT, icon: BugAntIcon },
 ];
 
 const NavigationItem = ({ item, active }: NavigationItemProps) => {
