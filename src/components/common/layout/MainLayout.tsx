@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Sidebar } from './Sidebar';
 import { classNames } from '@/const';
+import { useSidebarActions, useSidebarOpen } from '@/store/useSidebarStore';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -15,7 +16,8 @@ type MainLayoutProps = {
 };
 
 export const MainLayout = ({ children }: MainLayoutProps) => {
-  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const sidebarOpen = useSidebarOpen();
+  const { setSidebarOpen } = useSidebarActions();
   const { t } = useTranslation('common');
 
   return (
@@ -56,7 +58,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-neutral-600 bg-opacity-75" />
+            <div className="fixed inset-0 bg-neutral-600/75" />
           </Transition.Child>
 
           <div className="fixed inset-0 z-40 flex">

@@ -16,6 +16,7 @@ import { classNames } from '@/const';
 import { useTranslation } from 'next-i18next';
 import { useSession } from 'next-auth/react';
 import { SettingsModal } from './settings/SettingsModal';
+import { useSidebarActions } from '@/store/useSidebarStore';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -40,6 +41,7 @@ const navigationItems: NavigationItem[] = [
 ];
 
 const NavigationItem = ({ item, active }: NavigationItemProps) => {
+  const { setSidebarOpen } = useSidebarActions();
   const { t } = useTranslation('navigation');
 
   return (
@@ -50,6 +52,7 @@ const NavigationItem = ({ item, active }: NavigationItemProps) => {
         'flex items-center justify-between gap-2 px-3 py-2 rounded-lg transition-colors duration-200 group',
         active ? 'bg-black text-white' : 'bg-white hover:bg-neutral-100 text-black'
       )}
+      onClick={() => setSidebarOpen(false)}
     >
       <div className="flex items-center justify-center gap-2">
         <item.icon className="w-6" />
@@ -103,7 +106,6 @@ export const Sidebar = () => {
 
   return (
     <>
-
       <aside className="fixed h-screen w-72 bg-white px-1 shadow-md">
         <div className="flex h-full flex-col justify-between divide-y-2 divide-gray-200">
           <div className="flex flex-col gap-0 divide-y-2 divide-gray-200">
@@ -112,7 +114,7 @@ export const Sidebar = () => {
           </div>
           <div className="flex flex-col gap-2 p-2">
             <div className="flex items-center justify-between">
-              <div className="justify-left flex items-center gap-2">
+              <div className="flex items-center gap-2">
                 <div className="overflow-hidden rounded-xl border border-neutral-400 p-0.5">
                   <Image
                     src={session?.user?.image ?? '/logo.png'}
