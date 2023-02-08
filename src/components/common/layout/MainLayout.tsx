@@ -23,7 +23,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <>
       <div className={classNames('lg:hidden', inter.className)}>
-        <div className="fixed flex h-16 w-screen items-center justify-between border-b border-neutral-200 bg-white px-4 py-1.5">
+        <div className="fixed z-20 flex h-16 w-screen items-center justify-between border-b border-neutral-200 bg-white px-4 py-1.5">
           <div>
             <Image
               className="h-8 w-auto"
@@ -107,7 +107,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         <Sidebar />
       </div>
       <main className={classNames(
-        'bg-neutral-100 w-full h-screen pt-16 lg:pt-0 lg:pl-72',
+        'bg-neutral-100 w-full min-h-screen h-full pt-16 lg:pt-0 lg:pl-72',
         inter.className,
       )}>
         {children}

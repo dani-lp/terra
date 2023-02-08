@@ -35,14 +35,6 @@ export const SearchBar = ({
         />
       </div>
       {withButton && (
-        // <button
-        //   type="button"
-        //   className="relative -ml-px inline-flex items-center space-x-2 rounded-r-md border border-neutral-300 bg-neutral-50 px-4 py-2 text-sm font-medium text-neutral-700 hover:bg-neutral-100 focus:border-black focus:outline-none focus:ring-1 focus:ring-black"
-        //   onClick={onClick}
-        // >
-        //   <FunnelIcon className="h-5 w-5 text-neutral-400" aria-hidden="true" />
-        //   <span>{buttonText}</span>
-        // </button>
         <Button
           type="button"
           variant="inverse"
