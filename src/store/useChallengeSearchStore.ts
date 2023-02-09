@@ -9,7 +9,7 @@ export const statusOptions: Readonly<SelectOption[]> = [
 
 interface ChallengeSearchStore {
   playerNumber: number;
-  status: SelectOption; // TODO use proper types
+  status: SelectOption;
   searchString: string;
   actions: {
     clearFilters: () => void;

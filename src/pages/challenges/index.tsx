@@ -47,18 +47,18 @@ const Challenges: NextPageWithLayout = () => {
   const { setSearchString } = useChallengeSearchActions();
 
   const filteredChallenges = challenges
-      .filter((challenge) => !search ? challenges : challenge.name.toLowerCase().includes(search.toLowerCase()))
-      .filter((challenge) => {
-        switch (challengeStatus.id) {
-          case 'open':
-            return challenge.status === 'open';
-          case 'ended':
-            return challenge.status === 'ended';
-          default:
-            return true;
-        }
-      })
-      .filter((challenge) => challenge.players > playerNumber);
+    .filter((challenge) => !search ? challenges : challenge.name.toLowerCase().includes(search.toLowerCase()))
+    .filter((challenge) => {
+      switch (challengeStatus.id) {
+        case 'open':
+          return challenge.status === 'open';
+        case 'ended':
+          return challenge.status === 'ended';
+        default:
+          return true;
+      }
+    })
+    .filter((challenge) => challenge.players > playerNumber);
 
   return (
     <>
@@ -85,7 +85,7 @@ const Challenges: NextPageWithLayout = () => {
         <div className="w-full max-w-6xl">
           <div className="flex flex-col xl:flex-row xl:gap-4 xl:pt-4">
             <div className="min-w-[300px] px-4 py-2 xl:px-0">
-              <div className="mb-3 flex flex-row items-center justify-between gap-2 xl:hidden xl:flex-col xl:items-start">
+              <div className="mt-2 mb-3 flex flex-row items-center justify-between gap-2 xl:hidden xl:flex-col xl:items-start">
                 <h1 className="text-2xl font-bold">Your challenges</h1>
                 <Button size='sm' className="xl:w-full">New</Button>
               </div>
@@ -96,9 +96,11 @@ const Challenges: NextPageWithLayout = () => {
                 <ChallengesFilterGroup showTitle />
               </div>
             </div>
-            <ul role="list" className="grid grid-cols-1 gap-6 py-2 px-4 sm:grid-cols-2 lg:grid-cols-3 xl:px-0">
-              {filteredChallenges.map((challenge) => <ChallengeCard key={challenge.id} challenge={challenge} />)}
-            </ul>
+            <div>
+              <ul role="list" className="grid grid-cols-1 gap-6 py-2 px-4 sm:grid-cols-2 lg:grid-cols-3 xl:px-0">
+                {filteredChallenges.map((challenge) => <ChallengeCard key={challenge.id} challenge={challenge} />)}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
