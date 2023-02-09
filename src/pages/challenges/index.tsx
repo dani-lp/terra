@@ -7,6 +7,7 @@ import { Button, MainLayout } from '@/components/common';
 import { SearchBar } from '@/components/common/form/SearchBar';
 import nextI18nConfig from '@/../next-i18next.config.mjs';
 import { ChallengeCard, type Challenge, ChallengesFilterGroup } from '@/components/challenges';
+import { useChallengeSearch, useChallengeSearchActions, useChallengeSearchPlayerNumber, useChallengeSearchStatus } from '@/store/useChallengeSearchStore';
 
 // TEMP
 const challenges: Challenge[] = [
@@ -16,8 +17,48 @@ const challenges: Challenge[] = [
   { id: 4, name: 'A short one', players: 270, date: '2022-08-02', status: 'open' },
 ];
 
+const SmallFilterGroup = () => {
+  const search = useChallengeSearch();
+  const { setSearchString } = useChallengeSearchActions();
+  const [filtersOpen, setFiltersOpen] = React.useState(false);
+
+  return (
+    <>
+      <SearchBar
+        value={search}
+        onChange={(e) => setSearchString(e.currentTarget.value)}
+        placeholder="Search your challenges..." // TODO i18n
+        className="mb-0"
+        withButton
+        squaredBottom={filtersOpen}
+        buttonText="Filters"
+        buttonVariant={filtersOpen ? 'primary' : 'inverse'}
+        onClick={() => setFiltersOpen(!filtersOpen)}
+      />
+      {filtersOpen && <ChallengesFilterGroup className="w-full rounded-t-none" />}
+    </>
+  )
+};
+
 const Challenges: NextPageWithLayout = () => {
-  const [search, setSearch] = React.useState<string>('');
+  const search = useChallengeSearch();
+  const playerNumber = useChallengeSearchPlayerNumber();
+  const challengeStatus = useChallengeSearchStatus();
+  const { setSearchString } = useChallengeSearchActions();
+
+  const filteredChallenges = challenges
+      .filter((challenge) => !search ? challenges : challenge.name.toLowerCase().includes(search.toLowerCase()))
+      .filter((challenge) => {
+        switch (challengeStatus.id) {
+          case 'open':
+            return challenge.status === 'open';
+          case 'ended':
+            return challenge.status === 'ended';
+          default:
+            return true;
+        }
+      })
+      .filter((challenge) => challenge.players > playerNumber);
 
   return (
     <>
@@ -31,7 +72,7 @@ const Challenges: NextPageWithLayout = () => {
           <h1 className="text-2xl font-bold">Your challenges</h1>
           <SearchBar
             value={search}
-            onChange={(e) => setSearch(e.currentTarget.value)}
+            onChange={(e) => setSearchString(e.currentTarget.value)}
             placeholder="Search your challenges..." // TODO i18n
             className="mb-0 max-w-2xl"
           />
@@ -48,22 +89,15 @@ const Challenges: NextPageWithLayout = () => {
                 <h1 className="text-2xl font-bold">Your challenges</h1>
                 <Button size='sm' className="xl:w-full">New</Button>
               </div>
-              <div className="mb-2 flex items-center justify-between xl:hidden">
-                <SearchBar
-                  value={search}
-                  onChange={(e) => setSearch(e.currentTarget.value)}
-                  placeholder="Search your challenges..." // TODO i18n
-                  className="mb-0"
-                  withButton
-                  buttonText="Filters"
-                />
+              <div className="mb-2 flex flex-col items-center justify-between xl:hidden">
+                <SmallFilterGroup />
               </div>
               <div className="hidden xl:block">
-                <ChallengesFilterGroup />
+                <ChallengesFilterGroup showTitle />
               </div>
             </div>
             <ul role="list" className="grid grid-cols-1 gap-6 py-2 px-4 sm:grid-cols-2 lg:grid-cols-3 xl:px-0">
-              {challenges.map((challenge) => <ChallengeCard key={challenge.id} challenge={challenge} />)}
+              {filteredChallenges.map((challenge) => <ChallengeCard key={challenge.id} challenge={challenge} />)}
             </ul>
           </div>
         </div>

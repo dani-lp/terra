@@ -51,7 +51,7 @@ export const SelectField = <T extends SelectOption>({
       {({ open }) => (
         <>
           {label && <Listbox.Label className={`block text-sm font-medium text-gray-700 ${hideLabel && 'sr-only'}`}>{label}</Listbox.Label>}
-          <div className="relative mt-1">
+          <div className="relative -mt-2">
             <Listbox.Button className={classNames(
               'relative w-full cursor-default rounded-lg border border-gray-300 bg-white py-2 pr-10 text-left shadow-sm focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm',
               'image' in selected || 'icon' in selected ? 'pl-3' : '',
@@ -82,7 +82,7 @@ export const SelectField = <T extends SelectOption>({
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-lg bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-lg bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm">
                 {options.map((option) => (
                   <Listbox.Option
                     key={option.id}
