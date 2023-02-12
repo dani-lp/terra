@@ -22,7 +22,7 @@ export const ChallengeCard = ({ challenge }: Props) => {
 
   return (
     <li>
-      <a href="#" className="block hover:bg-gray-50">
+      <a href={`/challenges/${challenge.id}`} className="block hover:bg-gray-50">
         <div className="p-4 sm:px-6">
           <div className="flex items-center justify-between">
             <p className="truncate text-sm font-medium text-indigo-600">{challenge.name}</p>
