@@ -17,7 +17,7 @@ import { useTranslation } from 'next-i18next';
 import { useSession } from 'next-auth/react';
 import { SettingsModal } from './settings/SettingsModal';
 import { useSidebarActions } from '@/store/useSidebarStore';
-import { urls } from '@/const/urls';
+import { playerUrls, orgUrls, adminUrls, urls } from '@/const/urls';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -72,11 +72,26 @@ const NavigationItem = ({ item, active }: NavigationItemProps) => {
 };
 
 const SidebarNavigation = () => {
+  const { data: session } = useSession();
   const router = useRouter();
+
+  const filteredNavigationItems = navigationItems.filter((item) => {
+    if (item.to === urls.DEVELOPMENT) return true;  // TODO remove when development is done, or based on environment
+    switch (session?.user?.role) {
+      case 'ADMIN':
+        return Object.values(adminUrls).some((url) => url === item.to);
+      case 'ORGANIZATION':
+        return Object.values(orgUrls).some((url) => url === item.to);
+      case 'PLAYER':
+        return Object.values(playerUrls).some((url) => url === item.to);
+      default:
+        return false;
+    }
+  });
 
   return (
     <nav className="flex flex-col gap-3 p-2">
-      {navigationItems.map((item) => (
+      {filteredNavigationItems.map((item) => (
         <NavigationItem
           key={item.key}
           item={item}

@@ -84,7 +84,7 @@ const Challenges: NextPageWithLayout = () => {
       <div className="flex items-center justify-center px-4">
         <div className="w-full max-w-6xl">
           <div className="flex flex-col xl:flex-row xl:gap-4 xl:pt-4">
-            <div className="min-w-[300px] px-4 py-2 xl:px-0">
+            <div className="min-w-[300px] xl:px-0">
               <div className="mt-2 mb-3 flex flex-row items-center justify-between gap-2 xl:hidden xl:flex-col xl:items-start">
                 <h1 className="text-2xl font-bold">Your challenges</h1>
                 <Button size='sm' className="xl:w-full">New</Button>
@@ -96,8 +96,8 @@ const Challenges: NextPageWithLayout = () => {
                 <ChallengesFilterGroup showTitle />
               </div>
             </div>
-            <div>
-              <ul role="list" className="grid grid-cols-1 gap-6 py-2 px-4 sm:grid-cols-2 lg:grid-cols-3 xl:px-0">
+            <div className="w-full overflow-hidden rounded-md bg-white shadow">
+              <ul role="list" className="divide-y divide-gray-200">
                 {filteredChallenges.map((challenge) => <ChallengeCard key={challenge.id} challenge={challenge} />)}
               </ul>
             </div>
