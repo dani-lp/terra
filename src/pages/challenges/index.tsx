@@ -11,10 +11,10 @@ import { useChallengeSearch, useChallengeSearchActions, useChallengeSearchPlayer
 
 // TEMP
 const challenges: Challenge[] = [
-  { id: 1, name: 'Challenge 1', players: 256, date: '2021-01-01', status: 'open' },
-  { id: 2, name: 'Another challenge', players: 2, date: '2021-08-02', status: 'ended' },
-  { id: 3, name: 'Some challenge with a way longer name to test adaptation', players: 5918270, date: '2022-08-02', status: 'open' },
-  { id: 4, name: 'A short one', players: 270, date: '2022-08-02', status: 'open' },
+  { id: 1, name: 'Beach cleaning', players: 256, date: '2021-01-01', status: 'open' },
+  { id: 2, name: 'Daily running', players: 2, date: '2021-08-02', status: 'ended' },
+  { id: 3, name: 'Use sustainable transporting means', players: 5918270, date: '2022-08-02', status: 'open' },
+  { id: 4, name: 'Cleaning litter inside campus', players: 270, date: '2022-08-02', status: 'open' },
 ];
 
 const SmallFilterGroup = () => {
