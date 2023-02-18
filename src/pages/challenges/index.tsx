@@ -68,13 +68,12 @@ const Challenges: NextPageWithLayout = () => {
 
       {/* Top bar */}
       <div className="sticky top-0 z-10 hidden h-16 w-full justify-center bg-white px-4 shadow xl:flex">
-        <div className="flex h-full w-full max-w-6xl items-center justify-between">
-          <h1 className="text-2xl font-bold">Your challenges</h1>
+        <div className="flex h-full w-full max-w-6xl items-center justify-between gap-2">
           <SearchBar
             value={search}
             onChange={(e) => setSearchString(e.currentTarget.value)}
             placeholder="Search your challenges..." // TODO i18n
-            className="mb-0 max-w-2xl"
+            className="mb-0"
           />
           <Button size='sm'>New</Button>
         </div>
@@ -84,7 +83,7 @@ const Challenges: NextPageWithLayout = () => {
       <div className="flex items-center justify-center px-4">
         <div className="w-full max-w-6xl">
           <div className="flex flex-col xl:flex-row xl:gap-4 xl:pt-4">
-            <div className="min-w-[300px] xl:px-0">
+            <div className="min-w-[250px] xl:px-0">
               <div className="mt-2 mb-3 flex flex-row items-center justify-between gap-2 xl:hidden xl:flex-col xl:items-start">
                 <h1 className="text-2xl font-bold">Your challenges</h1>
                 <Button size='sm' className="xl:w-full">New</Button>
