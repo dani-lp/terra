@@ -80,7 +80,7 @@ export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
             </button>
           </div>
 
-          <div className="w-full sm:hidden">
+          <div className="mt-2 w-full sm:hidden">
             <SelectField
               label={t('a11y.selectATab') || ''}
               hideLabel

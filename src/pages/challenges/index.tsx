@@ -6,8 +6,14 @@ import type { NextPageWithLayout } from '../_app';
 import { Button, MainLayout } from '@/components/common';
 import { SearchBar } from '@/components/common/form/SearchBar';
 import nextI18nConfig from '@/../next-i18next.config.mjs';
-import { ChallengeCard, type Challenge, ChallengesFilterGroup } from '@/components/challenges';
-import { useChallengeSearch, useChallengeSearchActions, useChallengeSearchPlayerNumber, useChallengeSearchStatus } from '@/store/useChallengeSearchStore';
+import { ChallengeListEntry, type Challenge, ChallengesFilterGroup } from '@/components/challenges';
+import {
+  useChallengeSearch,
+  useChallengeSearchActions,
+  useChallengeSearchPlayerNumber,
+  useChallengeSearchStatus,
+} from '@/store/useChallengeSearchStore';
+import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
 
 // TEMP
 const challenges: Challenge[] = [
@@ -73,9 +79,9 @@ const Challenges: NextPageWithLayout = () => {
             value={search}
             onChange={(e) => setSearchString(e.currentTarget.value)}
             placeholder="Search your challenges..." // TODO i18n
-            className="mb-0"
+            className="mb-0 h-10"
           />
-          <Button size='sm'>New</Button>
+          <Button size='sm' className="xl:h-10">New</Button>
         </div>
       </div>
 
@@ -97,12 +103,14 @@ const Challenges: NextPageWithLayout = () => {
             </div>
             <div className="w-full overflow-hidden rounded-md bg-white shadow">
               <ul role="list" className="divide-y divide-gray-200">
-                {filteredChallenges.map((challenge) => <ChallengeCard key={challenge.id} challenge={challenge} />)}
+                {filteredChallenges.map((challenge) => <ChallengeListEntry key={challenge.id} challenge={challenge} />)}
               </ul>
             </div>
           </div>
         </div>
       </div>
+
+      <ChallengeDetailsModal />
     </>
   )
 };

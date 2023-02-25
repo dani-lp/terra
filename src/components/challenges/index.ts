@@ -1,2 +1,2 @@
-export * from './ChallengeCard';
+export * from './ChallengeListEntry';
 export * from './filters';
