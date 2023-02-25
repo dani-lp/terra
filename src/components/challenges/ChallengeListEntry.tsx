@@ -2,6 +2,7 @@ import { classNames } from '@/const';
 import { QUERY_PARAM_CHALLENGE } from '@/const/queryParams';
 import Link from 'next/link';
 import { ChallengeStats } from './ChallengeStats';
+import { useQueryParams } from '@/hooks/useQueryParams';
 
 // TEMP
 export type Challenge = {
@@ -17,9 +18,20 @@ type Props = {
 }
 
 export const ChallengeListEntry = ({ challenge }: Props) => {
+  const { addParam } = useQueryParams();
+
+  const handleOpenModal = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    addParam(QUERY_PARAM_CHALLENGE, challenge.id.toString());
+  }
+
   return (
     <li>
-      <Link href={{ query: { [QUERY_PARAM_CHALLENGE]: challenge.id } }} className="block hover:bg-gray-50">
+      <Link
+        href=""
+        onClick={handleOpenModal}
+        className="block hover:bg-gray-50"
+      >
         <div className="p-4 sm:px-6">
           <div className="flex items-center justify-between">
             <p className="truncate text-sm font-medium text-indigo-600">{challenge.name}</p>

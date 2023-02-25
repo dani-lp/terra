@@ -1,28 +1,21 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
-import { XMarkIcon } from '@heroicons/react/24/outline';
 
 import { QUERY_PARAM_CHALLENGE } from '@/const/queryParams';
 import { Button, Modal } from '../common';
 import Image from 'next/image';
 import { ChallengeStats } from './ChallengeStats';
 import { useTranslation } from 'react-i18next';
+import { useQueryParams } from '@/hooks/useQueryParams';
 
 export const ChallengeDetailsModal = () => {
   const { t } = useTranslation();
   const router = useRouter();
+  const { removeParam } = useQueryParams();
   const selectedChallengeId = router.query[QUERY_PARAM_CHALLENGE];
 
   const handleSetOpen = () => {
-    if (!!selectedChallengeId) {
-      router.push({
-        pathname: router.pathname,
-        query: {
-          ...router.query,
-          [QUERY_PARAM_CHALLENGE]: undefined,
-        },
-      });
-    }
+    removeParam(QUERY_PARAM_CHALLENGE);
   };
 
   return (
@@ -50,10 +43,10 @@ export const ChallengeDetailsModal = () => {
           <div className="mt-auto flex w-full flex-col items-center justify-center gap-4 sm:flex-row">
             {/* TODO translate, use proper texts depending on user role, e.g. "edit" */}
             <Button className="w-full" variant="inverse" onClick={handleSetOpen}>
-              Close
+              {t('actions.close')}
             </Button>
             <Button className="w-full">
-              Join in
+              {t('actions.join')}
             </Button>
           </div>
         </div>

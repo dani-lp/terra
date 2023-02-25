@@ -4,6 +4,11 @@
     "closeSidebar": "Close sidebar",
     "selectATab": "Select a tab"
   },
+  "actions": {
+    "close": "Close",
+    "edit": "Edit",
+    "join": "Join in"
+  },
   "settings": {
     "descriptions": {
       "profileDescription": "This information will be displayed publicly. Be careful what you share!",
