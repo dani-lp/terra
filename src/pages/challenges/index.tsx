@@ -6,7 +6,7 @@ import type { NextPageWithLayout } from '../_app';
 import { Button, MainLayout } from '@/components/common';
 import { SearchBar } from '@/components/common/form/SearchBar';
 import nextI18nConfig from '@/../next-i18next.config.mjs';
-import { ChallengeListEntry, type Challenge, ChallengesFilterGroup } from '@/components/challenges';
+import { ChallengeListEntry, type Challenge, ChallengesFilterGroup, NewChallengeSlideOver } from '@/components/challenges';
 import {
   useChallengeSearch,
   useChallengeSearchActions,
@@ -16,7 +16,7 @@ import {
 import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
 
 // TEMP
-const challenges: Challenge[] = [
+const tempChallenges: Challenge[] = [
   { id: 1, name: 'Beach cleaning', players: 256, date: '2021-01-01', status: 'open' },
   { id: 2, name: 'Daily running', players: 2, date: '2021-08-02', status: 'ended' },
   { id: 3, name: 'Use sustainable transporting means', players: 5918270, date: '2022-08-02', status: 'open' },
@@ -47,6 +47,7 @@ const SmallFilterGroup = () => {
 };
 
 const Challenges: NextPageWithLayout = () => {
+  const [challenges, setChallenges] = React.useState<Challenge[]>(tempChallenges);
   const search = useChallengeSearch();
   const playerNumber = useChallengeSearchPlayerNumber();
   const challengeStatus = useChallengeSearchStatus();
@@ -81,7 +82,7 @@ const Challenges: NextPageWithLayout = () => {
             placeholder="Search your challenges..." // TODO i18n
             className="mb-0 h-10"
           />
-          <Button size='sm' className="xl:h-10">New</Button>
+          <NewChallengeSlideOver challenges={challenges} setChallenges={setChallenges} />
         </div>
       </div>
 
@@ -129,7 +130,7 @@ export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
     ...(await serverSideTranslations(
       locale,
-      ['common', 'navigation'],
+      ['common', 'navigation', 'challenges',],
       nextI18nConfig,
       ['en']
     )),

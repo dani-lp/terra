@@ -24,7 +24,7 @@ export const Modal = ({
 }: ModalProps) => {
   return (
     <Transition.Root show={open} as={React.Fragment}>
-      <Dialog as="div" className="relative z-50" onClose={setOpen}>
+      <Dialog as="div" className="relative z-40" onClose={setOpen}>
         {!smallShadow && (
           <Transition.Child
             as={React.Fragment}
