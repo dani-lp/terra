@@ -37,7 +37,7 @@ const Dev: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Terra - Dev</title>
+        <title>Development - Terra</title>
       </Head>
       <div className='mb-4 flex h-full w-full flex-col items-start justify-start gap-4 p-2'>
         <Link href="/auth/signin">

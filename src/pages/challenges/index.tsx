@@ -69,7 +69,7 @@ const Challenges: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Terra - Challenges</title>
+        <title>Challenges - Terra</title>
       </Head>
 
       {/* Top bar */}

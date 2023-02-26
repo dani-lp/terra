@@ -16,7 +16,7 @@ const SignIn: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Terra - Sign in</title>
+        <title>Sign in to Terra</title>
       </Head>
       <main className={classNames(
         'w-full flex items-center justify-center pt-16',
