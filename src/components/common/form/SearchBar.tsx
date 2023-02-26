@@ -22,7 +22,7 @@ export const SearchBar = ({
   ...props
 }: SearchBarProps) => {
   return (
-    <div className={classNames('mt-1 flex w-full rounded-lg shadow-sm', className)}>
+    <div className={classNames('flex w-full rounded-lg shadow-sm', className)}>
       <div className="relative flex grow items-stretch focus-within:z-10">
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
           <MagnifyingGlassIcon className="h-5 w-5 text-neutral-400" aria-hidden="true" />

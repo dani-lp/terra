@@ -2,7 +2,13 @@
   "a11y": {
     "openSidebar": "Open sidebar",
     "closeSidebar": "Close sidebar",
+    "closePanel": "Close panel",
     "selectATab": "Select a tab"
+  },
+  "actions": {
+    "close": "Close",
+    "edit": "Edit",
+    "join": "Join in"
   },
   "settings": {
     "descriptions": {
