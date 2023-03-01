@@ -4,7 +4,7 @@ import { XMarkIcon } from '@heroicons/react/24/outline';
 import { LinkIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 
 import { SlideOver } from '../common/layout/SlideOver';
-import { Button, OptionsButton, type OptionsButtonOption } from '../common';
+import { Button } from '../common';
 import { useTranslation } from 'react-i18next';
 import type { Challenge } from './ChallengeListEntry';
 
@@ -15,15 +15,9 @@ type Props = {
   setChallenges: (newChallenges: Challenge[]) => void;
 }
 
-const submitButtonOptions = [
-  { id: '1', label: 'Create challenge', description: 'The challenge will be visible by any allowed account.' },
-  { id: '2', label: 'Draft challenge', description: 'The challenge will be saved as a draft for you to publish later.' },
-] as const;
-
 export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
   const { t } = useTranslation('challenges');
   const [open, setOpen] = React.useState(false);
-  const [selectedSubmitOption, setSelectedSubmitOption] = React.useState<OptionsButtonOption>(submitButtonOptions[0]);
 
   // TODO use a TRPC mutation 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -74,7 +68,7 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
                 <div className="space-y-6 pt-6 pb-5">
                   <div>
                     <label htmlFor="project-name" className="block text-sm font-medium text-gray-900">
-                      Project name
+                      Challenge name
                     </label>
                     <div className="mt-1">
                       <input
@@ -118,7 +112,7 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
                             Public access
                           </label>
                           <p id="privacy-public-description" className="text-gray-500">
-                            Everyone with the link will see this project.
+                            Everyone will be able to take part in the challenge.
                           </p>
                         </div>
                       </div>
@@ -135,10 +129,10 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
                           </div>
                           <div className="pl-7 text-sm">
                             <label htmlFor="privacy-private-to-project" className="font-medium text-gray-900">
-                              Private to project members
+                              Private to organization members
                             </label>
                             <p id="privacy-private-to-project-description" className="text-gray-500">
-                              Only members of this project would be able to access.
+                              Only members of your organization will be able to participate.
                             </p>
                           </div>
                         </div>
@@ -159,7 +153,7 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
                               Private to you
                             </label>
                             <p id="privacy-private-description" className="text-gray-500">
-                              You are the only one able to access this project.
+                              Create a draft version of the challenge.
                             </p>
                           </div>
                         </div>
@@ -186,7 +180,7 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
                         className="h-5 w-5 text-gray-400 group-hover:text-gray-500"
                         aria-hidden="true"
                       />
-                      <span className="ml-2">Learn more about sharing</span>
+                      <span className="ml-2">Learn more about challenges</span>
                     </a>
                   </div>
                 </div>
@@ -201,14 +195,9 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
             >
               Cancel
             </Button>
-            <OptionsButton
-              type="submit"
-              options={submitButtonOptions}
-              selected={selectedSubmitOption}
-              setSelected={setSelectedSubmitOption}
-            >
-              Create
-            </OptionsButton>
+            <Button type="submit">
+              Create challenge
+            </Button>
           </div>
         </form>
       </SlideOver>
