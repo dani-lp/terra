@@ -102,8 +102,8 @@ const Challenges: NextPageWithLayout = () => {
                 <ChallengesFilterGroup showTitle />
               </div>
             </div>
-            <div className="w-full overflow-hidden rounded-md bg-white shadow">
-              <ul role="list" className="divide-y divide-gray-200">
+            <div className="w-full">
+              <ul role="list" className="divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow">
                 {filteredChallenges.map((challenge) => <ChallengeListEntry key={challenge.id} challenge={challenge} />)}
               </ul>
             </div>
