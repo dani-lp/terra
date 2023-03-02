@@ -5,10 +5,7 @@ import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/20/solid'
 import { classNames } from '@/const/helpers';
 
 
-type Icon = React.ForwardRefExoticComponent<React.SVGProps<SVGSVGElement> & {
-  title?: string | undefined;
-  titleId?: string | undefined;
-}>;
+type Icon = typeof CheckIcon;
 
 export type SelectOption = {
   id: string;
