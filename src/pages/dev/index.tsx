@@ -13,11 +13,12 @@ import { trpc } from '@/utils/trpc';
 import type { NextPageWithLayout } from '../_app';
 import nextI18nConfig from '@/../next-i18next.config.mjs';
 import { Role } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 
 const selectOptions: SelectOption[] = [
   {
     id: Role.ADMIN,
-    label: 'Admin',
+    label: 'Administrator',
   },
   {
     id: Role.ORGANIZATION,
@@ -30,8 +31,9 @@ const selectOptions: SelectOption[] = [
 ];
 
 const Dev: NextPageWithLayout = () => {
+  const { data: session, status } = useSession();
   const [selectedRoleOption, setSelectedRoleOption] = React.useState<SelectOption>(
-    selectOptions[0] ??
+    selectOptions.find((option) => option.id === session?.user?.role) ??
     { id: 'ADMIN', label: 'Admin' }
   );
   const roleMutation = trpc.dev.changeRole.useMutation();
@@ -40,24 +42,37 @@ const Dev: NextPageWithLayout = () => {
     roleMutation.mutate({ role: selectedRoleOption.id as Role });
   };
 
+  React.useEffect(() => {
+    if (status === 'authenticated') {
+      setSelectedRoleOption(
+        selectOptions.find((option) => option.id === session?.user?.role) ??
+        { id: 'ADMIN', label: 'Admin' }
+      );
+    }
+  }, [status, session?.user?.role]);
+
   return (
     <>
       <Head>
         <title>Development - Terra</title>
       </Head>
       <div className='mb-4 flex h-full w-full flex-col items-start justify-start gap-4 p-2'>
-        <Link href="/auth/signin">
-          <Button>Sign in</Button>
-        </Link>
-        <div className="mt-4">
-        <SelectField
-          options={selectOptions}
-          selected={selectedRoleOption}
-          setSelected={setSelectedRoleOption}
-          className="mb-2"
-        />
-        <Button onClick={handleRoleChange}>Change role</Button>
-        </div>
+        {status === 'unauthenticated' && (
+          <Link href="/auth/signin">
+            <Button>Sign in</Button>
+          </Link>
+        )}
+        {status === 'authenticated' && (
+          <div className="mt-4">
+            <SelectField
+              options={selectOptions}
+              selected={selectedRoleOption}
+              setSelected={setSelectedRoleOption}
+              className="mb-2"
+            />
+            <Button onClick={handleRoleChange}>Change role</Button>
+          </div>
+        )}
       </div>
     </>
   );
