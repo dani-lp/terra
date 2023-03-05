@@ -22,6 +22,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <>
+      {/* Top bar */}
       <div className={classNames('lg:hidden', inter.className)}>
         <div className="fixed z-20 flex h-16 w-screen items-center justify-between border-b border-neutral-200 bg-white px-4 py-1.5">
           <div>

@@ -1,4 +1,4 @@
 export * from './ChallengeListEntry';
 export * from './filters';
 export * from './NewChallengeSlideOver';
-export * from './TerraChallengesView';
+export * from './TerraChallengesViewOrgs';

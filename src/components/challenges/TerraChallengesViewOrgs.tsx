@@ -41,7 +41,7 @@ const SmallFilterGroup = () => {
 };
 
 
-export const TerraChallengesView = () => {
+export const TerraChallengesViewOrgs = () => {
   const [challenges, setChallenges] = React.useState<Challenge[]>(tempChallenges);
   const search = useChallengeSearch();
   const playerNumber = useChallengeSearchPlayerNumber();
