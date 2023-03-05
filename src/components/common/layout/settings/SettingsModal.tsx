@@ -19,6 +19,7 @@ import { Modal } from '../../modal';
 
 import { trpc } from '@/utils/trpc';
 import { useSettingsActions } from '@/store/useSettingsStore';
+import { signOut } from 'next-auth/react';
 
 
 type SettingsModalProps = {
@@ -125,13 +126,20 @@ export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
           <SelectedSection />
         </div>
 
-        <div className="mt-auto flex w-full justify-end border-t-2 border-gray-100 p-4 sm:px-8">
-          <Button variant="inverse" onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
-          <Button type="submit" className="ml-5">
-            Save
-          </Button>
+        <div className="mt-auto flex w-full justify-between border-t-2 border-gray-100 p-4 sm:px-8">
+          <div>
+            <Button variant='inverseRed' onClick={() => signOut()}>
+              Log out
+            </Button>
+          </div>
+          <div className="flex justify-end">
+            <Button variant="inverse" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" className="ml-5">
+              Save
+            </Button>
+          </div>
         </div>
       </form>
     </Modal >

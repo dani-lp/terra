@@ -27,7 +27,7 @@ const SignIn: NextPage = () => {
           <h1 className="mb-2 text-4xl font-bold">Welcome back!</h1>
           <span className="mb-2 text-neutral-500">Enter you email to sign in to your account</span>
           <span className="mb-4 text-neutral-400">Your current status is: {status}</span>
-          <InputField placeholder='email@example.com' disabled wrapperClassName="w-full" />
+          <InputField placeholder='email@example.com' disabled wrapperClassName="w-full mb-2" />
           <Button className="w-full" disabled>Sign in with Email</Button>
           <div className="my-4 w-full border-t-2 border-neutral-200"></div>
           <Button
