@@ -6,7 +6,6 @@ const config = {
   i18n: {
     locales: ['en'],
     defaultLocale: 'en',
-    ns: ['common', 'navigation', 'challenges']
   },
   localePath: path.resolve('./public/locales'),
 };
