@@ -16,29 +16,25 @@ export default async function handler(
     });
 
     if (user) {
-      const existingUserData = await prisma.userDetails.findFirst({
-        where: { user: user },
-      });
-
-      if (!existingUserData) {
-        const newUserData = await prisma.userDetails.create({
-          data: {
-            user: {
-              connect: {
-                id: user.id,
-              },
-            },
-            userId: user.id,
-            role: 'PLAYER',
-            username: user.name,
-            about: '',
-            playerData: {
-              create: {}
+      const newUserData = await prisma.userDetails.upsert({
+        where: { userId: user.id },
+        update: {},
+        create: {
+          user: {
+            connect: {
+              id: user.id,
             },
           },
-        });
-        console.log(newUserData);
-      }
+          userId: user.id,
+          role: 'PLAYER',
+          username: user.name,
+          about: '',
+          playerData: {
+            create: {}
+          },
+        },
+      });
+      console.log(newUserData);
 
       res.status(201).redirect('/');
     }
