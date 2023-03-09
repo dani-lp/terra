@@ -13,7 +13,7 @@ import { TerraChallengesViewPlayers } from '@/components/challenges/TerraChallen
 const RoleViews = {
   ADMIN: TerraChallengesViewOrgs,
   PLAYER: TerraChallengesViewPlayers,
-  ORGANIZATION: TerraChallengesViewPlayers,
+  ORGANIZATION: TerraChallengesViewOrgs,
 } satisfies { [key in keyof typeof Role]: React.FC };
 
 // TEMP

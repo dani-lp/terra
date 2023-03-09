@@ -33,7 +33,7 @@ export const SideDrawer = ({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-neutral-500 bg-opacity-75 transition-opacity" />
+          <div className="fixed inset-0 bg-neutral-500/75 transition-opacity" />
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-hidden">

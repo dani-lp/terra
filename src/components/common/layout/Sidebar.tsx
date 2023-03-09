@@ -22,7 +22,7 @@ import { Skeleton } from '../skeleton';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
-export type NavigationItem = {
+export type NavItem = {
   key: string;
   to: string;
   icon: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
@@ -30,11 +30,11 @@ export type NavigationItem = {
 };
 
 type NavigationItemProps = {
-  item: NavigationItem;
+  item: NavItem;
   active: boolean;
 };
 
-const navigationItems: NavigationItem[] = [
+const navigationItems: NavItem[] = [
   { key: 'home', to: urls.HOME, icon: HomeIcon },
   { key: 'challenges', to: urls.CHALLENGES, icon: RocketLaunchIcon },
   { key: 'organizations', to: urls.ORGANIZATIONS, icon: BuildingOffice2Icon },

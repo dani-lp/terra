@@ -9,7 +9,7 @@ export const appRouter = router({
   example: exampleRouter,
   auth: authRouter,
   user: userRouter,
-  dev: devRouter, 
+  dev: devRouter,
   challenges: challengesRouter,
 });
 

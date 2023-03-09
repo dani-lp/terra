@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button } from '@/components/common';
 import { SearchBar } from '@/components/common/form/SearchBar';
 import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
-import { ChallengeListEntry, type Challenge, ChallengesFilterGroup } from '@/components/challenges';
+import { ChallengeListEntry, ChallengesFilterGroup } from '@/components/challenges';
 import {
   useChallengeSearch,
   useChallengeSearchActions,
@@ -10,25 +10,28 @@ import {
   useChallengeSearchStatus,
 } from '@/store/useChallengeSearchStore';
 import { classNames } from '@/const';
+import { trpc } from '@/utils/trpc';
+import type { DisplayChallenge } from '@/types';
+import { ChallengeRowSkeleton } from '@/components/challenges/ChallengeRowSkeleton';
 
-const tempChallenges: Challenge[] = [
-  { id: 1, name: 'Beach cleaning', players: 256, date: '2021-01-01', status: 'open' },
-  { id: 2, name: 'Daily running', players: 2, date: '2021-08-02', status: 'ended' },
-  {
-    id: 3,
-    name: 'Use sustainable transporting means',
-    players: 5918270,
-    date: '2022-08-02',
-    status: 'open',
-  },
-  {
-    id: 4,
-    name: 'Cleaning litter inside campus',
-    players: 270,
-    date: '2022-08-02',
-    status: 'open',
-  },
-];
+// const tempChallenges: Challenge[] = [
+//   { id: 1, name: 'Beach cleaning', players: 256, date: '2021-01-01', status: 'open' },
+//   { id: 2, name: 'Daily running', players: 2, date: '2021-08-02', status: 'ended' },
+//   {
+//     id: 3,
+//     name: 'Use sustainable transporting means',
+//     players: 5918270,
+//     date: '2022-08-02',
+//     status: 'open',
+//   },
+//   {
+//     id: 4,
+//     name: 'Cleaning litter inside campus',
+//     players: 270,
+//     date: '2022-08-02',
+//     status: 'open',
+//   },
+// ];
 
 // TODO extract
 const SmallFilterGroup = () => {
@@ -61,7 +64,17 @@ const tabs = [
 ] as const;
 
 export const TerraChallengesViewPlayers = () => {
-  const [challenges] = React.useState<Challenge[]>(tempChallenges);
+  const { data, isLoading, isError, error } = trpc.challenges.all.useQuery();
+
+  const challenges: DisplayChallenge[] =
+    data?.map((challenge) => ({
+      ...challenge,
+      startDate: challenge.startDate.toLocaleDateString(),
+      endDate: challenge.endDate.toLocaleDateString(),
+      players: Math.random() * 10_000,
+      status: Math.random() > 0.5 ? 'open' : 'ended',
+    })) ?? [];
+
   const search = useChallengeSearch();
   const playerNumber = useChallengeSearchPlayerNumber();
   const challengeStatus = useChallengeSearchStatus();
@@ -84,6 +97,11 @@ export const TerraChallengesViewPlayers = () => {
       }
     })
     .filter((challenge) => challenge.players > playerNumber);
+  
+  if (error) {
+    console.error(error.message);
+    throw new Error(error.message);
+  }
 
   return (
     <>
@@ -177,9 +195,12 @@ export const TerraChallengesViewPlayers = () => {
                 role="list"
                 className="divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow"
               >
-                {filteredChallenges.map((challenge) => (
-                  <ChallengeListEntry key={challenge.id} challenge={challenge} />
-                ))}
+                {isLoading && [...Array(3)].map((_, i) => <ChallengeRowSkeleton key={i} />)}
+                {!isLoading &&
+                  !isError &&
+                  filteredChallenges.map((challenge) => (
+                    <ChallengeListEntry key={challenge.id} challenge={challenge} />
+                  ))}
               </ul>
             </div>
           </div>

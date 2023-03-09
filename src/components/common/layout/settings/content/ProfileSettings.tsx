@@ -111,7 +111,7 @@ export const ProfileSettings = () => {
             />
             <label
               htmlFor="desktop-user-photo"
-              className="absolute inset-0 flex h-full w-full items-center justify-center bg-black bg-opacity-75 text-sm font-medium text-white opacity-0 focus-within:opacity-100 hover:opacity-100"
+              className="absolute inset-0 flex h-full w-full items-center justify-center bg-black/75 text-sm font-medium text-white opacity-0 focus-within:opacity-100 hover:opacity-100"
             >
               <span>Change</span>
               <span className="sr-only"> user photo</span>

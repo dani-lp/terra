@@ -26,7 +26,8 @@
       }
     ],
     "spaced-comment": "warn",
-    "camelcase": "warn"
+    "camelcase": "warn",
+    "react/prop-types": "off"
   },
   "settings": {
     "tailwindcss": {
@@ -34,6 +35,7 @@
     }
   },
   "globals": {
-    "React": true
+    "React": true,
+    "JSX": true
   }
 }

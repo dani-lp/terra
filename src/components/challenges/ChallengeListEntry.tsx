@@ -3,18 +3,10 @@ import { QUERY_PARAM_CHALLENGE } from '@/const/queryParams';
 import Link from 'next/link';
 import { ChallengeStats } from './ChallengeStats';
 import { useQueryParams } from '@/hooks/useQueryParams';
-
-// TEMP
-export type Challenge = {
-  id: number;
-  name: string;
-  players: number;
-  date: string;
-  status: 'open' | 'ended';
-};
+import type { DisplayChallenge } from '@/types';
 
 type Props = {
-  challenge: Challenge;
+  challenge: DisplayChallenge;
 };
 
 export const ChallengeListEntry = ({ challenge }: Props) => {
@@ -45,7 +37,7 @@ export const ChallengeListEntry = ({ challenge }: Props) => {
               </p>
             </div>
           </div>
-          <ChallengeStats endDate={challenge.date} players={challenge.players} />
+          <ChallengeStats endDate={challenge.startDate} players={challenge.players} />
         </div>
       </Link>
     </li>

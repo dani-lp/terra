@@ -6,32 +6,29 @@ import { LinkIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { SlideOver } from '../common/layout/SlideOver';
 import { Button } from '../common';
 import { useTranslation } from 'react-i18next';
-import type { Challenge } from './ChallengeListEntry';
+import { trpc } from '@/utils/trpc';
 
-// TODO temp
-type Props = {
-  challenges: Challenge[];
-  setChallenges: (newChallenges: Challenge[]) => void;
-};
 
-export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
+export const NewChallengeSlideOver = () => {
+  const utils = trpc.useContext();
+  const newChallengeMutation = trpc.challenges.create.useMutation({
+    onSuccess: () => {
+      utils.challenges.all.invalidate();
+    },
+  });
+
   const { t } = useTranslation('challenges');
   const [open, setOpen] = React.useState(false);
+  const [newChallengeName, setNewChallengeName] = React.useState<string>('');
+  const [newChallengeDescription, setNewChallengeDescription] = React.useState<string>('');
 
   // TODO use a TRPC mutation
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    setChallenges([
-      ...challenges,
-      {
-        id: challenges.length + 1,
-        name: 'New challenge',
-        players: 300,
-        date: '2021-01-01',
-        status: 'open',
-      } as Challenge,
-    ]);
+    newChallengeMutation.mutate({
+      name: newChallengeName,
+      description: newChallengeDescription,
+    });
 
     setOpen(false);
   };
@@ -84,6 +81,8 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
                         name="project-name"
                         id="project-name"
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
+                        value={newChallengeName}
+                        onChange={(e) => setNewChallengeName(e.currentTarget.value)}
                       />
                     </div>
                   </div>
@@ -100,7 +99,8 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
                         name="description"
                         rows={4}
                         className="block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
-                        defaultValue={''}
+                        value={newChallengeDescription}
+                        onChange={(e) => setNewChallengeDescription(e.currentTarget.value)}
                       />
                     </div>
                   </div>

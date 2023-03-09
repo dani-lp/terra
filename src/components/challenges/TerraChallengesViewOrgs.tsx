@@ -4,7 +4,6 @@ import { SearchBar } from '@/components/common/form/SearchBar';
 import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
 import {
   ChallengeListEntry,
-  type Challenge,
   ChallengesFilterGroup,
   NewChallengeSlideOver,
 } from '@/components/challenges';
@@ -14,25 +13,9 @@ import {
   useChallengeSearchPlayerNumber,
   useChallengeSearchStatus,
 } from '@/store/useChallengeSearchStore';
-
-const tempChallenges: Challenge[] = [
-  { id: 1, name: 'Beach cleaning', players: 256, date: '2021-01-01', status: 'open' },
-  { id: 2, name: 'Daily running', players: 2, date: '2021-08-02', status: 'ended' },
-  {
-    id: 3,
-    name: 'Use sustainable transporting means',
-    players: 5918270,
-    date: '2022-08-02',
-    status: 'open',
-  },
-  {
-    id: 4,
-    name: 'Cleaning litter inside campus',
-    players: 270,
-    date: '2022-08-02',
-    status: 'open',
-  },
-];
+import { trpc } from '@/utils/trpc';
+import type { DisplayChallenge } from '@/types';
+import { ChallengeRowSkeleton } from '@/components/challenges/ChallengeRowSkeleton';
 
 const SmallFilterGroup = () => {
   const search = useChallengeSearch();
@@ -58,11 +41,20 @@ const SmallFilterGroup = () => {
 };
 
 export const TerraChallengesViewOrgs = () => {
-  const [challenges, setChallenges] = React.useState<Challenge[]>(tempChallenges);
+  const { data, isLoading, isError, error } = trpc.challenges.all.useQuery();
   const search = useChallengeSearch();
   const playerNumber = useChallengeSearchPlayerNumber();
   const challengeStatus = useChallengeSearchStatus();
   const { setSearchString } = useChallengeSearchActions();
+
+  const challenges: DisplayChallenge[] =
+    data?.map((challenge) => ({
+      ...challenge,
+      startDate: challenge.startDate.toLocaleDateString(),
+      endDate: challenge.endDate.toLocaleDateString(),
+      players: Math.random() * 10_000,
+      status: Math.random() > 0.5 ? 'open' : 'ended',
+    })) ?? [];
 
   const filteredChallenges = challenges
     .filter((challenge) =>
@@ -80,6 +72,11 @@ export const TerraChallengesViewOrgs = () => {
     })
     .filter((challenge) => challenge.players > playerNumber);
 
+  if (error) {
+    console.error(error);
+    throw new Error(error.message);
+  }
+
   return (
     <>
       {/* Top bar */}
@@ -91,7 +88,7 @@ export const TerraChallengesViewOrgs = () => {
             placeholder="Search your challenges..." // TODO i18n
             className="mb-0 h-10"
           />
-          <NewChallengeSlideOver challenges={challenges} setChallenges={setChallenges} />
+          <NewChallengeSlideOver />
         </div>
       </div>
 
@@ -118,9 +115,12 @@ export const TerraChallengesViewOrgs = () => {
                 role="list"
                 className="divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow"
               >
-                {filteredChallenges.map((challenge) => (
-                  <ChallengeListEntry key={challenge.id} challenge={challenge} />
-                ))}
+                {isLoading && [...Array(3)].map((_, i) => <ChallengeRowSkeleton key={i} />)}
+                {!isLoading &&
+                  !isError &&
+                  filteredChallenges.map((challenge) => (
+                    <ChallengeListEntry key={challenge.id} challenge={challenge} />
+                  ))}
               </ul>
             </div>
           </div>

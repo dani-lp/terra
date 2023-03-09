@@ -16,7 +16,7 @@ export default async function handler(
     });
 
     if (user) {
-      const newUserData = await prisma.userDetails.upsert({
+      await prisma.userDetails.upsert({
         where: { userId: user.id },
         update: {},
         create: {
@@ -34,7 +34,6 @@ export default async function handler(
           },
         },
       });
-      console.log(newUserData);
 
       res.status(201).redirect('/');
     }
