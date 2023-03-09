@@ -15,6 +15,7 @@
   "rules": {
     "react/react-in-jsx-scope": "off",
     "@typescript-eslint/consistent-type-imports": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
     "no-unused-vars": "warn",
     "quotes": ["error", "single", { "avoidEscape": true }],
     "no-duplicate-imports": "error",
@@ -31,5 +32,8 @@
     "tailwindcss": {
       "callees": ["cn"]
     }
+  },
+  "globals": {
+    "React": true
   }
 }
