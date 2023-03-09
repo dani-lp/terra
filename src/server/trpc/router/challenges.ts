@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const challengesRouter = router({
   all: protectedProcedure.query(async ({ ctx }) => {
-    // TODO filter by participants
+    // TODO filter by participants, use DisplayChallenge as return
     const challenges = await ctx.prisma.challenge.findMany();
     return challenges; 
   }),

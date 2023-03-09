@@ -33,19 +33,14 @@ const Dev: NextPageWithLayout = () => {
       label: 'Admin',
     },
   );
-  const roleMutation = trpc.dev.changeRole.useMutation();
-
-  /**
-   * Weird hack, this reloads the session so that the user's role is updated. TODO: find a better way to do this.
-   */
-  const reloadSession = () => {
-    const event = new Event('visibilitychange');
-    document.dispatchEvent(event);
-  };
+  const roleMutation = trpc.dev.changeRole.useMutation({
+    onSuccess: () => {
+      window.location.reload();
+    }
+  });
 
   const handleRoleChange = () => {
-    roleMutation.mutate({ role: selectedRoleOption.id as Role });
-    reloadSession();
+    roleMutation.mutate({ role: selectedRoleOption.id as Role }); 
   };
 
   React.useEffect(() => {
