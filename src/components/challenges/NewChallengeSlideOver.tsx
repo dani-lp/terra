@@ -8,38 +8,45 @@ import { Button } from '../common';
 import { useTranslation } from 'react-i18next';
 import type { Challenge } from './ChallengeListEntry';
 
-
 // TODO temp
 type Props = {
   challenges: Challenge[];
   setChallenges: (newChallenges: Challenge[]) => void;
-}
+};
 
 export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
   const { t } = useTranslation('challenges');
   const [open, setOpen] = React.useState(false);
 
-  // TODO use a TRPC mutation 
+  // TODO use a TRPC mutation
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setChallenges([...challenges, {
-      id: challenges.length + 1,
-      name: 'New challenge',
-      players: 300,
-      date: '2021-01-01',
-      status: 'open',
-    } as Challenge]);
+    setChallenges([
+      ...challenges,
+      {
+        id: challenges.length + 1,
+        name: 'New challenge',
+        players: 300,
+        date: '2021-01-01',
+        status: 'open',
+      } as Challenge,
+    ]);
 
     setOpen(false);
   };
 
   return (
     <>
-      <Button size="sm" onClick={() => setOpen(!open)} className="xl:h-10">New</Button>
+      <Button size="sm" onClick={() => setOpen(!open)} className="xl:h-10">
+        New
+      </Button>
 
       <SlideOver open={open} setOpen={setOpen} withShadow>
-        <form className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl" onSubmit={handleSubmit}>
+        <form
+          className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
+          onSubmit={handleSubmit}
+        >
           <div className="h-0 flex-1 overflow-y-auto">
             <div className="bg-black py-6 px-4 sm:px-6">
               <div className="flex items-center justify-between">
@@ -58,16 +65,17 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
                 </div>
               </div>
               <div className="mt-1">
-                <p className="text-sm text-neutral-200">
-                  {t('challenges.new.description')}
-                </p>
+                <p className="text-sm text-neutral-200">{t('challenges.new.description')}</p>
               </div>
             </div>
             <div className="flex flex-1 flex-col justify-between">
               <div className="divide-y divide-gray-200 px-4 sm:px-6">
                 <div className="space-y-6 pt-6 pb-5">
                   <div>
-                    <label htmlFor="project-name" className="block text-sm font-medium text-gray-900">
+                    <label
+                      htmlFor="project-name"
+                      className="block text-sm font-medium text-gray-900"
+                    >
                       Challenge name
                     </label>
                     <div className="mt-1">
@@ -80,7 +88,10 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
                     </div>
                   </div>
                   <div>
-                    <label htmlFor="description" className="block text-sm font-medium text-gray-900">
+                    <label
+                      htmlFor="description"
+                      className="block text-sm font-medium text-gray-900"
+                    >
                       Description
                     </label>
                     <div className="mt-1">
@@ -128,10 +139,16 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
                             />
                           </div>
                           <div className="pl-7 text-sm">
-                            <label htmlFor="privacy-private-to-project" className="font-medium text-gray-900">
+                            <label
+                              htmlFor="privacy-private-to-project"
+                              className="font-medium text-gray-900"
+                            >
                               Private to organization members
                             </label>
-                            <p id="privacy-private-to-project-description" className="text-gray-500">
+                            <p
+                              id="privacy-private-to-project-description"
+                              className="text-gray-500"
+                            >
                               Only members of your organization will be able to participate.
                             </p>
                           </div>
@@ -175,7 +192,10 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
                     </a>
                   </div>
                   <div className="mt-4 flex text-sm">
-                    <a href="#" className="group inline-flex items-center text-gray-500 hover:text-gray-900">
+                    <a
+                      href="#"
+                      className="group inline-flex items-center text-gray-500 hover:text-gray-900"
+                    >
                       <QuestionMarkCircleIcon
                         className="h-5 w-5 text-gray-400 group-hover:text-gray-500"
                         aria-hidden="true"
@@ -188,16 +208,10 @@ export const NewChallengeSlideOver = ({ challenges, setChallenges }: Props) => {
             </div>
           </div>
           <div className="flex shrink-0 justify-end gap-2 p-4">
-            <Button
-              type="button"
-              variant="inverse"
-              onClick={() => setOpen(false)}
-            >
+            <Button type="button" variant="inverse" onClick={() => setOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit">
-              Create challenge
-            </Button>
+            <Button type="submit">Create challenge</Button>
           </div>
         </form>
       </SlideOver>

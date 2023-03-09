@@ -11,14 +11,24 @@ import {
 } from '@/store/useChallengeSearchStore';
 import { classNames } from '@/const';
 
-
 const tempChallenges: Challenge[] = [
   { id: 1, name: 'Beach cleaning', players: 256, date: '2021-01-01', status: 'open' },
   { id: 2, name: 'Daily running', players: 2, date: '2021-08-02', status: 'ended' },
-  { id: 3, name: 'Use sustainable transporting means', players: 5918270, date: '2022-08-02', status: 'open' },
-  { id: 4, name: 'Cleaning litter inside campus', players: 270, date: '2022-08-02', status: 'open' },
+  {
+    id: 3,
+    name: 'Use sustainable transporting means',
+    players: 5918270,
+    date: '2022-08-02',
+    status: 'open',
+  },
+  {
+    id: 4,
+    name: 'Cleaning litter inside campus',
+    players: 270,
+    date: '2022-08-02',
+    status: 'open',
+  },
 ];
-
 
 // TODO extract
 const SmallFilterGroup = () => {
@@ -41,9 +51,8 @@ const SmallFilterGroup = () => {
       />
       {filtersOpen && <ChallengesFilterGroup className="w-full rounded-t-none" />}
     </>
-  )
+  );
 };
-
 
 // TODO translations
 const tabs = [
@@ -61,7 +70,9 @@ export const TerraChallengesViewPlayers = () => {
   const [activeTab, setActiveTab] = React.useState<typeof tabs[number]['id']>(tabs[0].id);
 
   const filteredChallenges = challenges
-    .filter((challenge) => !search ? challenges : challenge.name.toLowerCase().includes(search.toLowerCase()))
+    .filter((challenge) =>
+      !search ? challenges : challenge.name.toLowerCase().includes(search.toLowerCase()),
+    )
     .filter((challenge) => {
       switch (challengeStatus.id) {
         case 'open':
@@ -90,7 +101,6 @@ export const TerraChallengesViewPlayers = () => {
 
       <div className="flex flex-col items-center justify-center px-4">
         <div className="w-full max-w-6xl">
-
           {/* Mobile tabs */}
           <div className="mb-2 flex w-full items-center justify-center lg:hidden">
             <div className="flex w-full justify-start border-b border-gray-200">
@@ -102,7 +112,7 @@ export const TerraChallengesViewPlayers = () => {
                       activeTab === tab.id
                         ? 'border-black text-black'
                         : 'border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700',
-                      'flex justify-center whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium w-full'
+                      'flex w-full justify-center whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium',
                     )}
                     onClick={() => setActiveTab(tab.id)}
                     aria-current={activeTab === tab.id ? 'page' : undefined}
@@ -130,8 +140,10 @@ export const TerraChallengesViewPlayers = () => {
                 <button
                   key={tab.id}
                   className={classNames(
-                    activeTab === tab.id ? 'bg-gray-200 text-gray-800' : 'text-gray-600 hover:text-gray-800',
-                    'rounded-md px-3 py-2 text-sm font-medium'
+                    activeTab === tab.id
+                      ? 'bg-gray-200 text-gray-800'
+                      : 'text-gray-600 hover:text-gray-800',
+                    'rounded-md px-3 py-2 text-sm font-medium',
                   )}
                   onClick={() => setActiveTab(tab.id)}
                   aria-current={activeTab === tab.id ? 'page' : undefined}
@@ -146,12 +158,8 @@ export const TerraChallengesViewPlayers = () => {
                 {/* TODO remove placeholder */}
                 Showing 1 to 10 of 20 results
               </p>
-              <Button variant="inverse">
-                Prev
-              </Button>
-              <Button variant="inverse">
-                Next
-              </Button>
+              <Button variant="inverse">Prev</Button>
+              <Button variant="inverse">Next</Button>
             </div>
           </div>
 
@@ -165,8 +173,13 @@ export const TerraChallengesViewPlayers = () => {
               </div>
             </div>
             <div className="w-full">
-              <ul role="list" className="divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow">
-                {filteredChallenges.map((challenge) => <ChallengeListEntry key={challenge.id} challenge={challenge} />)}
+              <ul
+                role="list"
+                className="divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow"
+              >
+                {filteredChallenges.map((challenge) => (
+                  <ChallengeListEntry key={challenge.id} challenge={challenge} />
+                ))}
               </ul>
             </div>
           </div>
@@ -174,16 +187,12 @@ export const TerraChallengesViewPlayers = () => {
       </div>
 
       <div className="fixed bottom-0 flex h-16 w-screen items-center justify-between gap-2 border-t-2 border-neutral-200 p-3 shadow lg:hidden">
-        <Button variant="inverse">
-          Prev
-        </Button>
+        <Button variant="inverse">Prev</Button>
         <p className="text-xs">
           {/* TODO remove placeholder */}
           Showing 1 to 10 of 20 results
         </p>
-        <Button variant="inverse">
-          Next
-        </Button>
+        <Button variant="inverse">Next</Button>
       </div>
 
       <ChallengeDetailsModal />

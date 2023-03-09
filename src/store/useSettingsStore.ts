@@ -6,13 +6,13 @@ export type Settings = {
   image: string;
   about: string;
   actions: {
-    setName: (name: string) => void; 
+    setName: (name: string) => void;
     setUsername: (username: string) => void;
     setImage: (image: string) => void;
     setAbout: (about: string) => void;
     load: (data: Omit<Settings, 'actions'>) => void;
     clear: () => void;
-  }
+  };
 };
 
 const useSettingsStore = create<Settings>((set) => ({
@@ -26,15 +26,15 @@ const useSettingsStore = create<Settings>((set) => ({
     setImage: (image: string) => set({ image }),
     setAbout: (about: string) => set({ about }),
     load: (data: Omit<Settings, 'actions'>) => set(data),
-    clear: () => set({
-      name: '',
-      username: '',
-      image: '',
-      about: '',
-    }),
+    clear: () =>
+      set({
+        name: '',
+        username: '',
+        image: '',
+        about: '',
+      }),
   },
 }));
-
 
 // selectors
 // TODO add new selectors as needed

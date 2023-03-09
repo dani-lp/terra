@@ -14,7 +14,7 @@ const Challenge: NextPageWithLayout = () => {
     <>
       <Head>
         <title>Challenge</title>
-      </Head> 
+      </Head>
       <h1>Challenge placeholder - {id}</h1>
     </>
   );
@@ -23,20 +23,11 @@ const Challenge: NextPageWithLayout = () => {
 export default Challenge;
 
 Challenge.getLayout = (page) => {
-  return (
-    <MainLayout>
-      {page}
-    </MainLayout>
-  );
+  return <MainLayout>{page}</MainLayout>;
 };
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(
-      locale,
-      ['common', 'navigation'],
-      nextI18nConfig,
-      ['en']
-    )),
+    ...(await serverSideTranslations(locale, ['common', 'navigation'], nextI18nConfig, ['en'])),
   },
 });

@@ -21,20 +21,11 @@ const Organizations: NextPageWithLayout = () => {
 export default Organizations;
 
 Organizations.getLayout = (page) => {
-  return (
-    <MainLayout>
-      {page}
-    </MainLayout>
-  );
+  return <MainLayout>{page}</MainLayout>;
 };
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(
-      locale,
-      ['common', 'navigation'],
-      nextI18nConfig,
-      ['en']
-    )),
+    ...(await serverSideTranslations(locale, ['common', 'navigation'], nextI18nConfig, ['en'])),
   },
 });

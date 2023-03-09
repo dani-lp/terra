@@ -3,15 +3,29 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["@typescript-eslint", "tailwindcss"],
+  "plugins": ["react", "react-hooks", "prettier", "@typescript-eslint", "tailwindcss"],
   "extends": [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
-    "plugin:tailwindcss/recommended"
+    "plugin:tailwindcss/recommended",
+    "prettier",
+    "eslint:recommended",
+    "plugin:react/recommended"
   ],
   "rules": {
+    "react/react-in-jsx-scope": "off",
     "@typescript-eslint/consistent-type-imports": "warn",
-    "quotes": ["error", "single", { "avoidEscape": true }]
+    "no-unused-vars": "warn",
+    "quotes": ["error", "single", { "avoidEscape": true }],
+    "no-duplicate-imports": "error",
+    "no-console": [
+      "warn",
+      {
+        "allow": ["error"]
+      }
+    ],
+    "spaced-comment": "warn",
+    "camelcase": "warn"
   },
   "settings": {
     "tailwindcss": {

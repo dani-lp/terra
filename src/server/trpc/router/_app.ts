@@ -1,3 +1,4 @@
+import { challengesRouter } from '@/server/trpc/router/challenges';
 import { router } from '../trpc';
 import { authRouter } from './auth';
 import { devRouter } from './dev';
@@ -9,6 +10,7 @@ export const appRouter = router({
   auth: authRouter,
   user: userRouter,
   dev: devRouter, 
+  challenges: challengesRouter,
 });
 
 // export type definition of API

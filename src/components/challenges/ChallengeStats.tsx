@@ -1,16 +1,15 @@
 import { CalendarIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 
 type Props = {
-  endDate: string;  // TODO use date, add startDate
+  endDate: string; // TODO use date, add startDate
   players: number;
-}
+};
 
 const formatter = Intl.NumberFormat('en-US', {
   style: 'decimal',
 });
 
 export const ChallengeStats = ({ endDate, players }: Props) => {
-
   return (
     <div className="mt-2 sm:justify-between">
       <div className="mb-2 sm:flex">

@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  Button,
-  MainLayout,
-  SelectField,
-  type SelectOption
-} from '@/components/common';
+import { Button, MainLayout, SelectField, type SelectOption } from '@/components/common';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -33,14 +28,16 @@ const selectOptions: SelectOption[] = [
 const Dev: NextPageWithLayout = () => {
   const { data: session, status } = useSession();
   const [selectedRoleOption, setSelectedRoleOption] = React.useState<SelectOption>(
-    selectOptions.find((option) => option.id === session?.user?.role) ??
-    { id: 'ADMIN', label: 'Admin' }
+    selectOptions.find((option) => option.id === session?.user?.role) ?? {
+      id: 'ADMIN',
+      label: 'Admin',
+    },
   );
   const roleMutation = trpc.dev.changeRole.useMutation();
 
   /**
    * Weird hack, this reloads the session so that the user's role is updated. TODO: find a better way to do this.
-   */ 
+   */
   const reloadSession = () => {
     const event = new Event('visibilitychange');
     document.dispatchEvent(event);
@@ -48,14 +45,16 @@ const Dev: NextPageWithLayout = () => {
 
   const handleRoleChange = () => {
     roleMutation.mutate({ role: selectedRoleOption.id as Role });
-    reloadSession(); 
+    reloadSession();
   };
 
   React.useEffect(() => {
     if (status === 'authenticated') {
       setSelectedRoleOption(
-        selectOptions.find((option) => option.id === session?.user?.role) ??
-        { id: 'ADMIN', label: 'Admin' }
+        selectOptions.find((option) => option.id === session?.user?.role) ?? {
+          id: 'ADMIN',
+          label: 'Admin',
+        },
       );
     }
   }, [status, session?.user?.role]);
@@ -65,7 +64,7 @@ const Dev: NextPageWithLayout = () => {
       <Head>
         <title>Development - Terra</title>
       </Head>
-      <div className='mb-4 flex h-full w-full flex-col items-start justify-start gap-4 p-2'>
+      <div className="mb-4 flex h-full w-full flex-col items-start justify-start gap-4 p-2">
         {status === 'unauthenticated' && (
           <Link href="/auth/signin">
             <Button>Sign in</Button>
@@ -79,7 +78,9 @@ const Dev: NextPageWithLayout = () => {
               setSelected={setSelectedRoleOption}
               className="mb-2"
             />
-            <Button onClick={handleRoleChange} disabled={roleMutation.isLoading}>Change role</Button>
+            <Button onClick={handleRoleChange} disabled={roleMutation.isLoading}>
+              Change role
+            </Button>
           </div>
         )}
       </div>
@@ -90,20 +91,11 @@ const Dev: NextPageWithLayout = () => {
 export default Dev;
 
 Dev.getLayout = (page) => {
-  return (
-    <MainLayout>
-      {page}
-    </MainLayout>
-  );
+  return <MainLayout>{page}</MainLayout>;
 };
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(
-      locale,
-      ['common', 'navigation'],
-      nextI18nConfig,
-      ['en']
-    )),
+    ...(await serverSideTranslations(locale, ['common', 'navigation'], nextI18nConfig, ['en'])),
   },
 });

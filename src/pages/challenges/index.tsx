@@ -10,7 +10,6 @@ import { useSession } from 'next-auth/react';
 import type { Role } from '@prisma/client';
 import { TerraChallengesViewPlayers } from '@/components/challenges/TerraChallengesViewPlayers';
 
-
 const RoleViews = {
   ADMIN: TerraChallengesViewOrgs,
   PLAYER: TerraChallengesViewPlayers,
@@ -38,26 +37,22 @@ const Challenges: NextPageWithLayout = () => {
       {isLoading && <div>Loading...</div>}
       {!isLoading && <RoleView />}
     </>
-  )
+  );
 };
 
 export default Challenges;
 
 Challenges.getLayout = (page) => {
-  return (
-    <MainLayout>
-      {page}
-    </MainLayout>
-  );
+  return <MainLayout>{page}</MainLayout>;
 };
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
     ...(await serverSideTranslations(
       locale,
-      ['common', 'navigation', 'challenges',],
+      ['common', 'navigation', 'challenges'],
       nextI18nConfig,
-      ['en']
+      ['en'],
     )),
   },
 });

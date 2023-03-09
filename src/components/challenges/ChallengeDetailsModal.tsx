@@ -45,9 +45,7 @@ export const ChallengeDetailsModal = () => {
             <Button className="w-full" variant="inverse" onClick={handleSetOpen}>
               {t('actions.close')}
             </Button>
-            <Button className="w-full">
-              {t('actions.join')}
-            </Button>
+            <Button className="w-full">{t('actions.join')}</Button>
           </div>
         </div>
       </div>

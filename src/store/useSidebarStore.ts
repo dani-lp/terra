@@ -5,7 +5,7 @@ export type SidebarStore = {
   actions: {
     setSidebarOpen: (isOpen: boolean) => void;
   };
-}
+};
 
 const useSidebarStore = create<SidebarStore>((set) => ({
   sidebarOpen: false,

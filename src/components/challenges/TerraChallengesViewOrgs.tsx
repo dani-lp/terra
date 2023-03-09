@@ -2,7 +2,12 @@ import * as React from 'react';
 import { Button } from '@/components/common';
 import { SearchBar } from '@/components/common/form/SearchBar';
 import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
-import { ChallengeListEntry, type Challenge, ChallengesFilterGroup, NewChallengeSlideOver } from '@/components/challenges';
+import {
+  ChallengeListEntry,
+  type Challenge,
+  ChallengesFilterGroup,
+  NewChallengeSlideOver,
+} from '@/components/challenges';
 import {
   useChallengeSearch,
   useChallengeSearchActions,
@@ -13,8 +18,20 @@ import {
 const tempChallenges: Challenge[] = [
   { id: 1, name: 'Beach cleaning', players: 256, date: '2021-01-01', status: 'open' },
   { id: 2, name: 'Daily running', players: 2, date: '2021-08-02', status: 'ended' },
-  { id: 3, name: 'Use sustainable transporting means', players: 5918270, date: '2022-08-02', status: 'open' },
-  { id: 4, name: 'Cleaning litter inside campus', players: 270, date: '2022-08-02', status: 'open' },
+  {
+    id: 3,
+    name: 'Use sustainable transporting means',
+    players: 5918270,
+    date: '2022-08-02',
+    status: 'open',
+  },
+  {
+    id: 4,
+    name: 'Cleaning litter inside campus',
+    players: 270,
+    date: '2022-08-02',
+    status: 'open',
+  },
 ];
 
 const SmallFilterGroup = () => {
@@ -37,9 +54,8 @@ const SmallFilterGroup = () => {
       />
       {filtersOpen && <ChallengesFilterGroup className="w-full rounded-t-none" />}
     </>
-  )
+  );
 };
-
 
 export const TerraChallengesViewOrgs = () => {
   const [challenges, setChallenges] = React.useState<Challenge[]>(tempChallenges);
@@ -49,7 +65,9 @@ export const TerraChallengesViewOrgs = () => {
   const { setSearchString } = useChallengeSearchActions();
 
   const filteredChallenges = challenges
-    .filter((challenge) => !search ? challenges : challenge.name.toLowerCase().includes(search.toLowerCase()))
+    .filter((challenge) =>
+      !search ? challenges : challenge.name.toLowerCase().includes(search.toLowerCase()),
+    )
     .filter((challenge) => {
       switch (challengeStatus.id) {
         case 'open':
@@ -84,7 +102,9 @@ export const TerraChallengesViewOrgs = () => {
             <div className="min-w-[250px] xl:px-0">
               <div className="mt-2 mb-3 flex flex-row items-center justify-between gap-2 xl:hidden xl:flex-col xl:items-start">
                 <h1 className="text-2xl font-bold">Your challenges</h1>
-                <Button size='sm' className="xl:w-full">New</Button>
+                <Button size="sm" className="xl:w-full">
+                  New
+                </Button>
               </div>
               <div className="mb-2 flex flex-col items-center justify-between xl:hidden">
                 <SmallFilterGroup />
@@ -94,8 +114,13 @@ export const TerraChallengesViewOrgs = () => {
               </div>
             </div>
             <div className="w-full">
-              <ul role="list" className="divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow">
-                {filteredChallenges.map((challenge) => <ChallengeListEntry key={challenge.id} challenge={challenge} />)}
+              <ul
+                role="list"
+                className="divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow"
+              >
+                {filteredChallenges.map((challenge) => (
+                  <ChallengeListEntry key={challenge.id} challenge={challenge} />
+                ))}
               </ul>
             </div>
           </div>
@@ -104,5 +129,5 @@ export const TerraChallengesViewOrgs = () => {
 
       <ChallengeDetailsModal />
     </>
-  )
+  );
 };

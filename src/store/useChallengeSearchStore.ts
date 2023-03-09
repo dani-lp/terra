@@ -16,7 +16,7 @@ interface ChallengeSearchStore {
     setPlayerNumber: (playerNumber: number) => void;
     setStatus: (status: SelectOption) => void;
     setSearchString: (searchString: string) => void;
-  },
+  };
 }
 
 const useChallengeSearchStore = create<ChallengeSearchStore>((set) => ({
@@ -24,21 +24,20 @@ const useChallengeSearchStore = create<ChallengeSearchStore>((set) => ({
   status: statusOptions[0] as SelectOption,
   searchString: '',
   actions: {
-    clearFilters: () => set(() => ({
-      playerNumber: 0,
-      searchString: '',
-      status: statusOptions[0],
-    })),
-    setPlayerNumber: (playerNumber: number) =>
-      set(() => ({ playerNumber })),
-    setStatus: (status: SelectOption) =>
-      set(() => ({ status })),
-    setSearchString: (searchString: string) =>
-      set(() => ({ searchString })),
+    clearFilters: () =>
+      set(() => ({
+        playerNumber: 0,
+        searchString: '',
+        status: statusOptions[0],
+      })),
+    setPlayerNumber: (playerNumber: number) => set(() => ({ playerNumber })),
+    setStatus: (status: SelectOption) => set(() => ({ status })),
+    setSearchString: (searchString: string) => set(() => ({ searchString })),
   },
 }));
 
-export const useChallengeSearchPlayerNumber = () => useChallengeSearchStore((state) => state.playerNumber);
+export const useChallengeSearchPlayerNumber = () =>
+  useChallengeSearchStore((state) => state.playerNumber);
 export const useChallengeSearchStatus = () => useChallengeSearchStore((state) => state.status);
 export const useChallengeSearch = () => useChallengeSearchStore((state) => state.searchString);
 export const useChallengeSearchActions = () => useChallengeSearchStore((state) => state.actions);

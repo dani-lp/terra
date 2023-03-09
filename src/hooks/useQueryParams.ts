@@ -78,7 +78,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
         query: newQuery,
       },
       undefined,
-      { shallow }
+      { shallow },
     );
   };
 
@@ -90,7 +90,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
    */
   const setParam = (
     name: string,
-    value?: string | boolean | number | string[] | boolean[] | number[]
+    value?: string | boolean | number | string[] | boolean[] | number[],
   ) => {
     if (!value) {
       removeParam(name);
@@ -108,7 +108,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
         },
       },
       undefined,
-      { shallow }
+      { shallow },
     );
   };
 
@@ -126,7 +126,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
           pathname,
         },
         undefined,
-        { shallow }
+        { shallow },
       );
       return;
     }
@@ -144,7 +144,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
         query: newQuery,
       },
       undefined,
-      { shallow }
+      { shallow },
     );
   };
 
@@ -155,7 +155,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
    */
   const removeParam = (
     name: string,
-    value?: string | number | boolean | string[] | number[] | boolean[]
+    value?: string | number | boolean | string[] | number[] | boolean[],
   ) => {
     const { [name]: param, ...rest } = query;
 
@@ -167,9 +167,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
     if (value && Array.isArray(param) && !Array.isArray(value)) {
       newQuery = {
         ...rest,
-        [name]: param.filter(
-          (element) => element !== encodeURIComponent(value)
-        ),
+        [name]: param.filter((element) => element !== encodeURIComponent(value)),
       };
     } else {
       newQuery = { ...rest };
@@ -181,7 +179,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
         query: newQuery,
       },
       undefined,
-      { shallow }
+      { shallow },
     );
   };
 
@@ -204,9 +202,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
         // -> remove the value.
         newQuery = {
           ...rest,
-          [name]: param.filter(
-            (element) => element !== encodeURIComponent(value)
-          ),
+          [name]: param.filter((element) => element !== encodeURIComponent(value)),
         };
       } else {
         // There are multiple values for the same param and the value it's not there
@@ -229,7 +225,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
         query: newQuery,
       },
       undefined,
-      { shallow }
+      { shallow },
     );
   };
 
