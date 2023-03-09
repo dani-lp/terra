@@ -3,7 +3,7 @@ import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import type { NextPage } from 'next';
 import * as React from 'react';
-import { appWithTranslation } from 'next-i18next'
+import { appWithTranslation } from 'next-i18next';
 
 import { ToDevButton } from '@/components/dev';
 import { trpc } from '../utils/trpc';
@@ -28,7 +28,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   const layout = getLayout(
     <>
       <Component {...pageProps} />
-    </>
+    </>,
   );
 
   return (
