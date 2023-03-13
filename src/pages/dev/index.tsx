@@ -36,12 +36,8 @@ const Dev: NextPageWithLayout = () => {
   const roleMutation = trpc.dev.changeRole.useMutation({
     onSuccess: () => {
       window.location.reload();
-    }
+    },
   });
-
-  const handleRoleChange = () => {
-    roleMutation.mutate({ role: selectedRoleOption.id as Role }); 
-  };
 
   React.useEffect(() => {
     if (status === 'authenticated') {
@@ -53,6 +49,14 @@ const Dev: NextPageWithLayout = () => {
       );
     }
   }, [status, session?.user?.role]);
+  
+  const handleRoleChange = () => {
+    roleMutation.mutate({ role: selectedRoleOption.id as Role });
+  };
+
+  if (process.env.NODE_ENV !== 'development') {
+    return <div>Not available</div>;
+  }
 
   return (
     <>

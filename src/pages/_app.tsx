@@ -34,7 +34,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session} refetchOnWindowFocus>
       {layout}
-      <ToDevButton />
+      {process.env.NODE_ENV === 'development' && <ToDevButton />}
     </SessionProvider>
   );
 };

@@ -79,7 +79,7 @@ const SidebarNavigation = () => {
   const isLoading = status === 'loading';
 
   const filteredNavigationItems = navigationItems.filter((item) => {
-    if (item.to === urls.DEVELOPMENT) return true;  // TODO remove when development is done, or based on environment
+    if (item.to === urls.DEVELOPMENT && process.env.NODE_ENV === 'development') return true;  // TODO remove when development is done, or based on environment
     switch (session?.user?.role) {
       case 'ADMIN':
         return Object.values(adminUrls).some((url) => url === item.to);

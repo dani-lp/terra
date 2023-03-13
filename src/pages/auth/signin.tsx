@@ -7,6 +7,7 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 
 import googleLogo from '@/../public/google-logo.png';
 import Head from 'next/head';
+import Link from 'next/link';
 
 const inter = Inter();
 
@@ -22,7 +23,9 @@ const SignIn: NextPage = () => {
         className={classNames('flex w-full items-center justify-center pt-16', inter.className)}
       >
         <div className="flex w-full max-w-xs flex-col items-center justify-center">
-          <Image src="/logo.png" alt="logo" width={60} height={60} className="mb-4" />
+          <Link href="/">
+            <Image src="/logo.png" alt="logo" width={60} height={60} className="mb-4" />
+          </Link>
           <h1 className="mb-2 text-4xl font-bold">Welcome back!</h1>
           <span className="mb-2 text-neutral-500">Enter you email to sign in to your account</span>
           <span className="mb-4 text-neutral-400">Your current status is: {status}</span>
