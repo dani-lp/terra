@@ -27,7 +27,8 @@
     ],
     "spaced-comment": "warn",
     "camelcase": "warn",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "@typescript-eslint/no-floating-promises": "error"
   },
   "settings": {
     "tailwindcss": {
