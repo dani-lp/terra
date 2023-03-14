@@ -58,7 +58,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
    * @param name The name of the param.
    * @param value The value of the param.
    */
-  const addParam = (name: string, value: string | boolean | number) => {
+  const addParam = async (name: string, value: string | boolean | number) => {
     const { [name]: param, ...rest } = query;
 
     let newQuery;
@@ -72,7 +72,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
       newQuery = { ...rest, [name]: [param, encodeURIComponent(value)] };
     }
 
-    reload(
+    await reload(
       {
         pathname,
         query: newQuery,
@@ -88,16 +88,16 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
    * @param name The name of the param.
    * @param value The value of the param, it can be single or multiple values.
    */
-  const setParam = (
+  const setParam = async (
     name: string,
     value?: string | boolean | number | string[] | boolean[] | number[],
   ) => {
     if (!value) {
-      removeParam(name);
+      await removeParam(name);
       return;
     }
     const { [name]: param, ...rest } = query;
-    reload(
+    await reload(
       {
         pathname,
         query: {
@@ -118,10 +118,10 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
    * from the URL.
    * @param params one or more params to remove.
    */
-  const clearParams = (...params: string[]) => {
+  const clearParams = async (...params: string[]) => {
     // Clear all params
     if (!params.length) {
-      reload(
+      await reload(
         {
           pathname,
         },
@@ -138,7 +138,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
       return acc;
     }, {} as ParsedUrlQuery);
 
-    reload(
+    await reload(
       {
         pathname,
         query: newQuery,
@@ -153,7 +153,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
    * @param name The name of the param.
    * @param value The value of the param.
    */
-  const removeParam = (
+  const removeParam = async (
     name: string,
     value?: string | number | boolean | string[] | number[] | boolean[],
   ) => {
@@ -173,7 +173,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
       newQuery = { ...rest };
     }
 
-    reload(
+    await reload(
       {
         pathname,
         query: newQuery,
@@ -189,7 +189,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
    * @param name The name of the param.
    * @param value The value of the param.
    */
-  const toggleParam = (name: string, value: string | boolean | number) => {
+  const toggleParam = async (name: string, value: string | boolean | number) => {
     const { [name]: param, ...rest } = query;
 
     let newQuery;
@@ -219,7 +219,7 @@ export const useQueryParams = (options?: UseRouterParamsOptions) => {
       }
     }
 
-    reload(
+    await reload(
       {
         pathname,
         query: newQuery,

@@ -58,7 +58,6 @@ export const SettingsModal = ({ open, setOpen }: SettingsModalProps) => {
   React.useEffect(() => {
     if (data && !isLoading && !isError) {
       load(data);
-      console.log('Loaded data');
     } else if (isError) {
       console.error(error);
     }
