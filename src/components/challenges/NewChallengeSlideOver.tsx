@@ -12,9 +12,9 @@ import { trpc } from '@/utils/trpc';
 export const NewChallengeSlideOver = () => {
   const utils = trpc.useContext();
   const newChallengeMutation = trpc.challenges.create.useMutation({
-    onSuccess: () => {
-      utils.challenges.available.invalidate();
-      utils.challenges.created.invalidate();
+    onSuccess: async () => {
+      await utils.challenges.available.invalidate();
+      await utils.challenges.created.invalidate();
     },
   });
 
