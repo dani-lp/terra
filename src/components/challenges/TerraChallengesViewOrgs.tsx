@@ -1,76 +1,15 @@
 import * as React from 'react';
 import { Button } from '@/components/common';
-import { SearchBar } from '@/components/common/form/SearchBar';
 import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
-import {
-  ChallengeListEntry,
-  ChallengesFilterGroup,
-  NewChallengeSlideOver,
-} from '@/components/challenges';
-import {
-  useChallengeSearch,
-  useChallengeSearchActions,
-  useChallengeSearchPlayerNumber,
-  useChallengeSearchStatus,
-} from '@/store/useChallengeSearchStore';
-import { trpc } from '@/utils/trpc';
-import type { DisplayChallenge } from '@/types';
+import { ChallengeListEntry, ChallengesFilterGroup } from '@/components/challenges';
 import { ChallengeRowSkeleton } from '@/components/challenges/ChallengeRowSkeleton';
-
-const SmallFilterGroup = () => {
-  const search = useChallengeSearch();
-  const { setSearchString } = useChallengeSearchActions();
-  const [filtersOpen, setFiltersOpen] = React.useState(false);
-
-  return (
-    <>
-      <SearchBar
-        value={search}
-        onChange={(e) => setSearchString(e.currentTarget.value)}
-        placeholder="Search your challenges..." // TODO i18n
-        className="mb-0"
-        withButton
-        squaredBottom={filtersOpen}
-        buttonText="Filters"
-        buttonVariant={filtersOpen ? 'primary' : 'inverse'}
-        onClick={() => setFiltersOpen(!filtersOpen)}
-      />
-      {filtersOpen && <ChallengesFilterGroup className="w-full rounded-t-none" />}
-    </>
-  );
-};
+import { SmallFilterGroup } from '@/components/challenges/SmallFilterGroup';
+import { ChallengesViewTopBar } from '@/components/challenges/ChallengesViewTopBar';
+import { useChallenges } from '@/components/challenges/hooks/useChallenges';
+import { trpc } from '@/utils/trpc';
 
 export const TerraChallengesViewOrgs = () => {
-  const { data, isLoading, isError, error } = trpc.challenges.all.useQuery();
-  const search = useChallengeSearch();
-  const playerNumber = useChallengeSearchPlayerNumber();
-  const challengeStatus = useChallengeSearchStatus();
-  const { setSearchString } = useChallengeSearchActions();
-
-  const challenges: DisplayChallenge[] =
-    data?.map((challenge) => ({
-      ...challenge,
-      startDate: challenge.startDate.toLocaleDateString(),
-      endDate: challenge.endDate.toLocaleDateString(),
-      players: Math.random() * 10_000,
-      status: Math.random() > 0.5 ? 'open' : 'ended',
-    })) ?? [];
-
-  const filteredChallenges = challenges
-    .filter((challenge) =>
-      !search ? challenges : challenge.name.toLowerCase().includes(search.toLowerCase()),
-    )
-    .filter((challenge) => {
-      switch (challengeStatus.id) {
-        case 'open':
-          return challenge.status === 'open';
-        case 'ended':
-          return challenge.status === 'ended';
-        default:
-          return true;
-      }
-    })
-    .filter((challenge) => challenge.players > playerNumber);
+  const { filteredChallenges, isLoading, isError, error } = useChallenges(trpc.challenges.created);
 
   if (error) {
     console.error(error);
@@ -79,18 +18,7 @@ export const TerraChallengesViewOrgs = () => {
 
   return (
     <>
-      {/* Top bar */}
-      <div className="sticky top-0 z-10 hidden h-16 w-full justify-center bg-white px-4 shadow xl:flex">
-        <div className="flex h-full w-full max-w-6xl items-center justify-between gap-2">
-          <SearchBar
-            value={search}
-            onChange={(e) => setSearchString(e.currentTarget.value)}
-            placeholder="Search your challenges..." // TODO i18n
-            className="mb-0 h-10"
-          />
-          <NewChallengeSlideOver />
-        </div>
-      </div>
+      <ChallengesViewTopBar showNewChallengeButton />
 
       {/* Main content */}
       <div className="flex items-center justify-center px-4">

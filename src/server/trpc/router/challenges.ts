@@ -1,12 +1,91 @@
-import { organizationProcedure, protectedProcedure, router } from '@/server/trpc/trpc';
+import { organizationProcedure, playerProcedure, router } from '@/server/trpc/trpc';
+import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 export const challengesRouter = router({
-  all: protectedProcedure.query(async ({ ctx }) => {
-    // TODO filter by participants, use DisplayChallenge as return
-    const challenges = await ctx.prisma.challenge.findMany();
-    return challenges; 
+  // queries
+
+  /**
+   * Get a organization's (own) challenges, only available for logged in users.
+   */
+  created: organizationProcedure.query(async ({ ctx }) => {
+    const organization = await ctx.prisma.userDetails.findUnique({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        organizationData: true,
+      },
+    });
+
+    const challenges = await ctx.prisma.challenge.findMany({
+      where: {
+        organizationDataId: organization?.organizationData?.id,
+      },
+    });
+
+    return challenges;
   }),
+
+  /**
+   * Get challenges that a player is enrolled in, only available for player users.
+   */
+  enrolled: playerProcedure.query(async ({ ctx }) => {
+    const player = await ctx.prisma.userDetails.findUnique({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        playerData: true,
+      },
+    });
+
+    const enrolledChallenges = await ctx.prisma.challenge.findMany({
+      where: {
+        enrolledPlayers: {
+          some: {
+            id: player?.playerData?.id,
+          },
+        },
+      },
+    });
+
+    return enrolledChallenges;
+  }),
+
+  /**
+   * Get challenges that a player is not enrolled in yet, only available for player users.
+   */
+  available: playerProcedure.query(async ({ ctx }) => {
+    const player = await ctx.prisma.userDetails.findUnique({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        playerData: true,
+      },
+    });
+
+    const availableChallenges = await ctx.prisma.challenge.findMany({
+      where: {
+        enrolledPlayers: {
+          every: {
+            id: {
+              not: player?.playerData?.id,
+            },
+          },
+        },
+      },
+    });
+
+    return availableChallenges;
+  }),
+
+  // mutations
+
+  /**
+   * Create a new challenge, only available for organization users.
+   */
   create: organizationProcedure
     .input(
       z.object({
@@ -16,7 +95,7 @@ export const challengesRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { name, description } = input;
-       
+
       const organizationUserDetails = await ctx.prisma.userDetails.findUnique({
         where: {
           userId: ctx.session.user.id,
@@ -35,7 +114,7 @@ export const challengesRouter = router({
           name: '',
           image: '',
           website: '',
-          country: '', 
+          country: '',
           userDetails: {
             connect: {
               id: organizationUserDetails?.id,
@@ -55,5 +134,78 @@ export const challengesRouter = router({
       });
 
       return challenge;
+    }),
+
+  /**
+   * Enroll a player in a challenge, only available for player users.
+   */
+  enroll: playerProcedure
+    .input(
+      z.object({
+        challengeId: z.string(),
+        playerId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { challengeId, playerId } = input;
+
+      const challenge = await ctx.prisma.challenge.findUnique({
+        where: {
+          id: challengeId,
+        },
+        include: {
+          enrolledPlayers: true,
+        },
+      });
+
+      if (!challenge) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: `Challenge with id '${challengeId} not found'`,
+        });
+      }
+
+      const isPlayerEnrolled = challenge?.enrolledPlayers.some((player) => player.id === playerId);
+
+      if (isPlayerEnrolled) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          cause: `Player with id '${playerId} is already enrolled in challenge with id '${challengeId}'`,
+        });
+      }
+
+      const player = await ctx.prisma.userDetails.findUnique({
+        where: {
+          userId: playerId,
+        },
+        select: {
+          playerData: true,
+        },
+      });
+
+      if (!player) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: `Player with id '${playerId} not found'`,
+        });
+      }
+
+      const updatedChallenge = await ctx.prisma.challenge.update({
+        where: {
+          id: challengeId,
+        },
+        data: {
+          enrolledPlayers: {
+            connect: {
+              id: playerId,
+            },
+          },
+        },
+        include: {
+          enrolledPlayers: true,
+        },
+      });
+
+      return updatedChallenge;
     }),
 });
