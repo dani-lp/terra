@@ -14,8 +14,8 @@ export const ChallengeDetailsModal = () => {
   const { removeParam } = useQueryParams();
   const selectedChallengeId = router.query[QUERY_PARAM_CHALLENGE];
 
-  const handleSetOpen = () => {
-    removeParam(QUERY_PARAM_CHALLENGE);
+  const handleSetOpen = async () => {
+    await removeParam(QUERY_PARAM_CHALLENGE);
   };
 
   return (

@@ -12,9 +12,9 @@ type Props = {
 export const ChallengeListEntry = ({ challenge }: Props) => {
   const { addParam } = useQueryParams();
 
-  const handleOpenModal = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleOpenModal = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    addParam(QUERY_PARAM_CHALLENGE, challenge.id.toString());
+    await addParam(QUERY_PARAM_CHALLENGE, challenge.id.toString());
   };
 
   return (
