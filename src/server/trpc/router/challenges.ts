@@ -143,11 +143,11 @@ export const challengesRouter = router({
     .input(
       z.object({
         challengeId: z.string(),
-        playerId: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { challengeId, playerId } = input;
+      const { challengeId } = input;
+      const playerId = ctx.session.user.id;
 
       const challenge = await ctx.prisma.challenge.findUnique({
         where: {
@@ -173,17 +173,33 @@ export const challengesRouter = router({
           cause: `Player with id '${playerId} is already enrolled in challenge with id '${challengeId}'`,
         });
       }
-
-      const player = await ctx.prisma.userDetails.findUnique({
+     
+      const userDetails = await ctx.prisma.userDetails.findUnique({
         where: {
-          userId: playerId,
+          userId: ctx.session.user.id,
         },
         select: {
-          playerData: true,
+          id: true,
+        },
+      });
+     
+      if (!userDetails) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: `User details with id '${playerId} not found'`,
+        }); 
+      }
+
+      const playerData = await ctx.prisma.playerData.findUnique({
+        where: {
+          userDetailsId: userDetails.id,
+        },
+        select: {
+          id: true,
         },
       });
 
-      if (!player) {
+      if (!playerData) {
         throw new TRPCError({
           code: 'NOT_FOUND',
           cause: `Player with id '${playerId} not found'`,
@@ -197,12 +213,9 @@ export const challengesRouter = router({
         data: {
           enrolledPlayers: {
             connect: {
-              id: playerId,
+              id: playerData.id,
             },
           },
-        },
-        include: {
-          enrolledPlayers: true,
         },
       });
 

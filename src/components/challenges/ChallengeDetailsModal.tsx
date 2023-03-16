@@ -8,16 +8,36 @@ import { ChallengeStats } from './ChallengeStats';
 import { useTranslation } from 'react-i18next';
 import { useQueryParams } from '@/hooks/useQueryParams';
 import { useSession } from 'next-auth/react';
+import { trpc } from '@/utils/trpc';
 
 export const ChallengeDetailsModal = () => {
   const { t } = useTranslation();
   const { data: session } = useSession();
+  const utils = trpc.useContext();
+  const challengeEnrollment = trpc.challenges.enroll.useMutation({
+    onSuccess: async () => {
+      await Promise.all([
+        utils.challenges.available.invalidate(),
+        utils.challenges.enrolled.invalidate(),
+      ]);
+      await handleSetOpen();
+    },
+  });
   const router = useRouter();
   const { removeParam } = useQueryParams();
   const selectedChallengeId = router.query[QUERY_PARAM_CHALLENGE];
 
   const handleSetOpen = async () => {
     await removeParam(QUERY_PARAM_CHALLENGE);
+  };
+
+  const handleAccept = async () => {
+    if (!selectedChallengeId || Array.isArray(selectedChallengeId)) return;
+    if (session?.user?.role === 'PLAYER') {
+      challengeEnrollment.mutate({ challengeId: selectedChallengeId });
+    } else if (session?.user?.role === 'ORGANIZATION') {
+      await router.push(`/challenges/${selectedChallengeId}`);
+    }
   };
 
   const acceptText =
@@ -50,7 +70,13 @@ export const ChallengeDetailsModal = () => {
             <Button className="w-full" variant="inverse" onClick={handleSetOpen}>
               {t('actions.close')}
             </Button>
-            <Button className="w-full">{acceptText}</Button>
+            <Button
+              onClick={handleAccept}
+              disabled={!selectedChallengeId || challengeEnrollment.isLoading}
+              className="w-full"
+            >
+              {acceptText}
+            </Button>
           </div>
         </div>
       </div>
