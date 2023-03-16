@@ -8,7 +8,8 @@
   "actions": {
     "close": "Close",
     "edit": "Edit",
-    "join": "Join in"
+    "join": "Join in",
+    "viewDetails": "View details"
   },
   "settings": {
     "descriptions": {

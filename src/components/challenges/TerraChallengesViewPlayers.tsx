@@ -8,23 +8,37 @@ import { SmallFilterGroup } from '@/components/challenges/SmallFilterGroup';
 import { ChallengesViewTopBar } from '@/components/challenges/ChallengesViewTopBar';
 import { useChallenges } from '@/components/challenges/hooks/useChallenges';
 import { trpc } from '@/utils/trpc';
+import { useQueryParams } from '@/hooks/useQueryParams';
+import { QUERY_PARAM_CHALLENGES_TAB } from '@/const/queryParams';
 
 // TODO translations
 const tabs = [
-  { id: 'available-tab', label: 'Available challenges', count: 235 },
-  { id: 'active-tab', label: 'Active challenges', count: 12 },
+  { id: 'available', label: 'Available challenges', count: 235 },
+  { id: 'active', label: 'Active challenges', count: 12 },
 ] as const;
 
 export const TerraChallengesViewPlayers = () => {
-  const [activeTab, setActiveTab] = React.useState<typeof tabs[number]['id']>(tabs[0].id);
+  const { getParamValue, setParam } = useQueryParams();
+  const activeTab = getParamValue(QUERY_PARAM_CHALLENGES_TAB) ?? 'available';
   const { filteredChallenges, isLoading, isError, error } = useChallenges(
-    trpc.challenges.available,
+    activeTab === 'active' ? trpc.challenges.enrolled : trpc.challenges.available,
   );
 
   if (error) {
     console.error(error.message);
     throw new Error(error.message);
   }
+ 
+  const handleTabChange = async (tabId: typeof tabs[number]['id']) => {
+    if (tabId === 'available') {
+      await setParam(QUERY_PARAM_CHALLENGES_TAB, 'available'); 
+    } else {
+      await setParam(QUERY_PARAM_CHALLENGES_TAB, 'active'); 
+    }
+  };
+
+  const showEmptyState = !isLoading && !isError && filteredChallenges.length === 0;
+  const showChallenges = !isLoading && !isError && filteredChallenges.length > 0;
 
   return (
     <>
@@ -45,7 +59,7 @@ export const TerraChallengesViewPlayers = () => {
                         : 'border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700',
                       'flex w-full justify-center whitespace-nowrap border-b-2 py-4 px-1 text-sm font-medium',
                     )}
-                    onClick={() => setActiveTab(tab.id)}
+                    onClick={() => handleTabChange(tab.id)}
                     aria-current={activeTab === tab.id ? 'page' : undefined}
                   >
                     {tab.label}
@@ -76,7 +90,7 @@ export const TerraChallengesViewPlayers = () => {
                       : 'text-gray-600 hover:text-gray-800',
                     'rounded-md px-3 py-2 text-sm font-medium',
                   )}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => handleTabChange(tab.id)}
                   aria-current={activeTab === tab.id ? 'page' : undefined}
                 >
                   {tab.label}
@@ -103,19 +117,28 @@ export const TerraChallengesViewPlayers = () => {
                 <ChallengesFilterGroup showTitle />
               </div>
             </div>
-            <div className="w-full">
-              <ul
-                role="list"
-                className="divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow"
-              >
-                {isLoading && [...Array(3)].map((_, i) => <ChallengeRowSkeleton key={i} />)}
-                {!isLoading &&
-                  !isError &&
-                  filteredChallenges.map((challenge) => (
-                    <ChallengeListEntry key={challenge.id} challenge={challenge} />
-                  ))}
-              </ul>
-            </div>
+            {!showEmptyState && (
+              <div className="w-full">
+                <ul
+                  role="list"
+                  className="divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow"
+                >
+                  {isLoading && [...Array(3)].map((_, i) => <ChallengeRowSkeleton key={i} />)}
+                  {showChallenges &&
+                    filteredChallenges.map((challenge) => (
+                      <ChallengeListEntry key={challenge.id} challenge={challenge} />
+                    ))}
+                </ul>
+              </div>
+            )}
+            {showEmptyState && (
+              <div className="flex h-96 w-full flex-col items-center justify-center">
+                <p className="text-center text-neutral-500">
+                  {/* TODO remove placeholder */}
+                  No challenges found
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -7,9 +7,11 @@ import Image from 'next/image';
 import { ChallengeStats } from './ChallengeStats';
 import { useTranslation } from 'react-i18next';
 import { useQueryParams } from '@/hooks/useQueryParams';
+import { useSession } from 'next-auth/react';
 
 export const ChallengeDetailsModal = () => {
   const { t } = useTranslation();
+  const { data: session } = useSession();
   const router = useRouter();
   const { removeParam } = useQueryParams();
   const selectedChallengeId = router.query[QUERY_PARAM_CHALLENGE];
@@ -17,6 +19,9 @@ export const ChallengeDetailsModal = () => {
   const handleSetOpen = async () => {
     await removeParam(QUERY_PARAM_CHALLENGE);
   };
+
+  const acceptText =
+    session?.user?.role === 'PLAYER' ? t('actions.join') : t('actions.viewDetails');
 
   return (
     <Modal
@@ -45,7 +50,7 @@ export const ChallengeDetailsModal = () => {
             <Button className="w-full" variant="inverse" onClick={handleSetOpen}>
               {t('actions.close')}
             </Button>
-            <Button className="w-full">{t('actions.join')}</Button>
+            <Button className="w-full">{acceptText}</Button>
           </div>
         </div>
       </div>
