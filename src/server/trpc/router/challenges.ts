@@ -173,7 +173,7 @@ export const challengesRouter = router({
           cause: `Player with id '${playerId} is already enrolled in challenge with id '${challengeId}'`,
         });
       }
-     
+
       const userDetails = await ctx.prisma.userDetails.findUnique({
         where: {
           userId: ctx.session.user.id,
@@ -182,12 +182,12 @@ export const challengesRouter = router({
           id: true,
         },
       });
-     
+
       if (!userDetails) {
         throw new TRPCError({
           code: 'NOT_FOUND',
           cause: `User details with id '${playerId} not found'`,
-        }); 
+        });
       }
 
       const playerData = await ctx.prisma.playerData.findUnique({
