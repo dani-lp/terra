@@ -6,7 +6,7 @@ import {
 import type { DisplayChallenge } from '@/types';
 import type { trpc } from '@/utils/trpc';
 
-type QueryType = 
+type QueryType =
   | typeof trpc.challenges.created
   | typeof trpc.challenges.enrolled
   | typeof trpc.challenges.available;
@@ -23,7 +23,7 @@ export const useChallenges = (query: QueryType) => {
       ...challenge,
       startDate: challenge.startDate.toLocaleDateString(),
       endDate: challenge.endDate.toLocaleDateString(),
-      players: Math.random() * 10_000,
+      players: challenge.enrolledPlayersCount,
       status: Math.random() > 0.5 ? 'open' : 'ended',
     })) ?? [];
 
@@ -41,7 +41,7 @@ export const useChallenges = (query: QueryType) => {
           return true;
       }
     })
-    .filter((challenge) => challenge.players > playerNumber);
+    .filter((challenge) => (playerNumber === '' ? true : challenge.players >= playerNumber));
 
   return { filteredChallenges, isLoading, isError, error };
 };

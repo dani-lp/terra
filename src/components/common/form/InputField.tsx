@@ -21,6 +21,7 @@ export const InputField = (
     required = false,
     disabled = false,
     onChange,
+    onBlur, 
     className,
     wrapperClassName,
     placeholder = '',
@@ -40,6 +41,7 @@ export const InputField = (
         placeholder={placeholder}
         onChange={onChange}
         autoFocus={autoFocus}
+        onBlur={onBlur}
       />
       {children}
     </FieldWrapper>
