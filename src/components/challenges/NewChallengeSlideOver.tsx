@@ -13,7 +13,8 @@ export const NewChallengeSlideOver = () => {
   const utils = trpc.useContext();
   const newChallengeMutation = trpc.challenges.create.useMutation({
     onSuccess: async () => {
-      await utils.challenges.all.invalidate();
+      await utils.challenges.available.invalidate();
+      await utils.challenges.created.invalidate();
     },
   });
 

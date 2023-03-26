@@ -8,29 +8,29 @@ export const statusOptions: Readonly<SelectOption[]> = [
 ] as const;
 
 interface ChallengeSearchStore {
-  playerNumber: number;
+  playerNumber: number | '';
   status: SelectOption;
   searchString: string;
   actions: {
     clearFilters: () => void;
-    setPlayerNumber: (playerNumber: number) => void;
+    setPlayerNumber: (playerNumber: number | '') => void;
     setStatus: (status: SelectOption) => void;
     setSearchString: (searchString: string) => void;
   };
 }
 
 const useChallengeSearchStore = create<ChallengeSearchStore>((set) => ({
-  playerNumber: 0,
+  playerNumber: '',
   status: statusOptions[0] as SelectOption,
   searchString: '',
   actions: {
     clearFilters: () =>
       set(() => ({
-        playerNumber: 0,
+        playerNumber: '',
         searchString: '',
         status: statusOptions[0],
       })),
-    setPlayerNumber: (playerNumber: number) => set(() => ({ playerNumber })),
+    setPlayerNumber: (playerNumber: number | '') => set(() => ({ playerNumber })),
     setStatus: (status: SelectOption) => set(() => ({ status })),
     setSearchString: (searchString: string) => set(() => ({ searchString })),
   },
