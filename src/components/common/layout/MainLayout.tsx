@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Inter } from '@next/font/google';
+import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';

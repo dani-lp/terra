@@ -1,6 +1,6 @@
 import { classNames } from '@/const';
 import type { NextPage } from 'next';
-import { Inter } from '@next/font/google';
+import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import { Button, InputField } from '@/components/common/';
 import { signIn, signOut, useSession } from 'next-auth/react';

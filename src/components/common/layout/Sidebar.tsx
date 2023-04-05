@@ -11,7 +11,7 @@ import {
   RocketLaunchIcon,
   UserIcon
 } from '@heroicons/react/24/outline';
-import { Montserrat } from '@next/font/google';
+import { Montserrat } from 'next/font/google';
 import { classNames } from '@/const';
 import { useTranslation } from 'next-i18next';
 import { useSession } from 'next-auth/react';
