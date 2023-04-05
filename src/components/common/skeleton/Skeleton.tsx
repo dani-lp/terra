@@ -1,16 +1,11 @@
 import { classNames } from '@/const';
 
 type Props = {
-  whiteBackground?: boolean;
-  className?: string;
+  className: `h-${number} w-${number}`;
 };
 
-export const Skeleton = ({ whiteBackground = false, className }: Props) => {
+export const Skeleton = ({ className }: Props) => {
   return (
-    <div className={classNames(
-      'animate-pulse rounded-lg w-full h-full',
-      whiteBackground ? 'bg-neutral-100' : 'bg-neutral-200',
-      className
-    )} />
+    <div className={classNames('animate-pulse rounded-lg bg-neutral-200', className)} />
   );
 };

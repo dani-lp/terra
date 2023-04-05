@@ -14,13 +14,16 @@ const Template: ComponentStory<typeof Skeleton> = (args) => {
 }
 
 export const Default = Template.bind({});
+Default.args = {
+  className: 'h-10 w-30',
+};
 
 export const Wide = Template.bind({});
 Wide.args = {
-  className: 'w-96',
+  className: 'h-40 w-96',
 };
 
 export const Square = Template.bind({});
 Square.args = {
-  className: 'w-40 h-40',
+  className: 'h-40 w-40',
 };
