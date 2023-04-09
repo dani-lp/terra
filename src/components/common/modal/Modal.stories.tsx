@@ -21,8 +21,11 @@ const Template: ComponentStory<typeof Modal> = (args) => {
 }
 
 export const Empty = Template.bind({});
+Empty.args = {
+  className: 'h-44 w-96',
+};
 
 export const FixedHeight = Template.bind({});
 FixedHeight.args = {
-  className: 'h-96',
+  className: 'h-96 w-96',
 };
