@@ -18,8 +18,8 @@
       "notificationsDescription": ""
     },
     "tabs": {
-      "profile" : "Profile",
-      "account" : "Account",
+      "profile": "Profile",
+      "account": "Account",
       "notifications": "Notifications"
     }
   },

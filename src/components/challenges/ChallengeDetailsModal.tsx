@@ -5,7 +5,7 @@ import { QUERY_PARAM_CHALLENGE } from '@/const/queryParams';
 import { Button, Modal } from '../common';
 import Image from 'next/image';
 import { ChallengeStats } from './ChallengeStats';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { useQueryParams } from '@/hooks/useQueryParams';
 import { useSession } from 'next-auth/react';
 import { trpc } from '@/utils/trpc';

@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import Image from 'next/image';
 import { Dialog, Transition } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import { Sidebar } from './Sidebar';
 import { classNames } from '@/const';
@@ -40,8 +40,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
               className="-mr-3 inline-flex h-12 w-12 items-center justify-center rounded-lg text-neutral-500 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-neutral-500"
               onClick={() => setSidebarOpen(true)}
             >
-              {/* TODO this causes an hydration error in the client for some reason? */}
-              {/* <span className="sr-only">{t('a11y.openSidebar')}</span> */}
+              <span className="sr-only">{t('a11y.openSidebar')}</span>
               <Bars3Icon className="h-6 w-6" aria-hidden="true" />
             </button>
           </div>

@@ -5,7 +5,7 @@ import { LinkIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 
 import { SlideOver } from '../common/layout/SlideOver';
 import { Button } from '../common';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { trpc } from '@/utils/trpc';
 
 

@@ -1,6 +1,6 @@
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { InputField, TextareaField } from '@/components/common';
 import { OrgUsernameField } from './components/OrgUsernameField';
 

@@ -1,10 +1,10 @@
-import { type AppType, type AppProps } from 'next/app';
+import type { NextPage } from 'next';
 import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
-import type { NextPage } from 'next';
+import { appWithTranslation } from 'next-i18next';
+import { type AppProps, type AppType } from 'next/app';
 import Head from 'next/head';
 import * as React from 'react';
-import { appWithTranslation } from 'next-i18next';
 
 import { ToDevButton } from '@/components/dev';
 import { trpc } from '../utils/trpc';
