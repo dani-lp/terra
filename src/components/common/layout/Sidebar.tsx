@@ -1,7 +1,6 @@
-import * as React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { classNames } from '@/const';
+import { adminUrls, orgUrls, playerUrls, urls } from '@/const/urls';
+import { useSidebarActions } from '@/store/useSidebarStore';
 import {
   BugAntIcon,
   BuildingOffice2Icon,
@@ -9,16 +8,17 @@ import {
   HomeIcon,
   PaperClipIcon,
   RocketLaunchIcon,
-  UserIcon
+  UserIcon,
 } from '@heroicons/react/24/outline';
-import { Montserrat } from 'next/font/google';
-import { classNames } from '@/const';
-import { useTranslation } from 'next-i18next';
 import { useSession } from 'next-auth/react';
-import { SettingsModal } from './settings/SettingsModal';
-import { useSidebarActions } from '@/store/useSidebarStore';
-import { playerUrls, orgUrls, adminUrls, urls } from '@/const/urls';
+import { useTranslation } from 'next-i18next';
+import { Montserrat } from 'next/font/google';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import * as React from 'react';
 import { Skeleton } from '../skeleton';
+import { SettingsModal } from './settings/SettingsModal';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -51,8 +51,8 @@ const NavigationItem = ({ item, active }: NavigationItemProps) => {
       href={item.to}
       key={item.key}
       className={classNames(
-        'flex items-center justify-between gap-2 px-3 py-2 rounded-lg transition-colors duration-200 group',
-        active ? 'bg-black text-white' : 'bg-white hover:bg-neutral-100 text-black'
+        'group flex items-center justify-between gap-2 rounded-lg px-3 py-2 transition-colors duration-200',
+        active ? 'bg-black text-white' : 'bg-white text-black hover:bg-neutral-100',
       )}
       onClick={() => setSidebarOpen(false)}
     >
@@ -61,10 +61,12 @@ const NavigationItem = ({ item, active }: NavigationItemProps) => {
         {t(`sidebar.items.${item.key}`)}
       </div>
       {item.number !== undefined && (
-        <div className={classNames(
-          'text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200',
-          active ? 'bg-neutral-700' : 'bg-neutral-200 group-hover:bg-neutral-300'
-        )}>
+        <div
+          className={classNames(
+            'rounded-full py-1 px-3 text-xs font-bold transition-colors duration-200',
+            active ? 'bg-neutral-700' : 'bg-neutral-200 group-hover:bg-neutral-300',
+          )}
+        >
           {item.number}
         </div>
       )}
@@ -79,7 +81,7 @@ const SidebarNavigation = () => {
   const isLoading = status === 'loading';
 
   const filteredNavigationItems = navigationItems.filter((item) => {
-    if (item.to === urls.DEVELOPMENT && process.env.NODE_ENV === 'development') return true;  // TODO remove when development is done, or based on environment
+    if (item.to === urls.DEVELOPMENT && process.env.NODE_ENV === 'development') return true; // TODO remove when development is done, or based on environment
     switch (session?.user?.role) {
       case 'ADMIN':
         return Object.values(adminUrls).some((url) => url === item.to);
@@ -102,13 +104,10 @@ const SidebarNavigation = () => {
           <Skeleton className="h-10 w-64" />
         </>
       )}
-      {!isLoading && filteredNavigationItems.map((item) => (
-        <NavigationItem
-          key={item.key}
-          item={item}
-          active={router.pathname === item.to}
-        />
-      ))}
+      {!isLoading &&
+        filteredNavigationItems.map((item) => (
+          <NavigationItem key={item.key} item={item} active={router.pathname === item.to} />
+        ))}
     </nav>
   );
 };
@@ -118,9 +117,7 @@ const Logo = () => {
     <Link href="/">
       <div className="flex items-center justify-center gap-6 px-2 py-4">
         <Image src="/logo.png" alt="logo" width={50} height={50} />
-        <h1 className={classNames('text-5xl font-bold uppercase', montserrat.className)}>
-          Terra
-        </h1>
+        <h1 className={classNames('text-5xl font-bold uppercase', montserrat.className)}>Terra</h1>
       </div>
     </Link>
   );
@@ -146,9 +143,7 @@ export const Sidebar = () => {
               <div className="flex items-center gap-2">
                 <div className="overflow-hidden rounded-xl border border-neutral-400 p-0.5">
                   {isLoading ? (
-                    <Skeleton
-                      className="h-[38px] w-[38px]"
-                    />
+                    <Skeleton className="h-[38px] w-[38px]" />
                   ) : (
                     <Image
                       src={session?.user?.image ?? '/logo.png'}
@@ -162,18 +157,21 @@ export const Sidebar = () => {
                 <div className="flex flex-col items-start justify-center text-sm">
                   <span className="font-bold">
                     {isLoading ? (
-                      <Skeleton className="mb-2 h-3 w-28" />
-                    ) : session?.user?.name ?? 'John Doe'}
-
+                      <div className="mb-2">
+                        <Skeleton className="h-3 w-28" />
+                      </div>
+                    ) : (
+                      session?.user?.name ?? 'John Doe'
+                    )}
                   </span>
                   <span className="text-neutral-700">
                     {isLoading ? (
                       <Skeleton className="h-3 w-24" />
-                    ) : session?.user?.role
-                      ? t(`roles.${session.user.role}`)
-                      : t('roles.PLAYER')
-                    }
-
+                    ) : session?.user?.role ? (
+                      t(`roles.${session.user.role}`)
+                    ) : (
+                      t('roles.PLAYER')
+                    )}
                   </span>
                 </div>
               </div>
@@ -181,24 +179,16 @@ export const Sidebar = () => {
                 {/* TODO redirect to use profile */}
                 {session?.user?.role !== 'ADMIN' && (
                   <div className="cursor-pointer rounded-lg p-1 transition-colors hover:bg-black hover:text-white">
-                    {isLoading && (
-                      <Skeleton className="h-6 w-6" />
-                    )}
-                    {!isLoading && (
-                      <UserIcon className="w-6" />
-                    )}
+                    {isLoading && <Skeleton className="h-6 w-6" />}
+                    {!isLoading && <UserIcon className="w-6" />}
                   </div>
                 )}
                 <button
                   onClick={() => setSettingsModalOpen(!settingsModalOpen)}
                   className="cursor-pointer rounded-lg p-1 transition-colors hover:bg-black hover:text-white"
                 >
-                  {isLoading && (
-                    <Skeleton className="h-6 w-6" />
-                  )}
-                  {!isLoading && (
-                    <Cog6ToothIcon className="w-6" />
-                  )}
+                  {isLoading && <Skeleton className="h-6 w-6" />}
+                  {!isLoading && <Cog6ToothIcon className="w-6" />}
                 </button>
               </div>
             </div>
