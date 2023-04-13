@@ -1,15 +1,16 @@
-import * as React from 'react';
-import { Button } from '@/components/common';
-import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
 import { ChallengeListEntry, ChallengesFilterGroup } from '@/components/challenges';
+import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
 import { ChallengeRowSkeleton } from '@/components/challenges/ChallengeRowSkeleton';
-import { SmallFilterGroup } from '@/components/challenges/SmallFilterGroup';
 import { ChallengesViewTopBar } from '@/components/challenges/ChallengesViewTopBar';
 import { useChallenges } from '@/components/challenges/hooks/useChallenges';
+import { SmallFilterGroup } from '@/components/challenges/SmallFilterGroup';
+import { Button } from '@/components/common';
 import { trpc } from '@/utils/trpc';
+import * as React from 'react';
 
 export const TerraChallengesViewOrgs = () => {
   const { filteredChallenges, isLoading, isError, error } = useChallenges(trpc.challenges.created);
+  const [modalChallengeId, setModalChallengeId] = React.useState<string>('');
 
   if (error) {
     console.error(error);
@@ -47,7 +48,11 @@ export const TerraChallengesViewOrgs = () => {
                 {!isLoading &&
                   !isError &&
                   filteredChallenges.map((challenge) => (
-                    <ChallengeListEntry key={challenge.id} challenge={challenge} />
+                    <ChallengeListEntry
+                      key={challenge.id}
+                      challenge={challenge}
+                      onClick={() => setModalChallengeId(challenge.id)}
+                    />
                   ))}
               </ul>
             </div>
@@ -55,7 +60,10 @@ export const TerraChallengesViewOrgs = () => {
         </div>
       </div>
 
-      <ChallengeDetailsModal />
+      <ChallengeDetailsModal
+        challengeId={modalChallengeId}
+        onExit={() => setModalChallengeId('')}
+      />
     </>
   );
 };
