@@ -23,6 +23,18 @@
       "notifications": "Notifications"
     }
   },
+  "sidebar": {
+    "items": {
+      "home": "Home",
+      "development": "Development",
+      "challenges": "Challenges",
+      "organizations": "Organizations",
+      "drafts": "Drafts"
+    },
+    "userInfo": {
+      "unknownUser": "Unknown User"
+    }
+  },
   "roles": {
     "ADMIN": "Administrator",
     "PLAYER": "Player",

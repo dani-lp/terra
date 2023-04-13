@@ -44,7 +44,7 @@ const navigationItems: NavItem[] = [
 
 const NavigationItem = ({ item, active }: NavigationItemProps) => {
   const { setSidebarOpen } = useSidebarActions();
-  const { t } = useTranslation('navigation');
+  const { t } = useTranslation('common');
 
   return (
     <Link
@@ -95,7 +95,7 @@ const SidebarNavigation = () => {
   });
 
   return (
-    <nav className="flex flex-col gap-3 p-2">
+    <nav className="flex flex-col gap-3 overflow-hidden p-2">
       {isLoading && (
         <>
           <Skeleton className="h-10 w-64" />
@@ -126,7 +126,7 @@ const Logo = () => {
 export const Sidebar = () => {
   const [settingsModalOpen, setSettingsModalOpen] = React.useState(false);
   const { data: session, status } = useSession();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation();
 
   const isLoading = status === 'loading';
 
@@ -155,15 +155,15 @@ export const Sidebar = () => {
                   )}
                 </div>
                 <div className="flex flex-col items-start justify-center text-sm">
-                  <span className="font-bold">
-                    {isLoading ? (
-                      <div className="mb-2">
-                        <Skeleton className="h-3 w-28" />
-                      </div>
-                    ) : (
-                      session?.user?.name ?? 'John Doe'
-                    )}
-                  </span>
+                  {isLoading ? (
+                    <div className="mb-2">
+                      <Skeleton className="h-3 w-28" />
+                    </div>
+                  ) : (
+                    <span className="max-w-[100px] overflow-hidden text-ellipsis font-bold">
+                      {session?.user?.name?.split(' ')[0] ?? t('sidebar.userInfo.unknownUser')}
+                    </span>
+                  )}
                   <span className="text-neutral-700">
                     {isLoading ? (
                       <Skeleton className="h-3 w-24" />
