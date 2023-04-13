@@ -3,13 +3,20 @@ import { type Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { appWithTranslation } from 'next-i18next';
 import { type AppProps, type AppType } from 'next/app';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
+import 'nprogress/nprogress.css';
 import * as React from 'react';
 
 import { ToDevButton } from '@/components/dev';
 import { trpc } from '../utils/trpc';
 
 import '../styles/globals.css';
+
+const TopProgressBar = dynamic(
+  () => import('@/components/common/top-progress-bar/TopProgressBar'),
+  { ssr: false },
+);
 
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: React.ReactElement) => React.ReactElement;
@@ -28,6 +35,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
 
   const layout = getLayout(
     <>
+      <TopProgressBar />
       <Component {...pageProps} />
     </>,
   );
