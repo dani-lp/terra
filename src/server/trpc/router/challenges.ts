@@ -1,9 +1,40 @@
-import { organizationProcedure, playerProcedure, router } from '@/server/trpc/trpc';
+import {
+  organizationProcedure,
+  playerProcedure,
+  protectedProcedure,
+  router,
+} from '@/server/trpc/trpc';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 export const challengesRouter = router({
   // queries
+
+  /**
+   * Get a challenge by id.
+   */
+  get: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    const { id } = input;
+
+    if (!id) {
+      return null;
+    }
+
+    const challenge = await ctx.prisma.challenge.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!challenge) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        cause: `Challenge with id '${id} not found'`,
+      });
+    }
+
+    return challenge;
+  }),
 
   /**
    * Get a organization's (own) challenges, only available for logged in users.

@@ -1,15 +1,15 @@
-import * as React from 'react';
-import { Button } from '@/components/common';
-import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
 import { ChallengeListEntry, ChallengesFilterGroup } from '@/components/challenges';
-import { classNames } from '@/const';
+import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
 import { ChallengeRowSkeleton } from '@/components/challenges/ChallengeRowSkeleton';
-import { SmallFilterGroup } from '@/components/challenges/SmallFilterGroup';
 import { ChallengesViewTopBar } from '@/components/challenges/ChallengesViewTopBar';
 import { useChallenges } from '@/components/challenges/hooks/useChallenges';
-import { trpc } from '@/utils/trpc';
-import { useQueryParams } from '@/hooks/useQueryParams';
+import { SmallFilterGroup } from '@/components/challenges/SmallFilterGroup';
+import { Button } from '@/components/common';
+import { classNames } from '@/const';
 import { QUERY_PARAM_CHALLENGES_TAB } from '@/const/queryParams';
+import { useQueryParams } from '@/hooks/useQueryParams';
+import { trpc } from '@/utils/trpc';
+import * as React from 'react';
 
 // TODO translations
 const tabs = [
@@ -19,6 +19,7 @@ const tabs = [
 
 export const TerraChallengesViewPlayers = () => {
   const { getParamValue, setParam } = useQueryParams();
+  const [modalChallengeId, setModalChallengeId] = React.useState<string>('');
   const activeTab = getParamValue(QUERY_PARAM_CHALLENGES_TAB) ?? 'available';
   const { filteredChallenges, isLoading, isError, error } = useChallenges(
     activeTab === 'active' ? trpc.challenges.enrolled : trpc.challenges.available,
@@ -28,12 +29,12 @@ export const TerraChallengesViewPlayers = () => {
     console.error(error.message);
     throw new Error(error.message);
   }
- 
+
   const handleTabChange = async (tabId: typeof tabs[number]['id']) => {
     if (tabId === 'available') {
-      await setParam(QUERY_PARAM_CHALLENGES_TAB, 'available'); 
+      await setParam(QUERY_PARAM_CHALLENGES_TAB, 'available');
     } else {
-      await setParam(QUERY_PARAM_CHALLENGES_TAB, 'active'); 
+      await setParam(QUERY_PARAM_CHALLENGES_TAB, 'active');
     }
   };
 
@@ -126,7 +127,11 @@ export const TerraChallengesViewPlayers = () => {
                   {isLoading && [...Array(3)].map((_, i) => <ChallengeRowSkeleton key={i} />)}
                   {showChallenges &&
                     filteredChallenges.map((challenge) => (
-                      <ChallengeListEntry key={challenge.id} challenge={challenge} />
+                      <ChallengeListEntry
+                        key={challenge.id}
+                        challenge={challenge}
+                        onClick={() => setModalChallengeId(challenge.id)}
+                      />
                     ))}
                 </ul>
               </div>
@@ -152,7 +157,10 @@ export const TerraChallengesViewPlayers = () => {
         <Button variant="inverse">Next</Button>
       </div>
 
-      <ChallengeDetailsModal />
+      <ChallengeDetailsModal
+        challengeId={modalChallengeId}
+        onExit={() => setModalChallengeId('')}
+      />
     </>
   );
 };
