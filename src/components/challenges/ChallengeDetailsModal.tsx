@@ -6,14 +6,20 @@ import { useRouter } from 'next/router';
 import { ChallengeDetailsModalSkeleton } from '@/components/challenges/ChallengeDetailsModalSkeleton';
 import { ChallengeStats } from '@/components/challenges/ChallengeStats';
 import { trpc } from '@/utils/trpc';
+import Link from 'next/link';
 import { Button, Modal } from '../common';
 
 type Props = {
   challengeId: string;
   onExit: () => void;
+  isAlreadyEnrolled?: boolean;
 };
 
-export const ChallengeDetailsModal = ({ challengeId, onExit }: Props) => {
+export const ChallengeDetailsModal = ({
+  challengeId,
+  onExit,
+  isAlreadyEnrolled = false,
+}: Props) => {
   const { t } = useTranslation();
   const { data: session } = useSession();
   const utils = trpc.useContext();
@@ -73,13 +79,24 @@ export const ChallengeDetailsModal = ({ challengeId, onExit }: Props) => {
             <Button className="w-full" variant="inverse" onClick={onExit}>
               {t('actions.close')}
             </Button>
-            <Button
-              onClick={handleAccept}
-              disabled={!challengeId || challengeEnrollment.isLoading || isError || isLoading}
-              className="w-full"
-            >
-              {acceptText}
-            </Button>
+            {isAlreadyEnrolled ? (
+              <Link href={`/challenges/${challenge?.id ?? ''}`} className="w-full">
+                <Button
+                  disabled={!challengeId || challengeEnrollment.isLoading || isError || isLoading}
+                  className="w-full"
+                >
+                  {t('actions.seeDetails')}
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                onClick={handleAccept}
+                disabled={!challengeId || challengeEnrollment.isLoading || isError || isLoading}
+                className="w-full"
+              >
+                {acceptText}
+              </Button>
+            )}
           </div>
         </div>
       </div>

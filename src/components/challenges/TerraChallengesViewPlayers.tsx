@@ -160,6 +160,7 @@ export const TerraChallengesViewPlayers = () => {
       <ChallengeDetailsModal
         challengeId={modalChallengeId}
         onExit={() => setModalChallengeId('')}
+        isAlreadyEnrolled={activeTab === 'active'}
       />
     </>
   );
