@@ -1,28 +1,19 @@
-# Create T3 App
+# Terra - Final degree project for Computer Engineering
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+This project consists of the complete development of a web platform using the latest state-of-
+the-art technologies. The platform will allow different organizations to create challenges and
+competitions related to sustainable actions, which players will be able to complete to gain points
+and compete in different leaderboards. The use of gamification will create more engagement from
+the users. Examples of those actions are recycling, cleaning the environment (beach, mountain,
+etc), or self-development challenges, such as exercising every day. The completion of those will
+grant users points through which they will level up and gain achievements. Administrators of
+the platform will control the registering of organizations and challenges. Challenges would be
+both public (open to the world) and private (created for organizations for their own members).
+The possibility of allowing rewarding will be studied, along with techniques of verification for
+challenges that need them.
 
-## What's next? How do I make an app with this?
-
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
-
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
-
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
-
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+### Technologies used
+- React
+- Next.js
+- Tailwind CSS
+- tRPC
