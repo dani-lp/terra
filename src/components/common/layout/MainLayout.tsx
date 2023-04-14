@@ -1,13 +1,15 @@
-import * as React from 'react';
-import { Inter } from 'next/font/google';
-import Image from 'next/image';
 import { Dialog, Transition } from '@headlessui/react';
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'next-i18next';
+import { Inter } from 'next/font/google';
+import * as React from 'react';
 
-import { Sidebar } from './Sidebar';
+import { NavigationProvider } from '@/components/common/layout/context/NavigationContext';
+import { SettingsModal } from '@/components/common/layout/settings';
+import { TopBar } from '@/components/common/layout/Topbar';
 import { classNames } from '@/const';
 import { useSidebarActions, useSidebarOpen } from '@/store/useSidebarStore';
+import { Sidebar } from './Sidebar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,34 +23,16 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
   const { t } = useTranslation('common');
 
   return (
-    <>
+    <NavigationProvider>
       {/* Top bar */}
-      <div className={classNames('lg:hidden', inter.className)}>
-        <div className="fixed z-20 flex h-16 w-screen items-center justify-between border-b border-neutral-200 bg-white px-4 py-1.5">
-          <div>
-            <Image
-              className="h-8 w-auto"
-              height={32}
-              width={32}
-              src="/logo.png"
-              alt="Terra"
-            />
-          </div>
-          <div>
-            <button
-              type="button"
-              className="-mr-3 inline-flex h-12 w-12 items-center justify-center rounded-lg text-neutral-500 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-neutral-500"
-              onClick={() => setSidebarOpen(true)}
-            >
-              <span className="sr-only">{t('a11y.openSidebar')}</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-            </button>
-          </div>
-        </div>
-      </div>
+      <TopBar setSidebarOpen={setSidebarOpen} />
 
       <Transition.Root show={sidebarOpen} as={React.Fragment}>
-        <Dialog as="div" className={classNames('relative z-40 lg:hidden', inter.className)} onClose={setSidebarOpen}>
+        <Dialog
+          as="div"
+          className={classNames('relative z-40 lg:hidden', inter.className)}
+          onClose={setSidebarOpen}
+        >
           <Transition.Child
             as={React.Fragment}
             enter="transition-opacity ease-linear duration-300"
@@ -103,15 +87,15 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
       </Transition.Root>
 
       {/* Desktop sidebar */}
-      <div className="hidden lg:block">
+      {/* <div className="hidden lg:hidden">
         <Sidebar />
-      </div>
-      <main className={classNames(
-        'bg-neutral-100 w-full min-h-screen h-full pt-16 lg:pt-0 lg:pl-72',
-        inter.className,
-      )}>
+      </div> */}
+      <main
+        className={classNames('h-full min-h-screen w-full bg-neutral-100 pt-16', inter.className)}
+      >
         {children}
       </main>
-    </>
+      <SettingsModal />
+    </NavigationProvider>
   );
 };

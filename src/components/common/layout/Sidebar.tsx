@@ -1,46 +1,22 @@
+import { useNavigation, type NavItem } from '@/components/common/layout/context/NavigationContext';
+import { NavigationButtons } from '@/components/common/layout/NavigationButtons';
+import { filterNavigationItems } from '@/components/common/layout/utils';
 import { classNames } from '@/const';
-import { adminUrls, orgUrls, playerUrls, urls } from '@/const/urls';
 import { useSidebarActions } from '@/store/useSidebarStore';
-import {
-  BugAntIcon,
-  BuildingOffice2Icon,
-  Cog6ToothIcon,
-  HomeIcon,
-  PaperClipIcon,
-  RocketLaunchIcon,
-  UserIcon,
-} from '@heroicons/react/24/outline';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { Montserrat } from 'next/font/google';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import * as React from 'react';
 import { Skeleton } from '../skeleton';
-import { SettingsModal } from './settings/SettingsModal';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
-
-export type NavItem = {
-  key: string;
-  to: string;
-  icon: (props: React.SVGProps<SVGSVGElement>) => JSX.Element;
-  number?: number;
-};
 
 type NavigationItemProps = {
   item: NavItem;
   active: boolean;
 };
-
-const navigationItems: NavItem[] = [
-  { key: 'home', to: urls.HOME, icon: HomeIcon },
-  { key: 'challenges', to: urls.CHALLENGES, icon: RocketLaunchIcon },
-  { key: 'organizations', to: urls.ORGANIZATIONS, icon: BuildingOffice2Icon },
-  { key: 'drafts', to: urls.DRAFTS, icon: PaperClipIcon },
-  { key: 'development', to: urls.DEVELOPMENT, icon: BugAntIcon },
-];
 
 const NavigationItem = ({ item, active }: NavigationItemProps) => {
   const { setSidebarOpen } = useSidebarActions();
@@ -77,22 +53,11 @@ const NavigationItem = ({ item, active }: NavigationItemProps) => {
 const SidebarNavigation = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const navigationItems = useNavigation();
 
   const isLoading = status === 'loading';
 
-  const filteredNavigationItems = navigationItems.filter((item) => {
-    if (item.to === urls.DEVELOPMENT && process.env.NODE_ENV === 'development') return true; // TODO remove when development is done, or based on environment
-    switch (session?.user?.role) {
-      case 'ADMIN':
-        return Object.values(adminUrls).some((url) => url === item.to);
-      case 'ORGANIZATION':
-        return Object.values(orgUrls).some((url) => url === item.to);
-      case 'PLAYER':
-        return Object.values(playerUrls).some((url) => url === item.to);
-      default:
-        return false;
-    }
-  });
+  const filteredNavigationItems = filterNavigationItems(navigationItems, session?.user?.role);
 
   return (
     <nav className="flex flex-col gap-3 overflow-hidden p-2">
@@ -124,7 +89,6 @@ const Logo = () => {
 };
 
 export const Sidebar = () => {
-  const [settingsModalOpen, setSettingsModalOpen] = React.useState(false);
   const { data: session, status } = useSession();
   const { t } = useTranslation();
 
@@ -175,27 +139,11 @@ export const Sidebar = () => {
                   </span>
                 </div>
               </div>
-              <div className="flex items-center justify-center gap-2 p-2">
-                {/* TODO redirect to use profile */}
-                {session?.user?.role !== 'ADMIN' && (
-                  <div className="cursor-pointer rounded-lg p-1 transition-colors hover:bg-black hover:text-white">
-                    {isLoading && <Skeleton className="h-6 w-6" />}
-                    {!isLoading && <UserIcon className="w-6" />}
-                  </div>
-                )}
-                <button
-                  onClick={() => setSettingsModalOpen(!settingsModalOpen)}
-                  className="cursor-pointer rounded-lg p-1 transition-colors hover:bg-black hover:text-white"
-                >
-                  {isLoading && <Skeleton className="h-6 w-6" />}
-                  {!isLoading && <Cog6ToothIcon className="w-6" />}
-                </button>
-              </div>
+              <NavigationButtons />
             </div>
           </div>
         </div>
       </aside>
-      <SettingsModal open={settingsModalOpen} setOpen={setSettingsModalOpen} />
     </>
   );
 };
