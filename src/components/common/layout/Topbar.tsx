@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 
 import { useNavigation } from '@/components/common/layout/context/NavigationContext';
 import { NavigationButtons } from '@/components/common/layout/NavigationButtons';
