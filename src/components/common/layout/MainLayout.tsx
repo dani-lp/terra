@@ -24,7 +24,6 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <NavigationProvider>
-      {/* Top bar */}
       <TopBar setSidebarOpen={setSidebarOpen} />
 
       <Transition.Root show={sidebarOpen} as={React.Fragment}>
@@ -86,14 +85,13 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
         </Dialog>
       </Transition.Root>
 
-      {/* Desktop sidebar */}
-      {/* <div className="hidden lg:hidden">
-        <Sidebar />
-      </div> */}
       <main
-        className={classNames('h-full min-h-screen w-full bg-neutral-100 pt-16', inter.className)}
+        className={classNames(
+          'flex h-full min-h-screen w-full justify-center bg-neutral-100',
+          inter.className,
+        )}
       >
-        {children}
+        <div className="w-full max-w-6xl pt-2">{children}</div>
       </main>
       <SettingsModal />
     </NavigationProvider>
