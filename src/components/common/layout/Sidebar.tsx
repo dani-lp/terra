@@ -96,7 +96,8 @@ export const Sidebar = () => {
 
   return (
     <>
-      <aside className="fixed z-20 h-screen w-72 bg-white px-1 shadow-md">
+      {/* eslint-disable-next-line tailwindcss/no-custom-classname */}
+      <aside className="h-screen-mobile fixed z-20 w-72 bg-white px-1 shadow-md">
         <div className="flex h-full flex-col justify-between divide-y-2 divide-gray-200">
           <div className="flex flex-col gap-0 divide-y-2 divide-gray-200">
             <Logo />

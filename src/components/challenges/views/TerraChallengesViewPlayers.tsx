@@ -43,8 +43,6 @@ export const TerraChallengesViewPlayers = () => {
 
   return (
     <>
-      <ChallengesViewTopBar />
-
       <div className="flex flex-col items-center justify-center px-4">
         <div className="w-full max-w-6xl">
           {/* Mobile tabs */}
@@ -120,6 +118,7 @@ export const TerraChallengesViewPlayers = () => {
             </div>
             {!showEmptyState && (
               <div className="w-full">
+                <ChallengesViewTopBar className="mb-2 items-start px-0" />
                 <ul
                   role="list"
                   className="divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow"

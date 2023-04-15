@@ -87,7 +87,7 @@ export const MainLayout = ({ children }: MainLayoutProps) => {
 
       <main
         className={classNames(
-          'flex h-full min-h-screen w-full justify-center bg-neutral-100 lg:pt-16',
+          'flex h-full min-h-screen w-full justify-center bg-neutral-100 pt-16',
           inter.className,
         )}
       >

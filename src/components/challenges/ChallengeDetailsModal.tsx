@@ -51,6 +51,11 @@ export const ChallengeDetailsModal = ({
 
   const acceptText =
     session?.user?.role === 'PLAYER' ? t('actions.join') : t('actions.viewDetails');
+  
+  if (isError) {
+    console.error(error);
+    return null;
+  }
 
   return (
     <Modal open={!!challengeId} setOpen={onExit} fullScreen className="max-w-3xl sm:max-h-[500px]">
@@ -79,7 +84,7 @@ export const ChallengeDetailsModal = ({
             <Button className="w-full" variant="inverse" onClick={onExit}>
               {t('actions.close')}
             </Button>
-            {isAlreadyEnrolled ? (
+            {isAlreadyEnrolled || session?.user?.role === 'ORGANIZATION' ? (
               <Link href={`/challenges/${challenge?.id ?? ''}`} className="w-full">
                 <Button
                   disabled={!challengeId || challengeEnrollment.isLoading || isError || isLoading}

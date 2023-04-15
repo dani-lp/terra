@@ -3,9 +3,9 @@ import { Inter } from 'next/font/google';
 import Image from 'next/image';
 
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
 
 import { useNavigation } from '@/components/common/layout/context/NavigationContext';
 import { NavigationButtons } from '@/components/common/layout/NavigationButtons';
@@ -64,13 +64,14 @@ export const TopBar = ({ setSidebarOpen }: Props) => {
               <TopBarNavigation />
             </div>
           </div>
+          <div id="topbar-portal-container"></div>
           <div>
             <NavigationButtons />
 
             <div className="inline-flex lg:hidden">
               <button
                 type="button"
-                className="-mr-3 h-12 w-12 items-center justify-center rounded-lg text-neutral-500 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-neutral-500"
+                className="flex h-12 w-12 items-center justify-center rounded-lg text-neutral-500 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-neutral-500"
                 onClick={() => setSidebarOpen(true)}
               >
                 <span className="sr-only">{t('a11y.openSidebar')}</span>

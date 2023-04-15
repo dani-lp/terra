@@ -1,10 +1,13 @@
-import { ChallengeListEntry, ChallengesFilterGroup } from '@/components/challenges';
+import {
+  ChallengeListEntry,
+  ChallengesFilterGroup,
+  NewChallengeSlideOver,
+} from '@/components/challenges';
 import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
 import { ChallengeRowSkeleton } from '@/components/challenges/ChallengeRowSkeleton';
 import { ChallengesViewTopBar } from '@/components/challenges/ChallengesViewTopBar';
 import { useChallenges } from '@/components/challenges/hooks/useChallenges';
 import { SmallFilterGroup } from '@/components/challenges/SmallFilterGroup';
-import { Button } from '@/components/common';
 import { trpc } from '@/utils/trpc';
 import * as React from 'react';
 
@@ -19,18 +22,16 @@ export const TerraChallengesViewOrgs = () => {
 
   return (
     <>
-      <ChallengesViewTopBar showNewChallengeButton />
+      <ChallengesViewTopBar showNewChallengeButton className="py-2" />
 
       {/* Main content */}
       <div className="flex items-center justify-center px-4">
         <div className="w-full max-w-6xl">
-          <div className="flex flex-col xl:flex-row xl:gap-4 xl:pt-4">
+          <div className="flex flex-col xl:flex-row xl:gap-4">
             <div className="min-w-[250px] xl:px-0">
               <div className="mt-2 mb-3 flex flex-row items-center justify-between gap-2 xl:hidden xl:flex-col xl:items-start">
                 <h1 className="text-2xl font-bold">Your challenges</h1>
-                <Button size="sm" className="xl:w-full">
-                  New
-                </Button>
+                <NewChallengeSlideOver />
               </div>
               <div className="mb-2 flex flex-col items-center justify-between xl:hidden">
                 <SmallFilterGroup />
