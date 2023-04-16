@@ -1,4 +1,6 @@
 import { LeaderBoardListRow } from '@/components/challenges/details/';
+import { LeaderBoardListRowSkeleton } from '@/components/challenges/details/LeaderBoardListRowSkeleton';
+import { Skeleton } from '@/components/common/skeleton';
 import { classNames } from '@/const';
 import { InformationCircleIcon, TrophyIcon } from '@heroicons/react/20/solid';
 import type { Challenge } from '@prisma/client';
@@ -6,22 +8,23 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
 type Props = {
-  challenge: Challenge;
+  challenge: Challenge | undefined;
+  loading: boolean;
 };
 
 // TODO use translation keys
 const tabs = [
   {
-    name: 'Overview',
-    icon: InformationCircleIcon,
-  },
-  {
     name: 'Leaderboard',
     icon: TrophyIcon,
   },
+  {
+    name: 'Overview',
+    icon: InformationCircleIcon,
+  },
 ] as const;
 
-export const ChallengeDetailsMobileContent = ({ challenge }: Props) => {
+export const ChallengeDetailsMobileContent = ({ challenge, loading }: Props) => {
   const { data: session } = useSession();
   const [selectedTab, setSelectedTab] = useState<typeof tabs[number]['name']>(tabs[0].name);
 
@@ -66,20 +69,37 @@ export const ChallengeDetailsMobileContent = ({ challenge }: Props) => {
       </div>
 
       {selectedTab === 'Overview' && (
-        <p className="text-sm sm:text-base">{challenge.description}</p>
+        <>
+          {loading ? (
+            <Skeleton className="h-48" />
+          ) : (
+            <p className="text-sm sm:text-base">{challenge?.description ?? ''}</p>
+          )}
+        </>
       )}
+
       {selectedTab === 'Leaderboard' && (
         <ol className="flex flex-col gap-1">
-          {tempLeaderboardContent.map((user, index) => (
-            <LeaderBoardListRow
-              key={user.username}
-              position={index + 1}
-              image={user.image ?? ''}
-              name={user.name}
-              username={user.username}
-              score={user.score}
-            />
-          ))}
+          {loading ? (
+            <>
+              {[...Array(4)].map((_, index) => (
+                <LeaderBoardListRowSkeleton key={index} position={index + 1} />
+              ))}
+            </>
+          ) : (
+            <>
+              {tempLeaderboardContent.map((user, index) => (
+                <LeaderBoardListRow
+                  key={user.username}
+                  position={index + 1}
+                  image={user.image ?? ''}
+                  name={user.name}
+                  username={user.username}
+                  score={user.score}
+                />
+              ))}
+            </>
+          )}
         </ol>
       )}
     </div>

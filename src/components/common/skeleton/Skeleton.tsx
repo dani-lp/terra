@@ -12,14 +12,16 @@ type Props = {
     | `h-[${number}px] w-${number}`;
   heightFull?: boolean;
   widthFull?: boolean;
+  rounded?: boolean;
 };
 
-export const Skeleton = ({ className, heightFull, widthFull }: Props) => {
+export const Skeleton = ({ className, heightFull, widthFull, rounded }: Props) => {
   return (
     <div
       className={classNames(
-        'animate-pulse rounded-lg bg-neutral-200',
+        'animate-pulse bg-neutral-300',
         className,
+        rounded ? 'rounded-full' : 'rounded-lg',
         heightFull ? 'h-full' : '',
         widthFull ? 'w-full' : '',
       )}
