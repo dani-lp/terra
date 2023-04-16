@@ -119,6 +119,20 @@ model OrganizationData {
   createdChallenges Challenge[]
 }
 
+// TODO add more entries
+enum ChallengeTag {
+  FITNESS
+  RECYCLING
+  ENVIRONMENT_CLEANING
+  MINDFULNESS
+  NUTRITION
+  WELLNESS
+  MOBILITY
+  ENERGY_CONSERVATION
+  COMMUNITY_INVOVEMENT
+  OTHER
+}
+
 // TODO: add challenge rewards functionality
 model Challenge {
   id                 String              @id @default(cuid())
@@ -138,7 +152,7 @@ model Challenge {
 }
 
 model ChallengeCategory {
-  id         String      @id @default(cuid())
-  name       String
+  id         String        @id @default(cuid())
+  tag        ChallengeTag
   challenges Challenge[]
 }

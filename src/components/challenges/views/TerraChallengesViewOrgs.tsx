@@ -22,7 +22,7 @@ export const TerraChallengesViewOrgs = () => {
 
   return (
     <>
-      <ChallengesViewTopBar showNewChallengeButton className="py-2" />
+      <ChallengesViewTopBar showNewChallengeButton className="py-2 px-4" />
 
       {/* Main content */}
       <div className="flex items-center justify-center px-4">
