@@ -10,13 +10,15 @@ import type { NextPageWithLayout } from '../_app';
 const Challenge: NextPageWithLayout = () => {
   const router = useRouter();
   const { id } = router.query;
+ 
+  const challengeId = Array.isArray(id) ? id[0] : id;
 
   return (
     <>
       <Head>
         <title>Challenge</title>
       </Head>
-      <ChallengeDetailsView challengeId={id} />
+      <ChallengeDetailsView challengeId={challengeId ?? ''} />
     </>
   );
 };

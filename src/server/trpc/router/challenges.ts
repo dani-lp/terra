@@ -33,7 +33,17 @@ export const challengesRouter = router({
       });
     }
 
-    return challenge;
+    const enrolledPlayerCount = await ctx.prisma.playerData.count({
+      where: {
+        enrolledChallenges: {
+          some: {
+            id,
+          },
+        },
+      },
+    });
+
+    return { challenge, enrolledPlayerCount };
   }),
 
   /**
