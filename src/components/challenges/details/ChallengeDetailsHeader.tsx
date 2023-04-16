@@ -2,13 +2,14 @@ import { CalendarIcon, MapPinIcon, UsersIcon } from '@heroicons/react/20/solid';
 import Link from 'next/link';
 
 import { Chip } from '@/components/common';
-import type { DisplayChallenge } from '@/types';
+import type { Challenge } from '@prisma/client';
 
 type Props = {
-  challenge: DisplayChallenge;
+  challenge: Challenge;
+  enrolledPlayers: number;
 };
 
-export const ChallengeDetailsHeader = ({ challenge }: Props) => {
+export const ChallengeDetailsHeader = ({ challenge, enrolledPlayers }: Props) => {
   const tempTags = [
     { name: 'Recycling', color: 'bg-green-100 text-green-800' },
     { name: 'Sustainability', color: 'bg-blue-100 text-blue-800' },
@@ -31,11 +32,13 @@ export const ChallengeDetailsHeader = ({ challenge }: Props) => {
       <div className="mt-2 mb-4 flex flex-col sm:flex-row sm:flex-wrap sm:space-x-6">
         <div className="mt-2 flex items-center text-sm text-gray-500">
           <CalendarIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
-          {challenge.startDate} &ndash; {challenge.endDate}
+          {challenge.startDate.toLocaleDateString()} &ndash; {challenge.endDate.toLocaleDateString()}
+          {/* TODO status indicator */}
         </div>
         <div className="mt-2 flex items-center text-sm text-gray-500">
           <UsersIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
-          $120k &ndash; $140k
+          {/* TODO i18n */}
+          {enrolledPlayers} players
         </div>
         <div className="mt-2 flex items-center text-sm text-gray-500">
           <MapPinIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
