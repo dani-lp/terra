@@ -68,7 +68,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <SessionProvider session={session} refetchOnWindowFocus>
         {layout}
         {process.env.NODE_ENV === 'development' && <ToDevButton />}
-        <InternalSessionRedirect />
       </SessionProvider>
     </>
   );
