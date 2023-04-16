@@ -24,7 +24,7 @@ export const ChallengeDetailsModal = ({
   const { data: session } = useSession();
   const utils = trpc.useContext();
   const {
-    data: challenge,
+    data,
     isLoading,
     isError,
     error,
@@ -73,10 +73,10 @@ export const ChallengeDetailsModal = ({
             <ChallengeDetailsModalSkeleton />
           ) : (
             <>
-              <h2 className="mb-2 text-3xl font-semibold">{challenge?.name}</h2>
+              <h2 className="mb-2 text-3xl font-semibold">{data?.challenge?.name}</h2>
               {/* TODO map paragraphs into <p> */}
-              <p className="mb-2">{challenge?.description}</p>
-              <ChallengeStats endDate={challenge?.endDate.toDateString() ?? ''} players={5297395} />
+              <p className="mb-2">{data?.challenge?.description}</p>
+              <ChallengeStats endDate={data?.challenge?.endDate.toDateString() ?? ''} players={5297395} />
             </>
           )}
           <div className="mt-auto flex w-full flex-col items-center justify-center gap-4 sm:flex-row">
@@ -85,7 +85,7 @@ export const ChallengeDetailsModal = ({
               {t('actions.close')}
             </Button>
             {isAlreadyEnrolled || session?.user?.role === 'ORGANIZATION' ? (
-              <Link href={`/challenges/${challenge?.id ?? ''}`} className="w-full">
+              <Link href={`/challenges/${data?.challenge?.id ?? ''}`} className="w-full">
                 <Button
                   disabled={!challengeId || challengeEnrollment.isLoading || isError || isLoading}
                   className="w-full"
