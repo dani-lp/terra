@@ -1,5 +1,18 @@
 {
   "challenges": {
+    "details": {
+      "actionButton": {
+        "edit": "Edit challenge",
+        "join": "Join challenge",
+        "addParticipation": "Add participation"
+      }
+    },
+    "enrollModal": {
+      "title": "Join challenge",
+      "description": "You are about to join the challenge '{{name}}'! Please confirm your participation.",
+      "join": "Join",
+      "cancel": "Cancel"
+    },
     "new": {
       "title": "New Challenge",
       "description": "Add some basic information about your new challenge!"

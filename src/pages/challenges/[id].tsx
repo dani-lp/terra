@@ -31,6 +31,6 @@ Challenge.getLayout = (page) => {
 
 export const getServerSideProps = async ({ locale }: { locale: string }) => ({
   props: {
-    ...(await serverSideTranslations(locale, ['common', 'navigation'], nextI18nConfig, ['en'])),
+    ...(await serverSideTranslations(locale, ['common', 'navigation', 'challenges'], nextI18nConfig, ['en'])),
   },
 });

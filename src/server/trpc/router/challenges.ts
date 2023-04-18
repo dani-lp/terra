@@ -43,7 +43,27 @@ export const challengesRouter = router({
       },
     });
 
-    return { challenge, enrolledPlayerCount };
+    const userDetails = await ctx.prisma.userDetails.findUnique({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        playerData: true,
+      },
+    });
+
+    const isPlayerEnrolled = await ctx.prisma.playerData.count({
+      where: {
+        id: userDetails?.playerData?.id,
+        enrolledChallenges: {
+          some: {
+            id,
+          },
+        },
+      },
+    }) > 0;
+
+    return { challenge, enrolledPlayerCount, isPlayerEnrolled };
   }),
 
   /**
