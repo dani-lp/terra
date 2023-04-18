@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/common/skeleton';
 
 export const ChallengeDetailsHeaderSkeleton = () => {
   return (
-    <div className="flex w-full flex-col items-start justify-start bg-white px-4 py-3 shadow">
+    <div className="flex w-full flex-col items-start justify-start bg-white px-4 py-3 shadow md:bg-transparent md:shadow-none">
       <div className="mb-1">
         <Skeleton className="h-6 w-48" />
       </div>
@@ -12,7 +12,7 @@ export const ChallengeDetailsHeaderSkeleton = () => {
         <Skeleton className="h-5 w-36" />
       </div>
 
-      <div className="mt-2 mb-4 flex flex-col sm:flex-row sm:flex-wrap sm:space-x-6">
+      <div className="mt-2 mb-4 flex flex-col md:mt-5">
         <div className="mt-2 flex items-center text-sm text-gray-500">
           <CalendarIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
           <Skeleton className="h-3 w-36" />

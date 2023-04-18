@@ -1,10 +1,8 @@
-import { LeaderBoardListRow } from '@/components/challenges/details/';
-import { LeaderBoardListRowSkeleton } from '@/components/challenges/details/LeaderBoardListRowSkeleton';
+import { LeaderBoardList } from '@/components/challenges/details/';
 import { Skeleton } from '@/components/common/skeleton';
 import { classNames } from '@/const';
 import { InformationCircleIcon, TrophyIcon } from '@heroicons/react/20/solid';
 import type { Challenge } from '@prisma/client';
-import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
 type Props = {
@@ -25,20 +23,10 @@ const tabs = [
 ] as const;
 
 export const ChallengeDetailsMobileContent = ({ challenge, loading }: Props) => {
-  const { data: session } = useSession();
   const [selectedTab, setSelectedTab] = useState<typeof tabs[number]['name']>(tabs[0].name);
 
-  // TODO use actual values/query
-  const tempLeaderboardContent = [
-    { name: 'John Smith', username: 'jsmith', score: 75, image: session?.user?.image },
-    { name: 'Emily Davis', username: 'edavis', score: 92, image: session?.user?.image },
-    { name: 'Tom Johnson', username: 'tjohnson', score: 81, image: session?.user?.image },
-    { name: 'Sarah Lee', username: 'slee', score: 67, image: session?.user?.image },
-  ];
-  tempLeaderboardContent.sort((a, b) => b.score - a.score);
-
   return (
-    <div className="w-full px-3">
+    <div className="w-full px-3 md:hidden">
       <div className="mb-2 border-b border-gray-200">
         <nav className="flex justify-around" aria-label="Tabs">
           {tabs.map((tab) => (
@@ -79,28 +67,7 @@ export const ChallengeDetailsMobileContent = ({ challenge, loading }: Props) => 
       )}
 
       {selectedTab === 'Leaderboard' && (
-        <ol className="flex flex-col gap-1">
-          {loading ? (
-            <>
-              {[...Array(4)].map((_, index) => (
-                <LeaderBoardListRowSkeleton key={index} position={index + 1} />
-              ))}
-            </>
-          ) : (
-            <>
-              {tempLeaderboardContent.map((user, index) => (
-                <LeaderBoardListRow
-                  key={user.username}
-                  position={index + 1}
-                  image={user.image ?? ''}
-                  name={user.name}
-                  username={user.username}
-                  score={user.score}
-                />
-              ))}
-            </>
-          )}
-        </ol>
+        <LeaderBoardList loading={loading} />
       )}
     </div>
   );

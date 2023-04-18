@@ -17,22 +17,23 @@ export const ChallengeDetailsHeader = ({ challenge, enrolledPlayers }: Props) =>
   ];
 
   return (
-    <div className="flex w-full flex-col items-start justify-start bg-white px-4 py-3 shadow">
-      <h2 className="mb-1 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
+    <div className="flex w-full flex-col items-start justify-start bg-white px-4 py-3 shadow md:bg-transparent md:shadow-none">
+      <h2 className="mb-1 text-2xl font-bold leading-7 text-gray-900 md:text-3xl">
         {challenge.name}
       </h2>
       {/* TODO remove placeholder */}
-      <p className="text-sm font-medium text-gray-500">
+      <p className="text-sm font-medium text-gray-500 md:text-base">
         By{' '}
         <Link href="#" className="text-gray-800 underline">
           University of Deusto
         </Link>
       </p>
 
-      <div className="mt-2 mb-4 flex flex-col sm:flex-row sm:flex-wrap sm:space-x-6">
+      <div className="mt-2 mb-4 flex flex-col">
         <div className="mt-2 flex items-center text-sm text-gray-500">
           <CalendarIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
-          {challenge.startDate.toLocaleDateString()} &ndash; {challenge.endDate.toLocaleDateString()}
+          {challenge.startDate.toLocaleDateString()} &ndash;{' '}
+          {challenge.endDate.toLocaleDateString()}
           {/* TODO status indicator */}
         </div>
         <div className="mt-2 flex items-center text-sm text-gray-500">
@@ -47,7 +48,7 @@ export const ChallengeDetailsHeader = ({ challenge, enrolledPlayers }: Props) =>
         </div>
       </div>
 
-      <h3 className="mb-1 text-base font-semibold leading-6 text-gray-900">Tags</h3>
+      <h3 className="mb-1 text-base font-semibold leading-6 text-gray-900 md:text-lg">Tags</h3>
       <div className="mb-2 flex flex-wrap gap-2">
         {tempTags.map((tag) => (
           <Chip key={tag.name} label={tag.name} className={tag.color} />

@@ -137,7 +137,7 @@ enum ChallengeTag {
 model Challenge {
   id                 String              @id @default(cuid())
   name               String
-  description        String
+  description        String              @db.Text
   image              String?
   startDate          DateTime
   endDate            DateTime
@@ -152,7 +152,7 @@ model Challenge {
 }
 
 model ChallengeCategory {
-  id         String        @id @default(cuid())
+  id         String       @id @default(cuid())
   tag        ChallengeTag
   challenges Challenge[]
 }
