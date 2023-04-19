@@ -1,4 +1,5 @@
 import { CalendarIcon, MapPinIcon, UsersIcon } from '@heroicons/react/20/solid';
+import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 
 import { Chip } from '@/components/common';
@@ -10,6 +11,9 @@ type Props = {
 };
 
 export const ChallengeDetailsHeader = ({ challenge, enrolledPlayers }: Props) => {
+  const { t } = useTranslation('challenges');
+
+  // TODO use DB tags
   const tempTags = [
     { name: 'Recycling', color: 'bg-green-100 text-green-800' },
     { name: 'Sustainability', color: 'bg-blue-100 text-blue-800' },
@@ -38,8 +42,7 @@ export const ChallengeDetailsHeader = ({ challenge, enrolledPlayers }: Props) =>
         </div>
         <div className="mt-2 flex items-center text-sm text-gray-500">
           <UsersIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
-          {/* TODO i18n */}
-          {enrolledPlayers} players
+          {t('challenges.details.header.players', { count: enrolledPlayers })}
         </div>
         <div className="mt-2 flex items-center text-sm text-gray-500">
           <MapPinIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />

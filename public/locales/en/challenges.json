@@ -5,6 +5,10 @@
         "edit": "Edit challenge",
         "join": "Join challenge",
         "addParticipation": "Add participation"
+      },
+      "header": {
+        "players_one": "{{count}} player",
+        "players_other": "{{count}} players"
       }
     },
     "enrollModal": {
