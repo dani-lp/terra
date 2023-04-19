@@ -97,10 +97,11 @@ model AdminData {
 }
 
 model PlayerData {
-  id                 String      @id @default(cuid())
+  id                 String          @id @default(cuid())
   enrolledChallenges Challenge[]
-  userDetails        UserDetails @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)
-  userDetailsId      String      @unique
+  userDetails        UserDetails     @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)
+  userDetailsId      String          @unique
+  Participation      Participation[]
 }
 
 model OrganizationData {
@@ -147,6 +148,7 @@ model Challenge {
   organizationDataId String
   ChallengeCategory  ChallengeCategory[]
   enrolledPlayers    PlayerData[]
+  Participation      Participation[]
 
   @@index([organizationDataId])
 }
@@ -155,4 +157,19 @@ model ChallengeCategory {
   id         String       @id @default(cuid())
   tag        ChallengeTag
   challenges Challenge[]
+}
+
+model Participation {
+  id           String     @id @default(cuid())
+  playerData   PlayerData @relation(fields: [playerDataId], references: [id], onDelete: Cascade)
+  playerDataId String
+  challenge    Challenge  @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  challengeId  String
+  isValid      Boolean    @default(true) // invalid if an administrator detects an irregularity
+  date         DateTime   @default(now())
+  comments     String?    @db.Text
+  proofUrl     String?
+
+  @@unique([playerDataId, challengeId])
+  @@index([challengeId])
 }
