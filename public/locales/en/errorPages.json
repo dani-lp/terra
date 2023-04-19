@@ -1,0 +1,10 @@
+{
+    "404": {
+        "pageNotFound": "Page not found",
+        "msg": "Sorry, we couldn't find the page you were looking for.",
+        "back": "Go back",
+        "home": "Back to home",
+        "contact": "Contact us",
+        "tabTitle": "Page not found"
+    }
+}
