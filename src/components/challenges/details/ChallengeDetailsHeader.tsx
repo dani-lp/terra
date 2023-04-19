@@ -43,8 +43,7 @@ export const ChallengeDetailsHeader = ({ challenge, enrolledPlayers }: Props) =>
         </div>
         <div className="mt-2 flex items-center text-sm text-gray-500">
           <MapPinIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
-          {/* TODO remove placeholder */}
-          Anywhere
+          {challenge.location ?? 'Anywhere'}
         </div>
       </div>
 

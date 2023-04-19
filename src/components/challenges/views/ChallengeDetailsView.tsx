@@ -115,8 +115,7 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
         <AddParticipationSlideOver
           open={addParticipationSlideOverOpen}
           setOpen={setAddParticipationSlideOverOpen}
-          title={data.challenge.name}
-          description={data.challenge.description}
+          challenge={data.challenge}
         />
       )}
     </>

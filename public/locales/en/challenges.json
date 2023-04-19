@@ -20,8 +20,13 @@
     "participationSlideOver": {
       "addParticipation": "Add participation",
       "cancel": "Cancel", 
-      "dateField": "Date of participation",
       "commentsField": "Comments about the participation",
+      "dateField": "Date of participation",
+      "errors": {
+        "title": "There are some errors in your submission",
+        "date": "Please select a valid date",
+        "proofError": "Please upload a proof"
+      },
       "learnAbout": "Learn more about challenges",
       "proof": "Proof",
       "uploadFile": "Upload a file"

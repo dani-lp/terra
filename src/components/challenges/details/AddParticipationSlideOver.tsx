@@ -1,12 +1,18 @@
-import { Button } from '@/components/common';
+import { Alert, Button } from '@/components/common';
+import { trpc } from '@/utils/trpc';
 import { Dialog, Transition } from '@headlessui/react';
-import { CalendarDaysIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
+import { CalendarDaysIcon, CalendarIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { PhotoIcon } from '@heroicons/react/24/solid';
+import type { Challenge } from '@prisma/client';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
-const DateInputWithIcon = () => {
+type ExternalInputProps = {
+  handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+};
+
+const DateInputWithIcon = ({ handleInputChange }: ExternalInputProps) => {
   const { t } = useTranslation('challenges');
 
   return (
@@ -24,6 +30,7 @@ const DateInputWithIcon = () => {
           id="date"
           className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
           placeholder="you@example.com"
+          onChange={handleInputChange}
         />
       </div>
     </div>
@@ -40,13 +47,13 @@ const FileInput = () => {
 
   return (
     <div className="col-span-full">
-      <label
-        htmlFor="cover-photo"
-        className="block text-sm font-medium leading-6 text-gray-900"
-      >
+      <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 text-gray-900">
         {t('challenges.participationSlideOver.proof')}
       </label>
-      <div onClick={handleContainerClick} className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+      <div
+        onClick={handleContainerClick}
+        className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
+      >
         <div className="text-center">
           <PhotoIcon className="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
           <div className="mt-4 text-sm leading-6 text-gray-600">
@@ -74,12 +81,54 @@ const FileInput = () => {
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  title: string;
-  description: string;
+  challenge: Challenge;
 };
 
-export const AddParticipationSlideOver = ({ open, setOpen, title, description }: Props) => {
+export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) => {
   const { t } = useTranslation('challenges');
+  const utils = trpc.useContext();
+  const registerParticipationMutation = trpc.participation.register.useMutation({
+    onSuccess: async () => {
+      await utils.challenges.get.invalidate();
+    },
+  });
+
+  const [date, setDate] = React.useState<Date>(new Date());
+  const [comments, setComments] = React.useState<string>('');
+  const [errors, setErrors] = React.useState<string[]>([]);
+
+  const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setErrors([]);
+    setDate(new Date(event.target.value));
+  };
+
+  const handleCommentsChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setComments(event.target.value);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const isDateValid = date > challenge.startDate && date < challenge.endDate;
+
+    if (!date || !isDateValid) {
+      setErrors([t('challenges.participationSlideOver.errors.date')]);
+      return;
+    }
+
+    // TODO upload file proof to S3 separately
+    const mutationData = {
+      challengeId: challenge.id,
+      date,
+      comments,
+    };
+
+    const result = await registerParticipationMutation.mutateAsync(mutationData);
+
+    if (result) {
+      setOpen(false);
+    }
+  };
 
   return (
     <Transition.Root show={open} as={React.Fragment}>
@@ -111,12 +160,15 @@ export const AddParticipationSlideOver = ({ open, setOpen, title, description }:
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
-                  <form className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
+                  <form
+                    onSubmit={handleSubmit}
+                    className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
+                  >
                     <div className="h-0 flex-1 overflow-y-auto">
                       <div className="bg-black px-4 py-6 sm:px-6">
                         <div className="flex items-center justify-between">
                           <Dialog.Title className="text-base font-semibold leading-6 text-white">
-                            {title}
+                            {challenge.name}
                           </Dialog.Title>
                           <div className="ml-3 flex h-7 items-center">
                             <button
@@ -130,13 +182,22 @@ export const AddParticipationSlideOver = ({ open, setOpen, title, description }:
                           </div>
                         </div>
                         <div className="mt-1">
-                          <p className="text-sm text-neutral-300">{description}</p>
+                          <p className="text-sm text-neutral-300">{challenge.description}</p>
+                        </div>
+
+                        <div className="mt-3 flex items-center text-sm text-neutral-200">
+                          <CalendarIcon
+                            className="mr-1.5 h-5 w-5 shrink-0 text-gray-300"
+                            aria-hidden="true"
+                          />
+                          {challenge.startDate.toLocaleDateString()} &ndash;{' '}
+                          {challenge.endDate.toLocaleDateString()}
                         </div>
                       </div>
                       <div className="flex flex-1 flex-col justify-between">
                         <div className="divide-y divide-gray-200 px-4 sm:px-6">
                           <div className="space-y-6 pb-5 pt-6">
-                            <DateInputWithIcon />
+                            <DateInputWithIcon handleInputChange={handleDateChange} />
 
                             <div>
                               <label
@@ -152,6 +213,7 @@ export const AddParticipationSlideOver = ({ open, setOpen, title, description }:
                                   rows={4}
                                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                                   defaultValue={''}
+                                  onChange={handleCommentsChange}
                                 />
                               </div>
                             </div>
@@ -177,13 +239,28 @@ export const AddParticipationSlideOver = ({ open, setOpen, title, description }:
                         </div>
                       </div>
                     </div>
-                    <div className="flex shrink-0 justify-end gap-4 p-4">
-                      <Button type="button" variant="inverse" onClick={() => setOpen(false)}>
-                        {t('challenges.participationSlideOver.cancel')}
-                      </Button>
-                      <Button type="submit">
-                        {t('challenges.participationSlideOver.addParticipation')}
-                      </Button>
+                    <div className="flex flex-col gap-4 p-4">
+                      <Alert
+                        shown={errors.length > 0}
+                        content={{
+                          type: 'error',
+                          title: `${t('challenges.participationSlideOver.errors.title')}:`,
+                          errors,
+                        }}
+                      />
+                      <div className="flex shrink-0 justify-end gap-4">
+                        <Button
+                          disabled={registerParticipationMutation.isLoading}
+                          type="button"
+                          variant="inverse"
+                          onClick={() => setOpen(false)}
+                        >
+                          {t('challenges.participationSlideOver.cancel')}
+                        </Button>
+                        <Button disabled={registerParticipationMutation.isLoading} type="submit">
+                          {t('challenges.participationSlideOver.addParticipation')}
+                        </Button>
+                      </div>
                     </div>
                   </form>
                 </Dialog.Panel>
