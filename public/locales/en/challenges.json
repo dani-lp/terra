@@ -32,7 +32,12 @@
       "location": "Location",
       "learnAbout": "Learn more about challenges",
       "errors": {
-        "title": "There are some errors in your submission"
+        "title": "There are some errors in your submission",
+        "missingName": "Please enter a name for the challenge",
+        "shortName": "The name of the challenge is too short",
+        "missingDescription": "The challenge is missing a description",
+        "missingStartDate": "You must provide a start date",
+        "missingEndDate": "You must provide an end date"
       },
       "other": {
         "closePanel": "Close panel"

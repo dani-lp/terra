@@ -1,4 +1,5 @@
 import { Alert, Button } from '@/components/common';
+import { trpc } from '@/utils/trpc';
 import { Dialog, Transition } from '@headlessui/react';
 import { CalendarDaysIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
@@ -53,7 +54,13 @@ type Props = {
 
 export const EditChallengeSlideOver = ({ open, setOpen, challenge }: Props) => {
   const { t } = useTranslation('challenges');
-  const [errors] = React.useState<string[]>([]);
+  const utils = trpc.useContext();
+  const editChallengeMutation = trpc.challenges.edit.useMutation({
+    onSuccess: async () => {
+      await utils.challenges.invalidate();
+    },
+  });
+  const [errors, setErrors] = React.useState<string[]>([]);
 
   const [formValues, setFormValues] = React.useState<FormValues>({
     name: challenge.name,
@@ -64,11 +71,13 @@ export const EditChallengeSlideOver = ({ open, setOpen, challenge }: Props) => {
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setErrors([]);
     const { name, value } = event.target;
     setFormValues({ ...formValues, [name]: value });
   };
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setErrors([]);
     const { name, value } = event.target;
     const newDate = new Date(value).toISOString().substring(0, 10);
     setFormValues({ ...formValues, [name]: newDate });
@@ -76,6 +85,45 @@ export const EditChallengeSlideOver = ({ open, setOpen, challenge }: Props) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const { name, description, startDate, endDate, location } = formValues;
+
+    const newErrors: string[] = [];
+
+    if (!name) {
+      newErrors.push(t('challenges.editSlideOver.errors.missingName'));
+    } else if (name.length < 5) {
+      newErrors.push(t('challenges.editSlideOver.errors.shortName'));
+    }
+
+    if (!description) {
+      newErrors.push(t('challenges.editSlideOver.errors.missingDescription'));
+    }
+    if (!startDate) {
+      newErrors.push(t('challenges.editSlideOver.errors.missingStartDate'));
+    }
+    if (!endDate) {
+      newErrors.push(t('challenges.editSlideOver.errors.missingEndDate'));
+    }
+
+    setErrors(newErrors);
+
+    if (newErrors.length > 0) {
+      return;
+    }
+
+    const result = await editChallengeMutation.mutateAsync({
+      id: challenge.id,
+      name,
+      description,
+      startDate,
+      endDate,
+      location,
+    });
+
+    if (result) {
+      setOpen(false);
+    }
   };
 
   return (
@@ -237,14 +285,14 @@ export const EditChallengeSlideOver = ({ open, setOpen, challenge }: Props) => {
                       />
                       <div className="flex shrink-0 justify-end gap-4">
                         <Button
-                          // disabled={registerParticipationMutation.isLoading}
+                          disabled={editChallengeMutation.isLoading}
                           type="button"
                           variant="inverse"
                           onClick={() => setOpen(false)}
                         >
                           {t('challenges.participationSlideOver.cancel')}
                         </Button>
-                        <Button disabled={false} type="submit">
+                        <Button disabled={editChallengeMutation.isLoading} type="submit">
                           {t('challenges.participationSlideOver.addParticipation')}
                         </Button>
                       </div>
