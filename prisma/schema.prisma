@@ -97,10 +97,11 @@ model AdminData {
 }
 
 model PlayerData {
-  id                 String      @id @default(cuid())
+  id                 String          @id @default(cuid())
   enrolledChallenges Challenge[]
-  userDetails        UserDetails @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)
-  userDetailsId      String      @unique
+  userDetails        UserDetails     @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)
+  userDetailsId      String          @unique
+  Participation      Participation[]
 }
 
 model OrganizationData {
@@ -119,11 +120,25 @@ model OrganizationData {
   createdChallenges Challenge[]
 }
 
+// TODO add more entries
+enum ChallengeTag {
+  FITNESS
+  RECYCLING
+  ENVIRONMENT_CLEANING
+  MINDFULNESS
+  NUTRITION
+  WELLNESS
+  MOBILITY
+  ENERGY_CONSERVATION
+  COMMUNITY_INVOVEMENT
+  OTHER
+}
+
 // TODO: add challenge rewards functionality
 model Challenge {
   id                 String              @id @default(cuid())
   name               String
-  description        String
+  description        String              @db.Text
   image              String?
   startDate          DateTime
   endDate            DateTime
@@ -133,12 +148,28 @@ model Challenge {
   organizationDataId String
   ChallengeCategory  ChallengeCategory[]
   enrolledPlayers    PlayerData[]
+  Participation      Participation[]
 
   @@index([organizationDataId])
 }
 
 model ChallengeCategory {
-  id         String      @id @default(cuid())
-  name       String
+  id         String       @id @default(cuid())
+  tag        ChallengeTag
   challenges Challenge[]
+}
+
+model Participation {
+  id           String     @id @default(cuid())
+  playerData   PlayerData @relation(fields: [playerDataId], references: [id], onDelete: Cascade)
+  playerDataId String
+  challenge    Challenge  @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  challengeId  String
+  isValid      Boolean    @default(true) // invalid if an administrator detects an irregularity
+  date         DateTime   @default(now())
+  comments     String?    @db.Text
+  proofUrl     String?
+
+  @@index([challengeId])
+  @@index([playerDataId])
 }

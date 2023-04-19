@@ -1,55 +1,64 @@
-import * as React from 'react';
+import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-import { QUERY_PARAM_CHALLENGE } from '@/const/queryParams';
-import { Button, Modal } from '../common';
-import Image from 'next/image';
-import { ChallengeStats } from './ChallengeStats';
-import { useTranslation } from 'next-i18next';
-import { useQueryParams } from '@/hooks/useQueryParams';
-import { useSession } from 'next-auth/react';
+import { ChallengeDetailsModalSkeleton } from '@/components/challenges/ChallengeDetailsModalSkeleton';
+import { ChallengeStats } from '@/components/challenges/ChallengeStats';
 import { trpc } from '@/utils/trpc';
+import Link from 'next/link';
+import { Button, Modal } from '../common';
 
-export const ChallengeDetailsModal = () => {
+type Props = {
+  challengeId: string;
+  onExit: () => void;
+  isAlreadyEnrolled?: boolean;
+};
+
+export const ChallengeDetailsModal = ({
+  challengeId,
+  onExit,
+  isAlreadyEnrolled = false,
+}: Props) => {
   const { t } = useTranslation();
   const { data: session } = useSession();
   const utils = trpc.useContext();
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+  } = trpc.challenges.get.useQuery({ id: challengeId });
   const challengeEnrollment = trpc.challenges.enroll.useMutation({
     onSuccess: async () => {
       await Promise.all([
         utils.challenges.available.invalidate(),
         utils.challenges.enrolled.invalidate(),
       ]);
-      await handleSetOpen();
+      onExit();
     },
   });
   const router = useRouter();
-  const { removeParam } = useQueryParams();
-  const selectedChallengeId = router.query[QUERY_PARAM_CHALLENGE];
-
-  const handleSetOpen = async () => {
-    await removeParam(QUERY_PARAM_CHALLENGE);
-  };
 
   const handleAccept = async () => {
-    if (!selectedChallengeId || Array.isArray(selectedChallengeId)) return;
+    if (!challengeId) return;
     if (session?.user?.role === 'PLAYER') {
-      challengeEnrollment.mutate({ challengeId: selectedChallengeId });
+      challengeEnrollment.mutate({ challengeId });
     } else if (session?.user?.role === 'ORGANIZATION') {
-      await router.push(`/challenges/${selectedChallengeId}`);
+      await router.push(`/challenges/${challengeId}`);
     }
   };
 
   const acceptText =
     session?.user?.role === 'PLAYER' ? t('actions.join') : t('actions.viewDetails');
+  
+  if (isError) {
+    console.error(error);
+    return null;
+  }
 
   return (
-    <Modal
-      open={!!selectedChallengeId}
-      setOpen={handleSetOpen}
-      fullScreen
-      className="max-w-3xl sm:max-h-[500px]"
-    >
+    <Modal open={!!challengeId} setOpen={onExit} fullScreen className="max-w-3xl sm:max-h-[500px]">
       <div className="flex h-full flex-col items-center justify-center gap-4 sm:flex-row">
         <div className="relative h-[300px] w-[500px] overflow-hidden rounded-lg object-cover sm:h-[500px] sm:rounded-none sm:p-0">
           <Image
@@ -60,23 +69,39 @@ export const ChallengeDetailsModal = () => {
           />
         </div>
         <div className="flex h-full w-full flex-col items-start justify-start px-4 py-2 sm:py-6">
-          <h2 className="mb-2 text-3xl font-semibold">Title of the challenge</h2>
-          {/* TODO map paragraphs into <p> */}
-          <p className="mb-2">Some smaller text describing the challenge {'blah '.repeat(50)}</p>
-          <p className="mb-2">Even more text but a bit shorter{'blah '.repeat(20)}</p>
-          <ChallengeStats endDate={'2024-01-01'} players={5297395} />
+          {isLoading ? (
+            <ChallengeDetailsModalSkeleton />
+          ) : (
+            <>
+              <h2 className="mb-2 text-3xl font-semibold">{data?.challenge?.name}</h2>
+              {/* TODO map paragraphs into <p> */}
+              <p className="mb-2">{data?.challenge?.description}</p>
+              <ChallengeStats endDate={data?.challenge?.endDate.toDateString() ?? ''} players={5297395} />
+            </>
+          )}
           <div className="mt-auto flex w-full flex-col items-center justify-center gap-4 sm:flex-row">
             {/* TODO translate, use proper texts depending on user role, e.g. "edit" */}
-            <Button className="w-full" variant="inverse" onClick={handleSetOpen}>
+            <Button className="w-full" variant="inverse" onClick={onExit}>
               {t('actions.close')}
             </Button>
-            <Button
-              onClick={handleAccept}
-              disabled={!selectedChallengeId || challengeEnrollment.isLoading}
-              className="w-full"
-            >
-              {acceptText}
-            </Button>
+            {isAlreadyEnrolled || session?.user?.role === 'ORGANIZATION' ? (
+              <Link href={`/challenges/${data?.challenge?.id ?? ''}`} className="w-full">
+                <Button
+                  disabled={!challengeId || challengeEnrollment.isLoading || isError || isLoading}
+                  className="w-full"
+                >
+                  {t('actions.seeDetails')}
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                onClick={handleAccept}
+                disabled={!challengeId || challengeEnrollment.isLoading || isError || isLoading}
+                className="w-full"
+              >
+                {acceptText}
+              </Button>
+            )}
           </div>
         </div>
       </div>

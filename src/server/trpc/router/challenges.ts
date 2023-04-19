@@ -1,9 +1,154 @@
-import { organizationProcedure, playerProcedure, router } from '@/server/trpc/trpc';
+import {
+  organizationProcedure,
+  playerProcedure,
+  protectedProcedure,
+  router,
+} from '@/server/trpc/trpc';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
 export const challengesRouter = router({
   // queries
+
+  /**
+   * Get a challenge by id.
+   */
+  get: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    const { id } = input;
+
+    if (!id) {
+      return null;
+    }
+
+    const challenge = await ctx.prisma.challenge.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!challenge) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        cause: `Challenge with id '${id} not found'`,
+      });
+    }
+
+    const userIsAuthor =
+      (await ctx.prisma.userDetails.count({
+        where: {
+          userId: ctx.session.user.id,
+          organizationData: {
+            createdChallenges: {
+              some: {
+                id,
+              },
+            },
+          },
+        },
+      })) > 0;
+
+    const enrolledPlayerCount = await ctx.prisma.playerData.count({
+      where: {
+        enrolledChallenges: {
+          some: {
+            id,
+          },
+        },
+      },
+    });
+
+    const userDetails = await ctx.prisma.userDetails.findUnique({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        playerData: true,
+      },
+    });
+
+    const isPlayerEnrolled =
+      (await ctx.prisma.playerData.count({
+        where: {
+          id: userDetails?.playerData?.id,
+          enrolledChallenges: {
+            some: {
+              id,
+            },
+          },
+        },
+      })) > 0;
+
+    return { challenge, enrolledPlayerCount, userIsAuthor, isPlayerEnrolled };
+  }),
+
+  /**
+   * Edit a challenge, only available for organization users.
+   */
+  edit: organizationProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        description: z.string(),
+        startDate: z.string(),
+        endDate: z.string(),
+        location: z.string().nullable(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, name, description, startDate, endDate, location } = input;
+
+      const challenge = await ctx.prisma.challenge.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!challenge) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: `Challenge with id '${id} not found'`,
+        });
+      }
+
+      const organization = await ctx.prisma.userDetails.findUnique({
+        where: {
+          userId: ctx.session.user.id,
+        },
+        select: {
+          organizationData: true,
+        },
+      });
+
+      if (!organization) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: `Organization with user id '${ctx.session.user.id} not found'`,
+        });
+      }
+
+      if (challenge.organizationDataId !== organization.organizationData?.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          cause: `User with id '${ctx.session.user.id} is not allowed to edit challenge with id '${id}'`,
+        });
+      }
+
+      const updatedChallenge = await ctx.prisma.challenge.update({
+        where: {
+          id,
+        },
+        data: {
+          name,
+          description,
+          startDate: new Date(startDate),
+          endDate: new Date(endDate),
+          location,
+        },
+      });
+
+      return updatedChallenge;
+    }),
 
   /**
    * Get a organization's (own) challenges, only available for logged in users.
