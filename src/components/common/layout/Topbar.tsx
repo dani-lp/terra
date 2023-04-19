@@ -57,16 +57,16 @@ export const TopBar = ({ setSidebarOpen }: Props) => {
       <div className="fixed z-20 flex h-16 w-screen items-center justify-center border-b border-neutral-200 bg-white px-4 py-1.5">
         <div className="flex w-full max-w-6xl items-center justify-between">
           <div className="flex items-center justify-center">
-            <div>
+            <Link href="/">
               <Image className="h-8 w-auto" height={32} width={32} src="/logo.png" alt="Terra" />
-            </div>
+            </Link>
             <div className="ml-6 hidden space-x-2 lg:flex">
               <TopBarNavigation />
             </div>
           </div>
           <div id="topbar-portal-container"></div>
           <div>
-            <NavigationButtons />
+            <NavigationButtons className="hidden lg:flex" />
 
             <div className="inline-flex lg:hidden">
               <button

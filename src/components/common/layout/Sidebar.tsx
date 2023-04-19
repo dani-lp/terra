@@ -140,7 +140,7 @@ export const Sidebar = () => {
                   </span>
                 </div>
               </div>
-              <NavigationButtons />
+              <NavigationButtons className="flex lg:hidden" />
             </div>
           </div>
         </div>
