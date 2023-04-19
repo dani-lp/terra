@@ -152,10 +152,10 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
               <Transition.Child
                 as={React.Fragment}
-                enter="transform transition ease-in-out duration-500 sm:duration-700"
+                enter="transform transition ease-in-out duration-500"
                 enterFrom="translate-x-full"
                 enterTo="translate-x-0"
-                leave="transform transition ease-in-out duration-500 sm:duration-700"
+                leave="transform transition ease-in-out duration-500"
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
@@ -231,6 +231,7 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
                                   aria-hidden="true"
                                 />
                                 <span className="ml-2">
+                                  {/* TODO add to "about" page */}
                                   {t('challenges.participationSlideOver.learnAbout')}
                                 </span>
                               </a>
