@@ -48,6 +48,10 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
     }
   };
 
+  const userCanAct =
+    session?.user?.role === 'PLAYER' ||
+    (session?.user?.role === 'ORGANIZATION' && data?.userIsAuthor);
+
   const actionButtonText =
     session?.user?.role === 'ORGANIZATION'
       ? t('challenges.details.actionButton.edit')
@@ -71,15 +75,17 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
                 enrolledPlayers={data?.enrolledPlayerCount}
               />
             )}
-            <div className="px-4">
-              <Button
-                disabled={isLoading}
-                onClick={actionButtonOnClick}
-                className="hidden w-full md:block"
-              >
-                {actionButtonText}
-              </Button>
-            </div>
+            {userCanAct && (
+              <div className="px-4">
+                <Button
+                  disabled={isLoading}
+                  onClick={actionButtonOnClick}
+                  className="hidden w-full md:block"
+                >
+                  {actionButtonText}
+                </Button>
+              </div>
+            )}
             <div className="hidden px-4 py-3 md:block">
               {isLoading ? (
                 <Skeleton className="h-48" />
@@ -98,11 +104,13 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
 
         <ChallengeDetailsMobileContent challenge={data?.challenge} loading={isLoading} />
 
-        <div className="fixed bottom-0 flex h-16 w-screen items-center justify-between gap-2 border-t-2 border-neutral-200 p-3 shadow md:hidden">
-          <Button disabled={isLoading} onClick={actionButtonOnClick} className="w-full">
-            {actionButtonText}
-          </Button>
-        </div>
+        {userCanAct && (
+          <div className="fixed bottom-0 flex h-16 w-screen items-center justify-between gap-2 border-t-2 border-neutral-200 p-3 shadow md:hidden">
+            <Button disabled={isLoading} onClick={actionButtonOnClick} className="w-full">
+              {actionButtonText}
+            </Button>
+          </div>
+        )}
       </div>
 
       {!data?.isPlayerEnrolled && (
