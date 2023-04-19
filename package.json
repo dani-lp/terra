@@ -71,7 +71,7 @@
     "postcss": "^8.4.21",
     "prettier": "^2.7.1",
     "prettier-plugin-organize-imports": "^3.2.2",
-    "prettier-plugin-tailwindcss": "^0.2.5",
+    "prettier-plugin-tailwindcss": "^0.2.7",
     "prisma": "^4.10.1",
     "storybook": "^7.0.5",
     "tailwindcss": "^3.2.7",
