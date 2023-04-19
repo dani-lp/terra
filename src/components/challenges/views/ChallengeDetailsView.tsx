@@ -6,6 +6,7 @@ import {
   ChallengeDetailsHeader,
   ChallengeDetailsHeaderSkeleton,
   ChallengeDetailsMobileContent,
+  EditChallengeSlideOver,
   EnrollModal,
   LeaderBoardList,
 } from '@/components/challenges/details';
@@ -23,6 +24,7 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
   const { data, isLoading, isError, error } = trpc.challenges.get.useQuery({ id: challengeId });
   const [enrollModalOpen, setEnrollModalOpen] = React.useState(false);
   const [addParticipationSlideOverOpen, setAddParticipationSlideOverOpen] = React.useState(false);
+  const [editChallengeSlideOverOpen, setEditChallengeSlideOverOpen] = React.useState(false);
   const { t } = useTranslation('challenges');
 
   if (!challengeId) {
@@ -38,7 +40,7 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
 
   const actionButtonOnClick = async () => {
     if (session?.user?.role === 'ORGANIZATION') {
-      // TODO edition modal
+      setEditChallengeSlideOverOpen(true);
     } else if (data?.isPlayerEnrolled) {
       setAddParticipationSlideOverOpen(true);
     } else {
@@ -115,6 +117,13 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
         <AddParticipationSlideOver
           open={addParticipationSlideOverOpen}
           setOpen={setAddParticipationSlideOverOpen}
+          challenge={data.challenge}
+        />
+      )}
+      {data && session?.user?.role === 'ORGANIZATION' && (
+        <EditChallengeSlideOver
+          open={editChallengeSlideOverOpen}
+          setOpen={setEditChallengeSlideOverOpen}
           challenge={data.challenge}
         />
       )}

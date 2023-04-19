@@ -21,9 +21,26 @@
       "title": "New Challenge",
       "description": "Add some basic information about your new challenge!"
     },
+    "editSlideOver": {
+      "title": "Edit challenge",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "name": "Challenge name",
+      "description": "Description",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "location": "Location",
+      "learnAbout": "Learn more about challenges",
+      "errors": {
+        "title": "There are some errors in your submission"
+      },
+      "other": {
+        "closePanel": "Close panel"
+      }
+    },
     "participationSlideOver": {
       "addParticipation": "Add participation",
-      "cancel": "Cancel", 
+      "cancel": "Cancel",
       "commentsField": "Comments about the participation",
       "dateField": "Date of participation",
       "errors": {
@@ -33,7 +50,10 @@
       },
       "learnAbout": "Learn more about challenges",
       "proof": "Proof",
-      "uploadFile": "Upload a file"
+      "uploadFile": "Upload a file",
+      "other": {
+        "closePanel": "Close panel"
+      }
     }
   }
 }
