@@ -9,6 +9,7 @@ import {
   EnrollModal,
   LeaderBoardList,
 } from '@/components/challenges/details';
+import { AddParticipationSlideOver } from '@/components/challenges/details/AddParticipationSlideOver';
 import { Button } from '@/components/common';
 import { Skeleton } from '@/components/common/skeleton';
 import { trpc } from '@/utils/trpc';
@@ -21,6 +22,7 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
   const { data: session } = useSession();
   const { data, isLoading, isError, error } = trpc.challenges.get.useQuery({ id: challengeId });
   const [enrollModalOpen, setEnrollModalOpen] = React.useState(false);
+  const [addParticipationSlideOverOpen, setAddParticipationSlideOverOpen] = React.useState(false);
   const { t } = useTranslation('challenges');
 
   if (!challengeId) {
@@ -38,7 +40,7 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
     if (session?.user?.role === 'ORGANIZATION') {
       // TODO edition modal
     } else if (data?.isPlayerEnrolled) {
-      // TODO participation modal
+      setAddParticipationSlideOverOpen(true);
     } else {
       setEnrollModalOpen(true);
     }
@@ -68,7 +70,11 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
               />
             )}
             <div className="px-4">
-              <Button disabled={isLoading} onClick={actionButtonOnClick} className="hidden w-full md:block">
+              <Button
+                disabled={isLoading}
+                onClick={actionButtonOnClick}
+                className="hidden w-full md:block"
+              >
                 {actionButtonText}
               </Button>
             </div>
@@ -97,12 +103,22 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
         </div>
       </div>
 
-      <EnrollModal
-        open={enrollModalOpen}
-        setOpen={setEnrollModalOpen}
-        challengeId={challengeId}
-        challengeName={data?.challenge.name ?? ''}
-      />
+      {!data?.isPlayerEnrolled && (
+        <EnrollModal
+          open={enrollModalOpen}
+          setOpen={setEnrollModalOpen}
+          challengeId={challengeId}
+          challengeName={data?.challenge.name ?? ''}
+        />
+      )}
+      {data?.isPlayerEnrolled && session?.user?.role === 'PLAYER' && (
+        <AddParticipationSlideOver
+          open={addParticipationSlideOverOpen}
+          setOpen={setAddParticipationSlideOverOpen}
+          title={data.challenge.name}
+          description={data.challenge.description}
+        />
+      )}
     </>
   );
 };

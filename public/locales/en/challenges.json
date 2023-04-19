@@ -16,6 +16,15 @@
     "new": {
       "title": "New Challenge",
       "description": "Add some basic information about your new challenge!"
+    },
+    "participationSlideOver": {
+      "addParticipation": "Add participation",
+      "cancel": "Cancel", 
+      "dateField": "Date of participation",
+      "commentsField": "Comments about the participation",
+      "learnAbout": "Learn more about challenges",
+      "proof": "Proof",
+      "uploadFile": "Upload a file"
     }
   }
 }
