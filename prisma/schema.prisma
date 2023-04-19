@@ -170,6 +170,6 @@ model Participation {
   comments     String?    @db.Text
   proofUrl     String?
 
-  @@unique([playerDataId, challengeId])
   @@index([challengeId])
+  @@index([playerDataId])
 }
