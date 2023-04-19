@@ -1,8 +1,64 @@
 {
   "challenges": {
+    "details": {
+      "actionButton": {
+        "edit": "Edit challenge",
+        "join": "Join challenge",
+        "addParticipation": "Add participation"
+      },
+      "header": {
+        "players_one": "{{count}} player",
+        "players_other": "{{count}} players"
+      }
+    },
+    "enrollModal": {
+      "title": "Join challenge",
+      "description": "You are about to join the challenge '{{name}}'! Please confirm your participation.",
+      "join": "Join",
+      "cancel": "Cancel"
+    },
     "new": {
       "title": "New Challenge",
       "description": "Add some basic information about your new challenge!"
+    },
+    "editSlideOver": {
+      "title": "Edit challenge",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "name": "Challenge name",
+      "description": "Description",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "location": "Location",
+      "learnAbout": "Learn more about challenges",
+      "errors": {
+        "title": "There are some errors in your submission",
+        "missingName": "Please enter a name for the challenge",
+        "shortName": "The name of the challenge is too short",
+        "missingDescription": "The challenge is missing a description",
+        "missingStartDate": "You must provide a start date",
+        "missingEndDate": "You must provide an end date"
+      },
+      "other": {
+        "closePanel": "Close panel"
+      }
+    },
+    "participationSlideOver": {
+      "addParticipation": "Add participation",
+      "cancel": "Cancel",
+      "commentsField": "Comments about the participation",
+      "dateField": "Date of participation",
+      "errors": {
+        "title": "There are some errors in your submission",
+        "date": "Please select a valid date",
+        "proofError": "Please upload a proof"
+      },
+      "learnAbout": "Learn more about challenges",
+      "proof": "Proof",
+      "uploadFile": "Upload a file",
+      "other": {
+        "closePanel": "Close panel"
+      }
     }
   }
 }

@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 #nprogress .bar {
-    background: #000000 !important;
-    height: 4px !important;
+  background: #000000 !important;
+  height: 4px !important;
+}
+
+.h-screen-mobile {
+  height: 100dvh;
 }

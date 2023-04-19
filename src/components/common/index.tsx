@@ -1,4 +1,6 @@
+export * from './alert';
 export * from './button';
+export * from './chip';
 export * from './form';
 export * from './layout';
 export * from './modal';

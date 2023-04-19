@@ -1,14 +1,13 @@
-import * as React from 'react';
-import Head from 'next/head';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
+import * as React from 'react';
 
-import type { NextPageWithLayout } from '../_app';
-import { MainLayout } from '@/components/common';
 import nextI18nConfig from '@/../next-i18next.config.mjs';
-import { TerraChallengesViewOrgs } from '@/components/challenges';
-import { useSession } from 'next-auth/react';
+import { TerraChallengesViewOrgs, TerraChallengesViewPlayers } from '@/components/challenges';
+import { MainLayout } from '@/components/common';
 import type { Role } from '@prisma/client';
-import { TerraChallengesViewPlayers } from '@/components/challenges/TerraChallengesViewPlayers';
+import { useSession } from 'next-auth/react';
+import type { NextPageWithLayout } from '../_app';
 
 const RoleViews = {
   ADMIN: TerraChallengesViewOrgs,

@@ -1,5 +1,5 @@
 import type { SelectOption } from '@/components/common';
-import create from 'zustand';
+import { create } from 'zustand';
 
 export const statusOptions: Readonly<SelectOption[]> = [
   { id: 'all', label: 'All' },

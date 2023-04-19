@@ -24,7 +24,7 @@ export const useChallenges = (query: QueryType) => {
       startDate: challenge.startDate.toLocaleDateString(),
       endDate: challenge.endDate.toLocaleDateString(),
       players: challenge.enrolledPlayersCount,
-      status: Math.random() > 0.5 ? 'open' : 'ended',
+      status: new Date() < challenge.endDate ? 'open' : 'ended', // TODO check
     })) ?? [];
 
   const filteredChallenges = challenges

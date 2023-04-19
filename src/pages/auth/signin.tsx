@@ -26,18 +26,18 @@ const SignIn: NextPage = () => {
       </Head>
       <main
         className={classNames(
-          'flex min-h-screen w-full items-center justify-center pt-16',
+          'flex min-h-screen w-full items-center justify-center px-4 pt-16',
           inter.className,
         )}
       >
         <Link
           href="/"
-          className="absolute top-4 left-4 inline-flex h-10 items-center justify-center rounded-lg bg-transparent py-2 px-4 text-sm font-medium transition-colors hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-transparent md:top-8 md:left-8"
+          className="absolute top-4 left-1 inline-flex h-10 items-center justify-center rounded-lg bg-transparent py-2 px-4 text-sm font-medium transition-colors hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-transparent sm:left-4 md:top-8 md:left-8"
         >
           <ChevronLeftIcon className="h-5 w-5" />
           {t('auth.actions.back')}
         </Link>
-        <div className="-mt-28 flex w-full max-w-xs flex-col items-center justify-center">
+        <div className="-mt-28 flex w-full max-w-xs flex-col items-center justify-center text-center">
           <Link href="/">
             <Image src="/logo.png" alt="logo" width={60} height={60} className="mb-4" />
           </Link>
