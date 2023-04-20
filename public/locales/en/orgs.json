@@ -11,6 +11,7 @@
             "title": "No challenges",
             "message": "This organization has not created any challenges yet.",
             "button": "Back to organizations"
-        }
+        },
+        "bottomTitle": "Organization challenges"
     }
 }

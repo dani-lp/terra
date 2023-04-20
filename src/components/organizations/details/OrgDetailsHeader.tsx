@@ -56,7 +56,7 @@ export const OrgDetailsHeader = ({ org, about, challengeCount }: Props) => {
   const { t } = useTranslation('orgs');
 
   return (
-    <div className="flex w-full flex-col items-start justify-start bg-white px-4 py-3 shadow md:bg-transparent">
+    <div className="flex w-full flex-col items-start justify-start bg-white px-4 py-3 shadow md:rounded-lg">
       <HeaderTitle name={org.name} joinedDate={org.createdAt} imageUrl={org.image} />
 
       <div className="mt-2 mb-4 flex flex-col">

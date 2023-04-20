@@ -10,7 +10,7 @@ const NoChallengesState = () => {
   const { t } = useTranslation('orgs');
 
   return (
-    <div className="py-8 px-4 text-center">
+    <div className="py-8 px-4 text-center md:p-0">
       <svg
         className="mx-auto h-12 w-12 text-gray-400"
         fill="none"
@@ -52,6 +52,7 @@ export const OrgDetailsMobileContent = ({ orgDetailsId }: Props) => {
   const { data, isLoading, isError, error } = trpc.challenges.createdByOrganization.useQuery({
     orgDetailsId,
   });
+  const { t } = useTranslation('orgs');
 
   if (isError) {
     // TODO error page
@@ -66,15 +67,17 @@ export const OrgDetailsMobileContent = ({ orgDetailsId }: Props) => {
   }
 
   return (
-    <ul
-      role="list"
-      className="m-2 divide-y divide-gray-200 overflow-hidden rounded-md bg-white shadow"
-    >
-      {isLoading && [...Array(3)].map((_, i) => <ChallengeRowSkeleton key={i} />)}
-      {!isLoading &&
-        challenges.map((challenge) => (
-          <ChallengeListRow key={challenge.id} challenge={challenge} asLink />
-        ))}
-    </ul>
+    <div className="m-2 divide-y-2 divide-gray-100 rounded-md bg-white shadow md:m-0">
+      <h2 className="px-3 py-2 text-lg font-medium leading-6">
+        {t('details.bottomTitle')}
+      </h2>
+      <ul role="list" className="divide-y divide-gray-200 overflow-hidden">
+        {isLoading && [...Array(3)].map((_, i) => <ChallengeRowSkeleton key={i} />)}
+        {!isLoading &&
+          challenges.map((challenge) => (
+            <ChallengeListRow key={challenge.id} challenge={challenge} asLink />
+          ))}
+      </ul>
+    </div>
   );
 };
