@@ -29,7 +29,7 @@ const sections: { [key: string]: () => JSX.Element } = {
 
 export const SettingsModal = () => {
   const [open, setOpen] = useAtom(settingsModalOpenAtom);
-  const { data, isLoading, isError, error } = trpc.user.getUserData.useQuery();
+  const { data, isLoading, isError, error } = trpc.user.getSelfData.useQuery();
   const [selectedTabKey, setSelectedTabKey] = React.useState<string>('1');
   const { t } = useTranslation('common');
   const { load } = useSettingsActions();

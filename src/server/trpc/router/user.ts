@@ -1,9 +1,13 @@
-import { TRPCError } from '@trpc/server';
-import { router, protectedProcedure } from '../trpc';
 import type { UserData } from '@/types';
+import { TRPCError } from '@trpc/server';
+import { z } from 'zod';
+import { protectedProcedure, router } from '../trpc';
 
 export const userRouter = router({
-  getUserData: protectedProcedure.query(async ({ ctx }) => {
+  /**
+   * Get the user's own data
+   */
+  getSelfData: protectedProcedure.query(async ({ ctx }) => {
     const { user } = ctx.session;
     const userDetails = await ctx.prisma.userDetails.findUnique({
       where: {
@@ -23,4 +27,30 @@ export const userRouter = router({
       about: userDetails.about,
     } as UserData;
   }),
+
+  /**
+   * Get data of an organization to be shown in a overview modal, card, or similar
+   */
+  getOrganizationOverviewData: protectedProcedure
+    .input(z.object({ organizationId: z.string() }))
+    .query(async ({ input }) => {
+      const { organizationId } = input;
+
+      // TODO
+
+      return organizationId;
+    }),
+
+  /**
+   * Get data of a player to be shown in a overview modal, card, or similar
+   */
+  getPlayerOverviewData: protectedProcedure
+    .input(z.object({ playerId: z.string() }))
+    .query(async ({ input }) => {
+      const { playerId } = input;
+
+      // TODO
+
+      return playerId;
+    }),
 });
