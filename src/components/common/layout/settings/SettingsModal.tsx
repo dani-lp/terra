@@ -47,7 +47,12 @@ export const SettingsModal = () => {
   // TODO might be a better idea to load data only when the modal gets opened
   React.useEffect(() => {
     if (data && !isLoading && !isError) {
-      load(data);
+      load({
+        about: data.about || '',
+        image: data.image || '',
+        name: data.name || '',
+        username: data.username || '',
+      });
     } else if (isError) {
       console.error(error);
     }
