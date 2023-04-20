@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { AllOrgsListSkeleton } from '@/components/organizations/AllOrgsListSkeleton';
 import { trpc } from '@/utils/trpc';
 import type { OrganizationData } from '@prisma/client';
 
@@ -30,8 +31,7 @@ export const AllOrgsList = ({ searchString }: Props) => {
   const { data, isLoading, isError, error } = trpc.user.getAllOrgsData.useQuery();
 
   if (isLoading) {
-    // TODO
-    return <div>Loading...</div>;
+    return <AllOrgsListSkeleton />;
   }
 
   if (isError) {
@@ -58,7 +58,7 @@ export const AllOrgsList = ({ searchString }: Props) => {
                 <li key={org.id}>
                   <Link
                     href={`/organizations/${org.id}`}
-                    className="flex gap-x-4 px-3 py-5 transition-colors hover:bg-gray-200"
+                    className="flex gap-x-4 px-3 py-5 transition-colors hover:bg-gray-200 md:rounded-lg"
                   >
                     <Image
                       className="h-12 w-12 flex-none rounded-full bg-gray-50"
