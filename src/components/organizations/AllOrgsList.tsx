@@ -59,7 +59,7 @@ export const AllOrgsList = ({ searchString }: Props) => {
               {orgs[letter]?.map((org) => (
                 <li key={org.id}>
                   <Link
-                    href={`/organizations/${org.name.toLowerCase().replace(/ /g, '-')}`}
+                    href={`/organizations/${org.id}`}
                     className="flex gap-x-4 px-3 py-5 transition-colors hover:bg-gray-200"
                   >
                     <Image

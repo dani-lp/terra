@@ -2,5 +2,10 @@
     "search": {
         "title": "Organization search",
         "placeholder": "Search organizations..."
+    },
+    "details": {
+        "challengeCount_one": "{{count}} challenge",
+        "challengeCount_other": "{{count}} challenges",
+        "joinedOn": "Joined on <1>{{date}}</1>"
     }
 }

@@ -62,6 +62,8 @@ export const userRouter = router({
       orderBy: { name: 'asc' },
     });
 
+    // TODO filter out non-org-roled users
+
     const orgsData: Record<string, typeof orgs> = {};
 
     orgs.forEach((org) => {
@@ -77,4 +79,42 @@ export const userRouter = router({
 
     return orgsData;
   }),
+
+  /**
+   * Get the details of an organization, to show in their details page
+   */
+  getOrgDetails: protectedProcedure
+    .input(z.object({ orgDetailsId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { orgDetailsId } = input;
+
+      const orgDetails = await ctx.prisma.organizationData.findUnique({
+        where: {
+          id: orgDetailsId,
+        },
+      });
+
+      if (!orgDetails) {
+        throw new TRPCError({ code: 'NOT_FOUND' });
+      }
+
+      const orgUserDetails = await ctx.prisma.userDetails.findUnique({
+        where: {
+          userId: orgDetails.userDetailsId,
+        },
+      });
+
+      if (!orgUserDetails) {
+        throw new TRPCError({ code: 'NOT_FOUND' });
+      }
+
+      const orgChallengeCount = await ctx.prisma.challenge.count({
+        where: {
+          organizationDataId: orgDetailsId,
+        },
+      });
+
+      // TODO fallback image URL
+      return { orgDetails, about: orgUserDetails.about ?? '', challengeCount: orgChallengeCount };
+    }),
 });

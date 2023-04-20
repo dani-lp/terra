@@ -423,4 +423,21 @@ export const challengesRouter = router({
 
       return updatedChallenge;
     }),
+
+  createdByOrganization: protectedProcedure
+    .input(
+      z.object({
+        orgDetailsId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { orgDetailsId } = input;
+
+      const challenges = await ctx.prisma.challenge.findMany({
+        where: {
+          organizationDataId: orgDetailsId,
+        },
+      });
+      return challenges;
+    }),
 });
