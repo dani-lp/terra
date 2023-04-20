@@ -12,7 +12,7 @@ export const AllOrgsView = () => {
 
   return (
     <div className="flex flex-col md:grid md:grid-cols-5 md:gap-4 md:p-4">
-      <div className="px-2 py-3 md:col-span-2 md:py-0">
+      <div className="mb-2 h-24 bg-white px-2 pb-3 pt-2 shadow md:col-span-2 md:rounded-lg md:pb-0">
         <h2 className="mb-2 text-lg font-medium">{t('search.title')}</h2>
         <SearchBar
           value={search}
