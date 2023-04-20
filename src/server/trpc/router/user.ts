@@ -1,6 +1,7 @@
-import type { UserData } from '@/types';
-import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
+
+import type { OrganizationData } from '@prisma/client';
+import { TRPCError } from '@trpc/server';
 import { protectedProcedure, router } from '../trpc';
 
 export const userRouter = router({
@@ -25,7 +26,7 @@ export const userRouter = router({
       image: user.image,
       role: userDetails.role,
       about: userDetails.about,
-    } as UserData;
+    };
   }),
 
   /**
@@ -60,11 +61,27 @@ export const userRouter = router({
   getAllOrgsData: protectedProcedure.query(async ({ ctx }) => {
     const orgs = await ctx.prisma.organizationData.findMany({
       orderBy: { name: 'asc' },
+      where: {
+        userDetails: {
+          role: {
+            equals: 'ORGANIZATION',
+          },
+        },
+      },
+      include: {
+        userDetails: {
+          select: {
+            user: {
+              select: {
+                image: true,
+              },
+            },
+          },
+        },
+      },
     });
 
-    // TODO filter out non-org-roled users
-
-    const orgsData: Record<string, typeof orgs> = {};
+    const orgsData: Record<string, (OrganizationData & { image: string })[]> = {};
 
     orgs.forEach((org) => {
       const initial = org.name[0]?.toUpperCase();
@@ -74,7 +91,8 @@ export const userRouter = router({
       if (!orgsData[initial]) {
         orgsData[initial] = [];
       }
-      orgsData[initial]?.push(org);
+      const { userDetails, ...rest } = org;
+      orgsData[initial]?.push({ ...rest, image: userDetails.user.image ?? '' });
     });
 
     return orgsData;

@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -28,10 +27,9 @@ const filterOrgs = (record: OrganizationGrouping, searchString: string): Organiz
 };
 
 export const AllOrgsList = ({ searchString }: Props) => {
-  const { data: session, status } = useSession();
   const { data, isLoading, isError, error } = trpc.user.getAllOrgsData.useQuery();
 
-  if (isLoading || status === 'loading') {
+  if (isLoading) {
     // TODO
     return <div>Loading...</div>;
   }
@@ -66,8 +64,7 @@ export const AllOrgsList = ({ searchString }: Props) => {
                       className="h-12 w-12 flex-none rounded-full bg-gray-50"
                       height={48}
                       width={48}
-                      // src={org.image}
-                      src={session?.user?.image ?? ''} // TODO add org image, or use placeholder
+                      src={org.image}
                       alt=""
                     />
                     <div className="min-w-0">
