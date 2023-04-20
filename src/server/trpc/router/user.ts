@@ -53,4 +53,28 @@ export const userRouter = router({
 
       return playerId;
     }),
+
+  /**
+   * Get a list of all orgs, ordered by name, divided by initial.
+   */
+  getAllOrgsData: protectedProcedure.query(async ({ ctx }) => {
+    const orgs = await ctx.prisma.organizationData.findMany({
+      orderBy: { name: 'asc' },
+    });
+
+    const orgsData: Record<string, typeof orgs> = {};
+
+    orgs.forEach((org) => {
+      const initial = org.name[0]?.toUpperCase();
+      if (!initial) {
+        return;
+      }
+      if (!orgsData[initial]) {
+        orgsData[initial] = [];
+      }
+      orgsData[initial]?.push(org);
+    });
+
+    return orgsData;
+  }),
 });
