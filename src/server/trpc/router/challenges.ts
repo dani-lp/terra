@@ -167,26 +167,31 @@ export const challengesRouter = router({
       where: {
         organizationDataId: organization?.organizationData?.id,
       },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        image: true,
+        startDate: true,
+        endDate: true,
+        location: true,
+        isDraft: true,
+        organizationDataId: true,
+        _count: {
+          select: {
+            enrolledPlayers: true,
+          },
+        },
+      },
     });
 
-    const challengesWithPlayerCount = await Promise.all(
-      challenges.map(async (challenge) => {
-        const enrolledPlayers = await ctx.prisma.playerData.findMany({
-          where: {
-            enrolledChallenges: {
-              some: {
-                id: challenge.id,
-              },
-            },
-          },
-        });
-
-        return {
-          ...challenge,
-          enrolledPlayersCount: enrolledPlayers.length,
-        };
-      }),
-    );
+    const challengesWithPlayerCount = challenges.map((challenge) => {
+      const { _count, ...challengeWithoutCount } = challenge;
+      return {
+        ...challengeWithoutCount,
+        enrolledPlayersCount: _count.enrolledPlayers,
+      };
+    });
 
     return challengesWithPlayerCount;
   }),
@@ -212,26 +217,31 @@ export const challengesRouter = router({
           },
         },
       },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        image: true,
+        startDate: true,
+        endDate: true,
+        location: true,
+        isDraft: true,
+        organizationDataId: true,
+        _count: {
+          select: {
+            enrolledPlayers: true,
+          },
+        },
+      },
     });
 
-    const enrolledChallengesWithPlayerCount = await Promise.all(
-      enrolledChallenges.map(async (challenge) => {
-        const enrolledPlayers = await ctx.prisma.playerData.findMany({
-          where: {
-            enrolledChallenges: {
-              some: {
-                id: challenge.id,
-              },
-            },
-          },
-        });
-
-        return {
-          ...challenge,
-          enrolledPlayersCount: enrolledPlayers.length,
-        };
-      }),
-    );
+    const enrolledChallengesWithPlayerCount = enrolledChallenges.map((challenge) => {
+      const { _count, ...challengeWithoutCount } = challenge;
+      return {
+        ...challengeWithoutCount,
+        enrolledPlayersCount: _count.enrolledPlayers,
+      };
+    });
 
     return enrolledChallengesWithPlayerCount;
   }),
@@ -259,26 +269,31 @@ export const challengesRouter = router({
           },
         },
       },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        image: true,
+        startDate: true,
+        endDate: true,
+        location: true,
+        isDraft: true,
+        organizationDataId: true,
+        _count: {
+          select: {
+            enrolledPlayers: true,
+          },
+        },
+      },
     });
 
-    const availableChallengesWithPlayerCount = await Promise.all(
-      availableChallenges.map(async (challenge) => {
-        const enrolledPlayers = await ctx.prisma.playerData.findMany({
-          where: {
-            enrolledChallenges: {
-              some: {
-                id: challenge.id,
-              },
-            },
-          },
-        });
-
-        return {
-          ...challenge,
-          enrolledPlayersCount: enrolledPlayers.length,
-        };
-      }),
-    );
+    const availableChallengesWithPlayerCount = availableChallenges.map((challenge) => {
+      const { _count, ...challengeWithoutCount } = challenge;
+      return {
+        ...challengeWithoutCount,
+        enrolledPlayersCount: _count.enrolledPlayers,
+      };
+    });
 
     return availableChallengesWithPlayerCount;
   }),
@@ -437,7 +452,32 @@ export const challengesRouter = router({
         where: {
           organizationDataId: orgDetailsId,
         },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          image: true,
+          startDate: true,
+          endDate: true,
+          location: true,
+          organizationDataId: true,
+          isDraft: true,
+          _count: {
+            select: {
+              enrolledPlayers: true,
+            },
+          },
+        },
       });
-      return challenges;
+
+      const challengesWithEnrolledPlayers = challenges.map((challenge) => {
+        const { _count, ...rest } = challenge;
+        return {
+          ...rest,
+          enrolledPlayersCount: _count.enrolledPlayers,
+        };
+      });
+
+      return challengesWithEnrolledPlayers;
     }),
 });

@@ -1,4 +1,8 @@
-import { OrgDetailsHeader } from '@/components/organizations/details';
+import {
+  OrgDetailsHeader,
+  OrgDetailsMobileContent,
+  OrgsDetailsHeaderSkeleton,
+} from '@/components/organizations/details';
 import { trpc } from '@/utils/trpc';
 import Head from 'next/head';
 
@@ -11,13 +15,8 @@ export const OrgDetailsView = ({ orgDetailsId }: Props) => {
     orgDetailsId: orgDetailsId ?? '',
   });
 
-  if (!orgDetailsId) {
-    // TODO error page
-    return null;
-  }
-
   if (isError) {
-    // TODO error page  
+    // TODO error page
     console.error(error);
     return null;
   }
@@ -30,11 +29,7 @@ export const OrgDetailsView = ({ orgDetailsId }: Props) => {
       <div className="overflow-hidden">
         <div className="md:grid md:grid-cols-2 md:gap-4 md:p-4 lg:gap-8">
           <div className="flex flex-col gap-2 md:col-span-1 md:max-w-md">
-            {/* {isLoading && (
-              <>
-                <OrgDetailsHeaderSkeleton />
-              </>
-            )} */}
+            {isLoading && <OrgsDetailsHeaderSkeleton />}
             {!isLoading && data !== null && (
               <OrgDetailsHeader
                 org={data.orgDetails}
@@ -50,8 +45,7 @@ export const OrgDetailsView = ({ orgDetailsId }: Props) => {
           </div> */}
         </div>
 
-        {/* <ChallengeDetailsMobileContent challenge={data?.challenge} loading={isLoading} /> */}
-
+        <OrgDetailsMobileContent orgDetailsId={orgDetailsId ?? ''} />
       </div>
     </>
   );

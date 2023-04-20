@@ -1,4 +1,4 @@
-import type { Challenge, Role } from '@prisma/client';
+import type { Role } from '@prisma/client';
 
 export type UserData = {
   id: string;
@@ -8,11 +8,4 @@ export type UserData = {
   image: string;
   role: Role;
   about: string;
-};
-
-export type DisplayChallenge = Omit<Challenge, 'startDate' | 'endDate'> & {
-  startDate: string; // TODO use proper dates
-  endDate: string;
-  players: number;
-  status: 'open' | 'ended';
 };

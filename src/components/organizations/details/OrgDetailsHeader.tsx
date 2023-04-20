@@ -60,16 +60,20 @@ export const OrgDetailsHeader = ({ org, about, challengeCount }: Props) => {
       <HeaderTitle name={org.name} joinedDate={org.createdAt} imageUrl={org.image} />
 
       <div className="mt-2 mb-4 flex flex-col">
-        <div className="mt-2 flex items-center text-sm text-gray-500">
-          <LinkIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
-          <a href={org.website} target="_blank" rel="noreferrer" className="hover:underline">
-            {org.website}
-          </a>
-        </div>
-        <div className="mt-2 flex items-center text-sm text-gray-500">
-          <MapPinIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
-          {org.country ?? 'Anywhere'}
-        </div>
+        {org.website && (
+          <div className="mt-2 flex items-center text-sm text-gray-500">
+            <LinkIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
+            <a href={org.website} target="_blank" rel="noreferrer" className="hover:underline">
+              {org.website}
+            </a>
+          </div>
+        )}
+        {org.country && (
+          <div className="mt-2 flex items-center text-sm text-gray-500">
+            <MapPinIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
+            {org.country}
+          </div>
+        )}
         <div className="mt-2 flex items-center text-sm text-gray-500">
           <UsersIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
           {t('details.challengeCount', { count: challengeCount })}

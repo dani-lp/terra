@@ -6,6 +6,11 @@
     "details": {
         "challengeCount_one": "{{count}} challenge",
         "challengeCount_other": "{{count}} challenges",
-        "joinedOn": "Joined on <1>{{date}}</1>"
+        "joinedOn": "Joined on <1>{{date}}</1>",
+        "noChallenges": {
+            "title": "No challenges",
+            "message": "This organization has not created any challenges yet.",
+            "button": "Back to organizations"
+        }
     }
 }
