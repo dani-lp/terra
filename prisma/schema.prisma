@@ -106,7 +106,7 @@ model PlayerData {
 
 model OrganizationData {
   id                String      @id @default(cuid())
-  name              String
+  name              String      @unique
   image             String
   website           String
   phone             String?
