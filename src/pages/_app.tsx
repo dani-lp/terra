@@ -48,6 +48,7 @@ const Layout = ({ Component, pageProps }: MyAppProps) => {
 
   return layout;
 };
+
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
