@@ -31,22 +31,27 @@ const Layout = ({ Component, pageProps }: MyAppProps) => {
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
-  const layout =
-    status === 'authenticated' ? (
-      getLayout(
-        <>
-          <TopProgressBar />
-          <Component {...pageProps} />
-        </>,
-      )
-    ) : (
+  const layouts: Record<typeof status, React.ReactElement> = {
+    authenticated: getLayout(
+      <>
+        <TopProgressBar />
+        <Component {...pageProps} />
+      </>,
+    ),
+    unauthenticated: (
       <>
         <TopProgressBar />
         <Component {...pageProps} />
       </>
-    );
+    ),
+    loading: (
+      <>
+        <TopProgressBar />
+      </>
+    ),
+  };
 
-  return layout;
+  return layouts[status];
 };
 
 const MyApp: AppType<{ session: Session | null }> = ({
