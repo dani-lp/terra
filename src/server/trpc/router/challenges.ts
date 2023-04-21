@@ -397,6 +397,13 @@ export const challengesRouter = router({
         });
       }
 
+      if (new Date() > new Date(challenge.endDate)) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          cause: `Challenge with id '${challengeId} has already ended'`,
+        });
+      }
+
       const isPlayerEnrolled = challenge?.enrolledPlayers.some((player) => player.id === playerId);
 
       if (isPlayerEnrolled) {
