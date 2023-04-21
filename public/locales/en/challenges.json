@@ -8,8 +8,12 @@
       },
       "header": {
         "players_one": "{{count}} player",
-        "players_other": "{{count}} players"
-      }
+        "players_other": "{{count}} players",
+        "by": "By",
+        "open": "Open",
+        "closed": "Closed"
+      },
+      "leaderboard": "Leaderboard"
     },
     "enrollModal": {
       "title": "Join challenge",

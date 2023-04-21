@@ -9,7 +9,8 @@ type Props = {
     | `h-${number} w-${number}`
     | `h-[${number}px] w-[${number}px]`
     | `h-${number} w-[${number}px]`
-    | `h-[${number}px] w-${number}`;
+    | `h-[${number}px] w-${number}`
+    | `h-${number} w-${number} sm:h-${number} sm:w-${number}`; // hardcoded, whatever
   heightFull?: boolean;
   widthFull?: boolean;
   rounded?: boolean;

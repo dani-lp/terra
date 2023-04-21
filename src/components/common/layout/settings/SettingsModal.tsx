@@ -29,7 +29,7 @@ const sections: { [key: string]: () => JSX.Element } = {
 
 export const SettingsModal = () => {
   const [open, setOpen] = useAtom(settingsModalOpenAtom);
-  const { data, isLoading, isError, error } = trpc.user.getUserData.useQuery();
+  const { data, isLoading, isError, error } = trpc.user.getSelfData.useQuery();
   const [selectedTabKey, setSelectedTabKey] = React.useState<string>('1');
   const { t } = useTranslation('common');
   const { load } = useSettingsActions();
@@ -47,7 +47,12 @@ export const SettingsModal = () => {
   // TODO might be a better idea to load data only when the modal gets opened
   React.useEffect(() => {
     if (data && !isLoading && !isError) {
-      load(data);
+      load({
+        about: data.about || '',
+        image: data.image || '',
+        name: data.name || '',
+        username: data.username || '',
+      });
     } else if (isError) {
       console.error(error);
     }

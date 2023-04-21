@@ -2,12 +2,10 @@ import { challengesRouter } from '@/server/trpc/router/challenges';
 import { router } from '../trpc';
 import { authRouter } from './auth';
 import { devRouter } from './dev';
-import { exampleRouter } from './example';
 import { userRouter } from './user';
 import { participationRouter } from '@/server/trpc/router/participation';
 
 export const appRouter = router({
-  example: exampleRouter,
   auth: authRouter,
   user: userRouter,
   dev: devRouter,

@@ -48,8 +48,10 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
     }
   };
 
+  const isChallengeActive = data && new Date() < data.challenge.endDate;
+
   const userCanAct =
-    session?.user?.role === 'PLAYER' ||
+    (session?.user?.role === 'PLAYER' && isChallengeActive) ||
     (session?.user?.role === 'ORGANIZATION' && data?.userIsAuthor);
 
   const actionButtonText =
@@ -72,7 +74,8 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
             {!isLoading && data !== null && (
               <ChallengeDetailsHeader
                 challenge={data.challenge}
-                enrolledPlayers={data?.enrolledPlayerCount}
+                enrolledPlayers={data.enrolledPlayerCount}
+                authorName={data.organizationName ?? ''}
               />
             )}
             {userCanAct && (
@@ -96,8 +99,9 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
           </div>
 
           <div className="hidden rounded-lg bg-white px-4 py-6 shadow md:col-span-1 md:block">
-            {/* TODO i18n */}
-            <h3 className="mb-2 ml-3 text-lg font-semibold leading-5 text-gray-900">Leaderboard</h3>
+            <h3 className="mb-2 ml-3 text-lg font-semibold leading-5 text-gray-900">
+              {t('challenges.details.leaderboard')}
+            </h3>
             <LeaderBoardList loading={isLoading} />
           </div>
         </div>
