@@ -130,7 +130,7 @@ export const SettingsModal = () => {
 
         <div className="mt-auto flex w-full justify-between border-t-2 border-gray-100 p-4 sm:px-8">
           <div>
-            <Button variant="inverseRed" onClick={() => signOut()}>
+            <Button variant="inverseRed" onClick={() => signOut({ callbackUrl: '/' })}>
               Log out
             </Button>
           </div>

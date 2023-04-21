@@ -12,12 +12,20 @@ import nextI18nConfig from '@/../next-i18next.config.mjs';
 import googleLogo from '@/../public/google-logo.png';
 import { Button, InputField } from '@/components/common/';
 import { classNames } from '@/const';
+import { QUERY_PARAM_CALLBACK_URL } from '@/const/queryParams';
+import { useQueryParams } from '@/hooks/useQueryParams';
 
 const inter = Inter({ subsets: ['latin'] });
 
 const SignIn: NextPage = () => {
   const { t } = useTranslation('auth');
   const { data: session, status } = useSession();
+  const { getParamValue } = useQueryParams();
+
+  const callbackUrlQueryParam = getParamValue(QUERY_PARAM_CALLBACK_URL);
+  const callbackUrl = Array.isArray(callbackUrlQueryParam)
+    ? callbackUrlQueryParam[0]
+    : callbackUrlQueryParam;
 
   return (
     <>
@@ -52,7 +60,7 @@ const SignIn: NextPage = () => {
           <Button
             type="button"
             variant="inverse"
-            onClick={() => signIn('google', { callbackUrl: '/dev' })}
+            onClick={() => signIn('google', { callbackUrl: callbackUrl ?? '/' })}
             className="mb-4 w-full"
           >
             <div className="mr-2 flex items-center justify-center rounded-full bg-white p-1">
@@ -63,7 +71,7 @@ const SignIn: NextPage = () => {
           {session?.user?.name && (
             <>
               <span className="mb-2">Welcome, {session?.user?.name}</span>
-              <Button onClick={() => signOut({ callbackUrl: '/dev' })}>
+              <Button onClick={() => signOut({ callbackUrl: '/' })}>
                 {t('auth.messages.signOut')}
               </Button>
             </>

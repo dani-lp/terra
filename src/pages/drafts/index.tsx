@@ -1,8 +1,11 @@
-import Head from 'next/head';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Head from 'next/head';
 
-import { MainLayout } from '@/components/common';
 import nextI18nConfig from '@/../next-i18next.config.mjs';
+import { MainLayout } from '@/components/common';
+import { QUERY_PARAM_CALLBACK_URL } from '@/const/queryParams';
+import type { GetServerSidePropsContext } from 'next';
+import { getSession } from 'next-auth/react';
 import type { NextPageWithLayout } from '../_app';
 
 const Drafts: NextPageWithLayout = () => {
@@ -24,8 +27,26 @@ Drafts.getLayout = (page) => {
   return <MainLayout>{page}</MainLayout>;
 };
 
-export const getServerSideProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ['common', 'navigation'], nextI18nConfig, ['en'])),
-  },
-});
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/auth/signin?${QUERY_PARAM_CALLBACK_URL}=${context.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      ...(await serverSideTranslations(
+        context.locale ?? '',
+        ['common', 'navigation'],
+        nextI18nConfig,
+        ['en'],
+      )),
+    },
+  };
+};
