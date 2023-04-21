@@ -11,7 +11,6 @@ import * as React from 'react';
 import { ToDevButton } from '@/components/dev';
 import { trpc } from '../utils/trpc';
 
-import { useRouter } from 'next/router';
 import '../styles/globals.css';
 
 const TopProgressBar = dynamic(
@@ -19,44 +18,46 @@ const TopProgressBar = dynamic(
   { ssr: false },
 );
 
-/**
- * Redirect users to the landing page if they are not authenticated
- */
-const InternalSessionRedirect = () => {
-  const { data: session, status } = useSession();
-  const router = useRouter();
-
-  React.useEffect(() => {
-    if (!session && status === 'unauthenticated') {
-      void router.push('/');
-    }
-  }, [session, status, router]);
-
-  return null;
-};
-
 export type NextPageWithLayout<P = Record<string, never>, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: React.ReactElement) => React.ReactElement;
 };
-
 type MyAppProps = AppProps & {
   Component: NextPageWithLayout;
   pageProps: { session: Session | null };
+};
+
+const Layout = ({ Component, pageProps }: MyAppProps) => {
+  const { status } = useSession();
+
+  const getLayout = Component.getLayout ?? ((page) => page);
+
+  const layouts: Record<typeof status, React.ReactElement> = {
+    authenticated: getLayout(
+      <>
+        <TopProgressBar />
+        <Component {...pageProps} />
+      </>,
+    ),
+    unauthenticated: (
+      <>
+        <TopProgressBar />
+        <Component {...pageProps} />
+      </>
+    ),
+    loading: (
+      <>
+        <TopProgressBar />
+      </>
+    ),
+  };
+
+  return layouts[status];
 };
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }: MyAppProps) => {
-  const getLayout = Component.getLayout ?? ((page) => page);
-
-  const layout = getLayout(
-    <>
-      <TopProgressBar />
-      <Component {...pageProps} />
-    </>,
-  );
-
   return (
     <>
       <Head>
@@ -66,7 +67,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <SessionProvider session={session} refetchOnWindowFocus>
-        {layout}
+        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+        {/* @ts-ignore */}
+        <Layout Component={Component} pageProps={pageProps} />
         {process.env.NODE_ENV === 'development' && <ToDevButton />}
       </SessionProvider>
     </>

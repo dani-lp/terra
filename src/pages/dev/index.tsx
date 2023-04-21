@@ -1,14 +1,16 @@
-import * as React from 'react';
 import { Button, MainLayout, SelectField, type SelectOption } from '@/components/common';
+import { trpc } from '@/utils/trpc';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import Link from 'next/link';
-import { trpc } from '@/utils/trpc';
+import * as React from 'react';
 
-import type { NextPageWithLayout } from '../_app';
 import nextI18nConfig from '@/../next-i18next.config.mjs';
+import { QUERY_PARAM_CALLBACK_URL } from '@/const/queryParams';
 import { Role } from '@prisma/client';
-import { useSession } from 'next-auth/react';
+import type { GetServerSidePropsContext } from 'next';
+import { getSession, useSession } from 'next-auth/react';
+import type { NextPageWithLayout } from '../_app';
 
 const selectOptions: SelectOption[] = [
   {
@@ -49,7 +51,7 @@ const Dev: NextPageWithLayout = () => {
       );
     }
   }, [status, session?.user?.role]);
-  
+
   const handleRoleChange = () => {
     roleMutation.mutate({ role: selectedRoleOption.id as Role });
   };
@@ -93,8 +95,26 @@ Dev.getLayout = (page) => {
   return <MainLayout>{page}</MainLayout>;
 };
 
-export const getServerSideProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ['common', 'navigation'], nextI18nConfig, ['en'])),
-  },
-});
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+  const session = await getSession(context);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/auth/signin?${QUERY_PARAM_CALLBACK_URL}=${context.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      ...(await serverSideTranslations(
+        context.locale ?? '',
+        ['common', 'navigation'],
+        nextI18nConfig,
+        ['en'],
+      )),
+    },
+  };
+};

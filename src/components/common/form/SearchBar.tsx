@@ -19,6 +19,7 @@ export const SearchBar = ({
   buttonText,
   buttonVariant,
   squaredBottom = false,
+  placeholder = 'Search your challenges',
   ...props
 }: SearchBarProps) => {
   return (
@@ -35,7 +36,7 @@ export const SearchBar = ({
             withButton ? 'rounded-none rounded-l-lg' : 'rounded-lg',
             squaredBottom ? 'rounded-b-none' : (withButton ? 'rounded-bl-lg' : ''),
           )}
-          placeholder="Search your challenges..."
+          placeholder={placeholder}
           {...props}
         />
       </div>

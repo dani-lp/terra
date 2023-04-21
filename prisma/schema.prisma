@@ -15,12 +15,6 @@ datasource db {
   relationMode = "prisma"
 }
 
-model Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 // Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
@@ -106,7 +100,7 @@ model PlayerData {
 
 model OrganizationData {
   id                String      @id @default(cuid())
-  name              String
+  name              String      @unique
   image             String
   website           String
   phone             String?
@@ -118,6 +112,7 @@ model OrganizationData {
   userDetails       UserDetails @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)
   userDetailsId     String      @unique
   createdChallenges Challenge[]
+  createdAt         DateTime    @default(now())
 }
 
 // TODO add more entries

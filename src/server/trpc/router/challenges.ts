@@ -78,7 +78,22 @@ export const challengesRouter = router({
         },
       })) > 0;
 
-    return { challenge, enrolledPlayerCount, userIsAuthor, isPlayerEnrolled };
+    const organization = await ctx.prisma.organizationData.findUnique({
+      where: {
+        id: challenge.organizationDataId,
+      },
+      select: {
+        name: true,
+      },
+    });
+
+    return {
+      challenge,
+      enrolledPlayerCount,
+      userIsAuthor,
+      isPlayerEnrolled,
+      organizationName: organization?.name,
+    };
   }),
 
   /**
@@ -167,26 +182,31 @@ export const challengesRouter = router({
       where: {
         organizationDataId: organization?.organizationData?.id,
       },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        image: true,
+        startDate: true,
+        endDate: true,
+        location: true,
+        isDraft: true,
+        organizationDataId: true,
+        _count: {
+          select: {
+            enrolledPlayers: true,
+          },
+        },
+      },
     });
 
-    const challengesWithPlayerCount = await Promise.all(
-      challenges.map(async (challenge) => {
-        const enrolledPlayers = await ctx.prisma.playerData.findMany({
-          where: {
-            enrolledChallenges: {
-              some: {
-                id: challenge.id,
-              },
-            },
-          },
-        });
-
-        return {
-          ...challenge,
-          enrolledPlayersCount: enrolledPlayers.length,
-        };
-      }),
-    );
+    const challengesWithPlayerCount = challenges.map((challenge) => {
+      const { _count, ...challengeWithoutCount } = challenge;
+      return {
+        ...challengeWithoutCount,
+        enrolledPlayersCount: _count.enrolledPlayers,
+      };
+    });
 
     return challengesWithPlayerCount;
   }),
@@ -212,26 +232,31 @@ export const challengesRouter = router({
           },
         },
       },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        image: true,
+        startDate: true,
+        endDate: true,
+        location: true,
+        isDraft: true,
+        organizationDataId: true,
+        _count: {
+          select: {
+            enrolledPlayers: true,
+          },
+        },
+      },
     });
 
-    const enrolledChallengesWithPlayerCount = await Promise.all(
-      enrolledChallenges.map(async (challenge) => {
-        const enrolledPlayers = await ctx.prisma.playerData.findMany({
-          where: {
-            enrolledChallenges: {
-              some: {
-                id: challenge.id,
-              },
-            },
-          },
-        });
-
-        return {
-          ...challenge,
-          enrolledPlayersCount: enrolledPlayers.length,
-        };
-      }),
-    );
+    const enrolledChallengesWithPlayerCount = enrolledChallenges.map((challenge) => {
+      const { _count, ...challengeWithoutCount } = challenge;
+      return {
+        ...challengeWithoutCount,
+        enrolledPlayersCount: _count.enrolledPlayers,
+      };
+    });
 
     return enrolledChallengesWithPlayerCount;
   }),
@@ -259,26 +284,31 @@ export const challengesRouter = router({
           },
         },
       },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        image: true,
+        startDate: true,
+        endDate: true,
+        location: true,
+        isDraft: true,
+        organizationDataId: true,
+        _count: {
+          select: {
+            enrolledPlayers: true,
+          },
+        },
+      },
     });
 
-    const availableChallengesWithPlayerCount = await Promise.all(
-      availableChallenges.map(async (challenge) => {
-        const enrolledPlayers = await ctx.prisma.playerData.findMany({
-          where: {
-            enrolledChallenges: {
-              some: {
-                id: challenge.id,
-              },
-            },
-          },
-        });
-
-        return {
-          ...challenge,
-          enrolledPlayersCount: enrolledPlayers.length,
-        };
-      }),
-    );
+    const availableChallengesWithPlayerCount = availableChallenges.map((challenge) => {
+      const { _count, ...challengeWithoutCount } = challenge;
+      return {
+        ...challengeWithoutCount,
+        enrolledPlayersCount: _count.enrolledPlayers,
+      };
+    });
 
     return availableChallengesWithPlayerCount;
   }),
@@ -367,6 +397,13 @@ export const challengesRouter = router({
         });
       }
 
+      if (new Date() > new Date(challenge.endDate)) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          cause: `Challenge with id '${challengeId} has already ended'`,
+        });
+      }
+
       const isPlayerEnrolled = challenge?.enrolledPlayers.some((player) => player.id === playerId);
 
       if (isPlayerEnrolled) {
@@ -422,5 +459,47 @@ export const challengesRouter = router({
       });
 
       return updatedChallenge;
+    }),
+
+  createdByOrganization: protectedProcedure
+    .input(
+      z.object({
+        orgDetailsId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { orgDetailsId } = input;
+
+      const challenges = await ctx.prisma.challenge.findMany({
+        where: {
+          organizationDataId: orgDetailsId,
+        },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          image: true,
+          startDate: true,
+          endDate: true,
+          location: true,
+          organizationDataId: true,
+          isDraft: true,
+          _count: {
+            select: {
+              enrolledPlayers: true,
+            },
+          },
+        },
+      });
+
+      const challengesWithEnrolledPlayers = challenges.map((challenge) => {
+        const { _count, ...rest } = challenge;
+        return {
+          ...rest,
+          enrolledPlayersCount: _count.enrolledPlayers,
+        };
+      });
+
+      return challengesWithEnrolledPlayers;
     }),
 });

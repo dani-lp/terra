@@ -1,4 +1,6 @@
-import { ChallengeListEntry, ChallengesFilterGroup } from '@/components/challenges';
+import * as React from 'react';
+
+import { ChallengeListRow, ChallengesFilterGroup } from '@/components/challenges';
 import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
 import { ChallengeRowSkeleton } from '@/components/challenges/ChallengeRowSkeleton';
 import { ChallengesViewTopBar } from '@/components/challenges/ChallengesViewTopBar';
@@ -9,7 +11,6 @@ import { classNames } from '@/const';
 import { QUERY_PARAM_CHALLENGES_TAB } from '@/const/queryParams';
 import { useQueryParams } from '@/hooks/useQueryParams';
 import { trpc } from '@/utils/trpc';
-import * as React from 'react';
 
 // TODO translations
 const tabs = [
@@ -126,7 +127,7 @@ export const TerraChallengesViewPlayers = () => {
                   {isLoading && [...Array(3)].map((_, i) => <ChallengeRowSkeleton key={i} />)}
                   {showChallenges &&
                     filteredChallenges.map((challenge) => (
-                      <ChallengeListEntry
+                      <ChallengeListRow
                         key={challenge.id}
                         challenge={challenge}
                         onClick={() => setModalChallengeId(challenge.id)}

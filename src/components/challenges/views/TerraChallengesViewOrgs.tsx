@@ -1,5 +1,5 @@
 import {
-  ChallengeListEntry,
+  ChallengeListRow,
   ChallengesFilterGroup,
   NewChallengeSlideOver,
 } from '@/components/challenges';
@@ -49,7 +49,7 @@ export const TerraChallengesViewOrgs = () => {
                 {!isLoading &&
                   !isError &&
                   filteredChallenges.map((challenge) => (
-                    <ChallengeListEntry
+                    <ChallengeListRow
                       key={challenge.id}
                       challenge={challenge}
                       onClick={() => setModalChallengeId(challenge.id)}
