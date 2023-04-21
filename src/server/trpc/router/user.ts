@@ -79,8 +79,12 @@ export const userRouter = router({
    * Get data of a player to be shown in a overview modal, card, or similar
    */
   getPlayerOverviewData: protectedProcedure
-    .input(z.object({ playerId: z.string() }))
+    .input(z.object({ playerId: z.string().nullable() }))
     .query(async ({ ctx, input }) => {
+      if (!input.playerId) {
+        return null;
+      }
+
       const { playerId } = input;
 
       const playerData = await ctx.prisma.playerData.findUnique({

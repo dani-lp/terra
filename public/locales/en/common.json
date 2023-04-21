@@ -40,5 +40,9 @@
     "ADMIN": "Administrator",
     "PLAYER": "Player",
     "ORGANIZATION": "Organization"
+  },
+  "users": {
+    "participatingChallenges_one": "Participating in {{count}} challenge",
+    "participatingChallenges_other": "Participating in {{count}} challenges"
   }
 }
