@@ -8,9 +8,10 @@ import type { Challenge } from '@prisma/client';
 type Props = {
   challenge: Challenge;
   enrolledPlayers: number;
+  authorName: string;
 };
 
-export const ChallengeDetailsHeader = ({ challenge, enrolledPlayers }: Props) => {
+export const ChallengeDetailsHeader = ({ challenge, enrolledPlayers, authorName }: Props) => {
   const { t } = useTranslation('challenges');
 
   // TODO use DB tags
@@ -25,11 +26,13 @@ export const ChallengeDetailsHeader = ({ challenge, enrolledPlayers }: Props) =>
       <h2 className="mb-1 text-2xl font-bold leading-7 text-gray-900 md:text-3xl">
         {challenge.name}
       </h2>
-      {/* TODO remove placeholder */}
       <p className="text-sm font-medium text-gray-500 md:text-base">
-        By{' '}
-        <Link href="#" className="text-gray-800 underline">
-          University of Deusto
+        {t('challenges.details.header.by')}{' '}
+        <Link
+          href={`/organizations/${challenge.organizationDataId}`}
+          className="text-gray-800 underline"
+        >
+          {authorName}
         </Link>
       </p>
 
@@ -38,7 +41,21 @@ export const ChallengeDetailsHeader = ({ challenge, enrolledPlayers }: Props) =>
           <CalendarIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
           {challenge.startDate.toLocaleDateString()} &ndash;{' '}
           {challenge.endDate.toLocaleDateString()}
-          {/* TODO status indicator */}
+          {new Date() > challenge.endDate ? (
+            <Chip
+              label={t('challenges.details.header.closed')}
+              className="ml-2 bg-red-200 text-red-800"
+              withDot
+              dotColor="bg-red-500"
+            />
+          ) : (
+            <Chip
+              label={t('challenges.details.header.open')}
+              className="ml-2 bg-green-200 text-green-800"
+              withDot
+              dotColor="bg-green-500"
+            />
+          )}
         </div>
         <div className="mt-2 flex items-center text-sm text-gray-500">
           <UsersIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
