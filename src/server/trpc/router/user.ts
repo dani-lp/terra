@@ -34,12 +34,45 @@ export const userRouter = router({
    */
   getOrganizationOverviewData: protectedProcedure
     .input(z.object({ organizationId: z.string() }))
-    .query(async ({ input }) => {
+    .query(async ({ ctx, input }) => {
       const { organizationId } = input;
 
-      // TODO
+      const organizationData = await ctx.prisma.organizationData.findUnique({
+        where: {
+          id: organizationId,
+        },
+      });
 
-      return organizationId;
+      if (!organizationData) {
+        throw new TRPCError({ code: 'NOT_FOUND' });
+      }
+
+      const organizationUserDetails = await ctx.prisma.userDetails.findUnique({
+        where: {
+          userId: organizationData.userDetailsId,
+        },
+      });
+
+      if (!organizationUserDetails) {
+        throw new TRPCError({ code: 'NOT_FOUND' });
+      }
+
+      const challengeCount = await ctx.prisma.challenge.count({
+        where: {
+          organizationDataId: organizationId,
+        },
+      });
+
+      return {
+        organizationId: organizationData.id,
+        userDetailsId: organizationData.userDetailsId,
+        name: organizationData.name,
+        image: organizationData.image,
+        about: organizationUserDetails.about ?? '',
+        country: organizationData.country,
+        challengeCount,
+        username: organizationUserDetails.username, // TODO is this needed?
+      };
     }),
 
   /**
@@ -47,12 +80,67 @@ export const userRouter = router({
    */
   getPlayerOverviewData: protectedProcedure
     .input(z.object({ playerId: z.string() }))
-    .query(async ({ input }) => {
+    .query(async ({ ctx, input }) => {
       const { playerId } = input;
 
-      // TODO
+      const playerData = await ctx.prisma.playerData.findUnique({
+        where: {
+          id: playerId,
+        },
+      });
 
-      return playerId;
+      if (!playerData) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: `Player playerData with id ${playerId} not found`,
+        });
+      }
+
+      const playerUserDetails = await ctx.prisma.userDetails.findUnique({
+        where: {
+          userId: playerData.userDetailsId,
+        },
+      });
+
+      if (!playerUserDetails) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: `Player userDetails with id ${playerData.userDetailsId} not found`,
+        });
+      }
+
+      const user = await ctx.prisma.user.findUnique({
+        where: {
+          id: playerUserDetails.userId,
+        },
+      });
+
+      if (!user) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: `Player user with id ${playerUserDetails.userId} not found`,
+        });
+      }
+
+      const challengeEnrollmentCount = await ctx.prisma.challenge.count({
+        where: {
+          enrolledPlayers: {
+            some: {
+              id: playerId,
+            },
+          },
+        },
+      });
+
+      return {
+        playerId: playerData.id,
+        userDetailsId: playerData.userDetailsId,
+        name: user.name,
+        username: playerUserDetails.username,
+        image: user.image,
+        about: playerUserDetails.about ?? '',
+        challengeEnrollmentCount,
+      };
     }),
 
   /**
