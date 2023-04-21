@@ -7,10 +7,10 @@ import * as React from 'react';
 
 import { trpc } from '@/utils/trpc';
 
+import { PlayerDetailsSlideOverContentSkeleton } from '@/components/users/PlayerDetailsSlideOverContentSkeleton';
 import pfp1 from '../../../public/img/profile_bgs/profileBg1.jpg';
 import pfp2 from '../../../public/img/profile_bgs/profileBg2.jpg';
 import pfp3 from '../../../public/img/profile_bgs/profileBg3.jpg';
-import { PlayerDetailsSlideOverContentSkeleton } from '@/components/users/PlayerDetailsSlideOverContentSkeleton';
 
 const coverImageUrls = [pfp1, pfp2, pfp3];
 
@@ -91,9 +91,7 @@ export const PlayerDetailsSlideOver = ({ playerId, open, setOpen }: Props) => {
                             alt=""
                           />
                         </div>
-                        {isLoading && (
-                          <PlayerDetailsSlideOverContentSkeleton />
-                        )}
+                        {isLoading && <PlayerDetailsSlideOverContentSkeleton />}
                         {!isLoading && data && (
                           <div className="mx-auto max-w-5xl px-6 sm:px-8 lg:px-10">
                             <div className="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">

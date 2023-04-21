@@ -6,7 +6,7 @@ export const PlayerDetailsSlideOverContentSkeleton = () => {
     <div className="mx-auto max-w-5xl px-6 sm:px-8 lg:px-10">
       <div className="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
         <div className="flex">
-          <Skeleton className="h-24 w-24" rounded />
+          <Skeleton className="h-24 w-24 sm:h-32 sm:w-32" rounded />
         </div>
       </div>
       <div className="mt-4 divide-y divide-gray-200">
