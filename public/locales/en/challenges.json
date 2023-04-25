@@ -1,5 +1,29 @@
 {
   "challenges": {
+    "creation": {
+      "new": "New",
+      "cancel": "Cancel",
+      "create": "Create challenge",
+      "name": "Challenge name",
+      "description": "Description",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "location": "Location",
+      "locationPlaceholder": "Where is the challenge taking place?",
+      "privacy": "Privacy",
+      "publicAccess": {
+        "title": "Public access",
+        "description": "Everyone will be able to take part in the challenge."
+      },
+      "protectedAccess": {
+        "title": "Private to organization members",
+        "description": "Only members of your organization will be able to participate."
+      },
+      "draftAccess": {
+        "title": "Private to you",
+        "description": "Create a draft version of the challenge."
+      }
+    },
     "details": {
       "actionButton": {
         "edit": "Edit challenge",
