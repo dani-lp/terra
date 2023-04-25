@@ -141,20 +141,26 @@ export const NewChallengeSlideOver = () => {
     if (!endDate) {
       newErrors.push(t('challenges.creation.errors.missingEndDate'));
     }
+    if (new Date(startDate) > new Date(endDate)) {
+      newErrors.push(t('challenges.creation.errors.invalidDateRange'));
+    }
+    if (new Date(endDate) < new Date()) {
+      newErrors.push(t('challenges.creation.errors.invalidEndDate'));
+    }
     if (location.length === 1) {
       newErrors.push(t('challenges.creation.errors.shortLocation'));
     }
 
     setErrors(newErrors);
 
-    // if (newErrors.length > 0) {
-    //   return;
-    // }
+    if (newErrors.length > 0) {
+      return;
+    }
 
     const result = await newChallengeMutation.mutateAsync(formValues);
 
     if (result) {
-      // setOpen(false);
+      setOpen(false);
     }
   };
 
@@ -425,10 +431,17 @@ export const NewChallengeSlideOver = () => {
               }}
             />
             <div className="flex shrink-0 justify-end gap-4">
-              <Button type="button" variant="inverse" onClick={() => setOpen(false)}>
+              <Button
+                disabled={newChallengeMutation.isLoading}
+                type="button"
+                variant="inverse"
+                onClick={() => setOpen(false)}
+              >
                 {t('challenges.creation.cancel')}
               </Button>
-              <Button type="submit">{t('challenges.creation.create')}</Button>
+              <Button disabled={newChallengeMutation.isLoading} type="submit">
+                {t('challenges.creation.create')}
+              </Button>
             </div>
           </div>
         </form>

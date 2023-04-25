@@ -324,22 +324,24 @@ export const challengesRouter = router({
       z.object({
         name: z.string().min(5),
         description: z.string(),
-        startDate: z.string(),
-        endDate: z.string(),
+        startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
         location: z.string(),
         privacy: z.enum(['public', 'private']),
-        tags: z.array(
-          z.enum([
-            ChallengeTag.FITNESS,
-            ChallengeTag.RECYCLING,
-            ChallengeTag.ENVIRONMENT_CLEANING,
-            ChallengeTag.NUTRITION,
-            ChallengeTag.MOBILITY,
-            ChallengeTag.WELLNESS,
-            ChallengeTag.COMMUNITY_INVOLVEMENT,
-            ChallengeTag.OTHER,
-          ]),
-        ).min(1),
+        tags: z
+          .array(
+            z.enum([
+              ChallengeTag.FITNESS,
+              ChallengeTag.RECYCLING,
+              ChallengeTag.ENVIRONMENT_CLEANING,
+              ChallengeTag.NUTRITION,
+              ChallengeTag.MOBILITY,
+              ChallengeTag.WELLNESS,
+              ChallengeTag.COMMUNITY_INVOLVEMENT,
+              ChallengeTag.OTHER,
+            ]),
+          )
+          .min(1),
         difficulty: z.enum([
           ChallengeDifficulty.EASY,
           ChallengeDifficulty.MEDIUM,
@@ -348,11 +350,21 @@ export const challengesRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { name, description } = input;
+      const { name, description, startDate, endDate, location, privacy, tags, difficulty } = input;
 
-      return input;
+      if (new Date(startDate) > new Date(endDate)) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Start date must be before end date',
+        });
+      }
+      if (new Date(endDate) < new Date()) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'End date must be in the future',
+        });
+      }
 
-      /** 
       const organizationUserDetails = await ctx.prisma.userDetails.findUnique({
         where: {
           userId: ctx.session.user.id,
@@ -384,14 +396,22 @@ export const challengesRouter = router({
         data: {
           name,
           description,
-          startDate: new Date(),
-          endDate: new Date(),
+          startDate: new Date(startDate),
+          endDate: new Date(endDate),
+          difficulty,
+          location,
+          isDraft: privacy === 'private',
+          challengeCategories: {
+            create: tags.map((tag) => ({
+              tag,
+            })),
+          },
+
           organizationDataId: organizationData.id,
         },
       });
 
       return challenge;
-      */
     }),
 
   /**

@@ -51,6 +51,8 @@
         "missingDescription": "The challenge is missing a description",
         "missingStartDate": "You must provide a start date",
         "missingEndDate": "You must provide an end date",
+        "invalidDateRange": "The end date must be after the start date",
+        "invalidEndDate": "The end date must be in the future",
         "shortLocation": "The location is too short (must be at least 1 character)"
       }
     },

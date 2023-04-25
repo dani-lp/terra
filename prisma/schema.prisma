@@ -149,12 +149,12 @@ model Challenge {
   location    String?
   isDraft     Boolean  @default(true)
 
-  organizationData   OrganizationData    @relation(fields: [organizationDataId], references: [id], onDelete: Cascade)
-  organizationDataId String
-  ChallengeCategory  ChallengeCategory[]
-  enrolledPlayers    PlayerData[]
-  participations     Participation[]
-  difficulty         ChallengeDifficulty @default(EASY)
+  organizationData    OrganizationData    @relation(fields: [organizationDataId], references: [id], onDelete: Cascade)
+  organizationDataId  String
+  challengeCategories ChallengeCategory[]
+  enrolledPlayers     PlayerData[]
+  participations      Participation[]
+  difficulty          ChallengeDifficulty @default(EASY)
 
   createdAt DateTime @default(now())
 
@@ -162,9 +162,13 @@ model Challenge {
 }
 
 model ChallengeCategory {
-  id         String       @id @default(cuid())
-  tag        ChallengeTag
-  challenges Challenge[]
+  id          String       @id @default(cuid())
+  tag         ChallengeTag
+  challenges  Challenge    @relation(fields: [challengeId], references: [id])
+  challengeId String
+
+  @@unique([tag, challengeId])
+  @@index([challengeId])
 }
 
 model Participation {
