@@ -10,3 +10,14 @@ export const tagColors: Record<ChallengeTag, string> = {
   COMMUNITY_INVOLVEMENT: 'bg-red-100 text-red-700',
   OTHER: 'bg-gray-100 text-gray-600',
 };
+
+export const tagDotColors: Record<ChallengeTag, string> = {
+  FITNESS: 'bg-indigo-300',
+  RECYCLING: 'bg-green-300',
+  ENVIRONMENT_CLEANING: 'bg-purple-300',
+  NUTRITION: 'bg-pink-300',
+  MOBILITY: 'bg-yellow-300',
+  WELLNESS: 'bg-blue-300',
+  COMMUNITY_INVOLVEMENT: 'bg-red-300',
+  OTHER: 'bg-gray-300',
+};

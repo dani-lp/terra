@@ -4,7 +4,7 @@ import { ChallengeTag } from '@prisma/client';
 import * as React from 'react';
 
 import { Chip } from '@/components/common/chip';
-import { classNames, tagColors } from '@/const';
+import { classNames, tagColors, tagDotColors } from '@/const';
 import { useTranslation } from 'next-i18next';
 
 type Props = {
@@ -64,7 +64,10 @@ export const ChallengeTagSelector = ({ selectedTags, setSelectedTags }: Props) =
                 >
                   <div className="flex items-center">
                     <span
-                      className="inline-block h-2 w-2 shrink-0 rounded-full bg-gray-200"
+                      className={classNames(
+                        'inline-block h-2 w-2 shrink-0 rounded-full bg-gray-200',
+                        tagDotColors[tag],
+                      )}
                       aria-hidden="true"
                     />
                     <span className="ml-3 truncate">{t(`challenges.creation.tag.${tag}`)}</span>
