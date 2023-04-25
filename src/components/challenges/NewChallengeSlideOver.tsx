@@ -1,15 +1,81 @@
-import { Dialog } from '@headlessui/react';
+import { Dialog, RadioGroup } from '@headlessui/react';
 import { MapPinIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import * as React from 'react';
 
-import { config } from '@/const';
+import { classNames, config } from '@/const';
 import { trpc } from '@/utils/trpc';
 import type { ChallengeDifficulty, ChallengeTag } from '@prisma/client';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { Button, DateInputWithIcon } from '../common';
 import { SlideOver } from '../common/layout/SlideOver';
+
+type DifficultyListEntry = {
+  checkedClassName: string;
+  ringClassName: string;
+};
+
+const difficultyLookup: Record<ChallengeDifficulty, DifficultyListEntry> = {
+  EASY: {
+    checkedClassName: 'bg-green-300',
+    ringClassName: 'ring-green-300',
+  },
+  MEDIUM: {
+    checkedClassName: 'bg-yellow-300',
+    ringClassName: 'ring-yellow-300',
+  },
+  HARD: {
+    checkedClassName: 'bg-red-300',
+    ringClassName: 'ring-red-300',
+  },
+};
+
+const difficulties: ChallengeDifficulty[] = ['EASY', 'MEDIUM', 'HARD'];
+
+type DifficultyRadioButtonsProps = {
+  difficulty: ChallengeDifficulty;
+  setDifficulty: (value: ChallengeDifficulty) => void;
+}
+
+const DifficultyRadioButtons = ({ difficulty, setDifficulty }: DifficultyRadioButtonsProps) => {
+  const { t } = useTranslation('challenges');
+
+  return (
+    <div>
+      <label className="text-sm font-medium leading-6 text-gray-900">
+        {t('challenges.creation.difficulty')}
+      </label>
+
+      <RadioGroup value={difficulty} onChange={setDifficulty} className="mt-1">
+        <RadioGroup.Label className="sr-only">
+          {t('challenges.creation.difficultySrMsg')}
+        </RadioGroup.Label>
+        <div className="flex flex-col items-center justify-between gap-2 min-[550px]:flex-row">
+          {difficulties.map((option) => (
+            <RadioGroup.Option
+              key={option}
+              value={option}
+              className={({ active, checked }) =>
+                classNames(
+                  active ? `ring-2 ring-offset-2 ${difficultyLookup[option].ringClassName}` : '',
+                  checked
+                    ? difficultyLookup[option].checkedClassName
+                    : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50',
+                  'flex w-full flex-1 cursor-pointer items-center justify-center rounded-md p-3 text-sm font-semibold uppercase focus:outline-none',
+                )
+              }
+            >
+              <RadioGroup.Label as="span">
+                {t(`challenges.creation.difficulties.${option.toLocaleLowerCase()}`)}
+              </RadioGroup.Label>
+            </RadioGroup.Option>
+          ))}
+        </div>
+      </RadioGroup>
+    </div>
+  );
+};
 
 type FormValues = {
   name: string;
@@ -32,6 +98,7 @@ export const NewChallengeSlideOver = () => {
   });
 
   const { t } = useTranslation('challenges');
+  const { t: tCommon } = useTranslation('common');
   const [open, setOpen] = React.useState(false);
   const [formValues, setFormValues] = React.useState<FormValues>({
     name: '',
@@ -69,6 +136,13 @@ export const NewChallengeSlideOver = () => {
     });
   };
 
+  const handleDifficultyChange = (value: ChallengeDifficulty) => {
+    setFormValues({
+      ...formValues,
+      difficulty: value,
+    });
+  };
+
   return (
     <>
       <Button size="sm" onClick={() => setOpen(!open)} className="xl:h-10">
@@ -92,7 +166,7 @@ export const NewChallengeSlideOver = () => {
                     className="rounded-md text-neutral-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
                     onClick={() => setOpen(false)}
                   >
-                    <span className="sr-only">{t('a11y.closePanel')}</span>
+                    <span className="sr-only">{tCommon('a11y.closePanel')}</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
@@ -140,7 +214,7 @@ export const NewChallengeSlideOver = () => {
                     </div>
                   </div>
 
-                  <div className="flex w-full items-center justify-between gap-4">
+                  <div className="flex w-full flex-col items-center justify-between gap-4 sm:flex-row">
                     <DateInputWithIcon
                       label={t('challenges.creation.startDate')}
                       name="startDate"
@@ -180,6 +254,8 @@ export const NewChallengeSlideOver = () => {
                       />
                     </div>
                   </div>
+
+                  <DifficultyRadioButtons difficulty={formValues.difficulty} setDifficulty={(newDifficulty) => handleDifficultyChange(newDifficulty)} />
 
                   <fieldset>
                     <legend className="text-sm font-medium text-gray-900">

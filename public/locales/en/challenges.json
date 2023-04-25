@@ -10,6 +10,13 @@
       "endDate": "End date",
       "location": "Location",
       "locationPlaceholder": "Where is the challenge taking place?",
+      "difficulty": "Difficulty",
+      "difficulties": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Challenging"
+      },
+      "difficultySrMsg": "Choose a difficulty level",
       "privacy": "Privacy",
       "publicAccess": {
         "title": "Public access",
