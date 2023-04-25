@@ -45,14 +45,12 @@ export const ChallengeDetailsHeader = ({ challenge, enrolledPlayers, authorName 
             <Chip
               label={t('challenges.details.header.closed')}
               className="ml-2 bg-red-200 text-red-800"
-              withDot
               dotColor="bg-red-500"
             />
           ) : (
             <Chip
               label={t('challenges.details.header.open')}
               className="ml-2 bg-green-200 text-green-800"
-              withDot
               dotColor="bg-green-500"
             />
           )}

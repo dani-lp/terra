@@ -3,6 +3,7 @@ import { MapPinIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import * as React from 'react';
 
+import { ChallengeTagSelector } from '@/components/common';
 import { classNames, config } from '@/const';
 import { trpc } from '@/utils/trpc';
 import type { ChallengeDifficulty, ChallengeTag } from '@prisma/client';
@@ -36,16 +37,17 @@ const difficulties: ChallengeDifficulty[] = ['EASY', 'MEDIUM', 'HARD'];
 type DifficultyRadioButtonsProps = {
   difficulty: ChallengeDifficulty;
   setDifficulty: (value: ChallengeDifficulty) => void;
-}
+};
 
 const DifficultyRadioButtons = ({ difficulty, setDifficulty }: DifficultyRadioButtonsProps) => {
   const { t } = useTranslation('challenges');
 
   return (
     <div>
-      <label className="text-sm font-medium leading-6 text-gray-900">
+      <p className="text-sm font-medium leading-6 text-gray-900">
         {t('challenges.creation.difficulty')}
-      </label>
+        <span className="text-red-500"> *</span>
+      </p>
 
       <RadioGroup value={difficulty} onChange={setDifficulty} className="mt-1">
         <RadioGroup.Label className="sr-only">
@@ -143,6 +145,13 @@ export const NewChallengeSlideOver = () => {
     });
   };
 
+  const handleTagsChange = (value: ChallengeTag[]) => {
+    setFormValues({
+      ...formValues,
+      tags: value,
+    });
+  };
+
   return (
     <>
       <Button size="sm" onClick={() => setOpen(!open)} className="xl:h-10">
@@ -194,6 +203,18 @@ export const NewChallengeSlideOver = () => {
                       />
                     </div>
                   </div>
+
+                  <DifficultyRadioButtons
+                    difficulty={formValues.difficulty}
+                    setDifficulty={(newDifficulty) => handleDifficultyChange(newDifficulty)}
+                  />
+
+                  <ChallengeTagSelector
+                    selectedTags={formValues.tags}
+                    setSelectedTags={handleTagsChange}
+                  />
+                </div>
+                <div className="space-y-6 pt-4 pb-5">
                   <div>
                     <label
                       htmlFor="description"
@@ -254,9 +275,8 @@ export const NewChallengeSlideOver = () => {
                       />
                     </div>
                   </div>
-
-                  <DifficultyRadioButtons difficulty={formValues.difficulty} setDifficulty={(newDifficulty) => handleDifficultyChange(newDifficulty)} />
-
+                </div>
+                <div className="space-y-6 pt-4 pb-5">
                   <fieldset>
                     <legend className="text-sm font-medium text-gray-900">
                       {t('challenges.creation.privacy')}

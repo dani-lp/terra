@@ -17,6 +17,18 @@
         "hard": "Challenging"
       },
       "difficultySrMsg": "Choose a difficulty level",
+      "tags": "Tags",
+      "addTags": "Add tags...",
+      "tag": {
+        "FITNESS": "Fitness",
+        "RECYCLING": "Recycling",
+        "ENVIRONMENT_CLEANING": "Environment cleaning",
+        "NUTRITION": "Nutrition",
+        "MOBILITY": "Mobility",
+        "WELLNESS": "Wellness",
+        "COMMUNITY_INVOLVEMENT": "Community involvement",
+        "OTHER": "Other"
+      },
       "privacy": "Privacy",
       "publicAccess": {
         "title": "Public access",
