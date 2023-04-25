@@ -1,5 +1,6 @@
 import { classNames } from '@/const';
 import type { Challenge } from '@prisma/client';
+import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { ChallengeStats } from './ChallengeStats';
 
@@ -10,6 +11,7 @@ type Props = {
 };
 
 const Content = ({ challenge }: Pick<Props, 'challenge'>) => {
+  const { t } = useTranslation('challenges');
   const status = new Date() < challenge.endDate ? 'open' : 'ended';
 
   return (
@@ -23,8 +25,9 @@ const Content = ({ challenge }: Pick<Props, 'challenge'>) => {
               status === 'open' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800',
             )}
           >
-            {/* TODO i18n */}
-            {status}
+            {status === 'open'
+              ? t('challenges.details.header.open')
+              : t('challenges.details.header.closed')}
           </p>
         </div>
       </div>

@@ -5,9 +5,10 @@ import { useRouter } from 'next/router';
 
 import { ChallengeDetailsModalSkeleton } from '@/components/challenges/ChallengeDetailsModalSkeleton';
 import { ChallengeStats } from '@/components/challenges/ChallengeStats';
+import { tagColors } from '@/const';
 import { trpc } from '@/utils/trpc';
 import Link from 'next/link';
-import { Button, Modal } from '../common';
+import { Button, Chip, Modal } from '../common';
 
 type Props = {
   challengeId: string;
@@ -21,14 +22,10 @@ export const ChallengeDetailsModal = ({
   isAlreadyEnrolled = false,
 }: Props) => {
   const { t } = useTranslation();
+  const { t: tChallenges } = useTranslation('challenges');
   const { data: session } = useSession();
   const utils = trpc.useContext();
-  const {
-    data,
-    isLoading,
-    isError,
-    error,
-  } = trpc.challenges.get.useQuery({ id: challengeId });
+  const { data, isLoading, isError, error } = trpc.challenges.get.useQuery({ id: challengeId });
   const challengeEnrollment = trpc.challenges.enroll.useMutation({
     onSuccess: async () => {
       await Promise.all([
@@ -51,11 +48,17 @@ export const ChallengeDetailsModal = ({
 
   const acceptText =
     session?.user?.role === 'PLAYER' ? t('actions.join') : t('actions.viewDetails');
-  
+
   if (isError) {
     console.error(error);
     return null;
   }
+
+  const tags =
+    data?.challengeTags.map((tag) => ({
+      name: tChallenges(`challenges.tags.${tag}`),
+      color: tagColors[tag],
+    })) || [];
 
   return (
     <Modal open={!!challengeId} setOpen={onExit} fullScreen className="max-w-3xl sm:max-h-[500px]">
@@ -74,13 +77,22 @@ export const ChallengeDetailsModal = ({
           ) : (
             <>
               <h2 className="mb-2 text-3xl font-semibold">{data?.challenge?.name}</h2>
-              {/* TODO map paragraphs into <p> */}
+              {tags.length > 0 && (
+                <div className="mb-2 flex flex-wrap gap-2">
+                  {tags.map((tag) => (
+                    <Chip key={tag.name} label={tag.name} className={tag.color} />
+                  ))}
+                </div>
+              )}
               <p className="mb-2">{data?.challenge?.description}</p>
-              <ChallengeStats endDate={data?.challenge?.endDate.toDateString() ?? ''} players={5297395} />
+              <ChallengeStats
+                endDate={data?.challenge?.endDate.toISOString().substring(0, 10) ?? ''}
+                players={data?.enrolledPlayerCount ?? 0}
+                location={data?.challenge?.location ?? ''}
+              />
             </>
           )}
           <div className="mt-auto flex w-full flex-col items-center justify-center gap-4 sm:flex-row">
-            {/* TODO translate, use proper texts depending on user role, e.g. "edit" */}
             <Button className="w-full" variant="inverse" onClick={onExit}>
               {t('actions.close')}
             </Button>
