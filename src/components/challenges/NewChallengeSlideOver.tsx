@@ -3,7 +3,7 @@ import { MapPinIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import * as React from 'react';
 
-import { ChallengeTagSelector } from '@/components/common';
+import { Alert, ChallengeTagSelector } from '@/components/common';
 import { classNames, config } from '@/const';
 import { trpc } from '@/utils/trpc';
 import type { ChallengeDifficulty, ChallengeTag } from '@prisma/client';
@@ -98,6 +98,7 @@ export const NewChallengeSlideOver = () => {
       await utils.challenges.created.invalidate();
     },
   });
+  const [errors, setErrors] = React.useState<string[]>([]);
 
   const { t } = useTranslation('challenges');
   const { t: tCommon } = useTranslation('common');
@@ -116,7 +117,40 @@ export const NewChallengeSlideOver = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // TODO validation
+    const { name, difficulty, tags, description, startDate, endDate, location } = formValues;
+
+    const newErrors: string[] = [];
+
+    if (!name) {
+      newErrors.push(t('challenges.creation.errors.missingName'));
+    } else if (name.length < 5) {
+      newErrors.push(t('challenges.creation.errors.shortName'));
+    }
+    if (!difficulty) {
+      newErrors.push(t('challenges.creation.errors.missingDifficulty'));
+    }
+    if (!tags || tags.length === 0) {
+      newErrors.push(t('challenges.creation.errors.missingTags'));
+    }
+    if (!description) {
+      newErrors.push(t('challenges.creation.errors.missingDescription'));
+    }
+    if (!startDate) {
+      newErrors.push(t('challenges.creation.errors.missingStartDate'));
+    }
+    if (!endDate) {
+      newErrors.push(t('challenges.creation.errors.missingEndDate'));
+    }
+    if (location.length === 1) {
+      newErrors.push(t('challenges.creation.errors.shortLocation'));
+    }
+
+    setErrors(newErrors);
+
+    if (newErrors.length > 0) {
+      return;
+    }
+
     const result = await newChallengeMutation.mutateAsync(formValues);
 
     if (result) {
@@ -125,6 +159,7 @@ export const NewChallengeSlideOver = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setErrors([]);
     setFormValues({
       ...formValues,
       [e.target.name]: e.target.value,
@@ -132,6 +167,7 @@ export const NewChallengeSlideOver = () => {
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setErrors([]);
     setFormValues({
       ...formValues,
       [e.target.name]: new Date(e.target.value).toISOString().substring(0, 10),
@@ -139,6 +175,7 @@ export const NewChallengeSlideOver = () => {
   };
 
   const handleDifficultyChange = (value: ChallengeDifficulty) => {
+    setErrors([]);
     setFormValues({
       ...formValues,
       difficulty: value,
@@ -146,6 +183,7 @@ export const NewChallengeSlideOver = () => {
   };
 
   const handleTagsChange = (value: ChallengeTag[]) => {
+    setErrors([]);
     setFormValues({
       ...formValues,
       tags: value,
@@ -377,11 +415,21 @@ export const NewChallengeSlideOver = () => {
               </div>
             </div>
           </div>
-          <div className="flex shrink-0 justify-end gap-2 p-4">
-            <Button type="button" variant="inverse" onClick={() => setOpen(false)}>
-              {t('challenges.creation.cancel')}
-            </Button>
-            <Button type="submit">{t('challenges.creation.create')}</Button>
+          <div className="flex flex-col gap-4 p-4">
+            <Alert
+              shown={errors.length > 0}
+              content={{
+                type: 'error',
+                title: `${t('challenges.creation.errors.title')}:`,
+                errors,
+              }}
+            />
+            <div className="flex shrink-0 justify-end gap-4">
+              <Button type="button" variant="inverse" onClick={() => setOpen(false)}>
+                {t('challenges.creation.cancel')}
+              </Button>
+              <Button type="submit">{t('challenges.creation.create')}</Button>
+            </div>
           </div>
         </form>
       </SlideOver>
