@@ -147,14 +147,14 @@ export const NewChallengeSlideOver = () => {
 
     setErrors(newErrors);
 
-    if (newErrors.length > 0) {
-      return;
-    }
+    // if (newErrors.length > 0) {
+    //   return;
+    // }
 
     const result = await newChallengeMutation.mutateAsync(formValues);
 
     if (result) {
-      setOpen(false);
+      // setOpen(false);
     }
   };
 

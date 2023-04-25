@@ -4,6 +4,7 @@ import {
   protectedProcedure,
   router,
 } from '@/server/trpc/trpc';
+import { ChallengeDifficulty, ChallengeTag } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -321,13 +322,37 @@ export const challengesRouter = router({
   create: organizationProcedure
     .input(
       z.object({
-        name: z.string(),
+        name: z.string().min(5),
         description: z.string(),
+        startDate: z.string(),
+        endDate: z.string(),
+        location: z.string(),
+        privacy: z.enum(['public', 'private']),
+        tags: z.array(
+          z.enum([
+            ChallengeTag.FITNESS,
+            ChallengeTag.RECYCLING,
+            ChallengeTag.ENVIRONMENT_CLEANING,
+            ChallengeTag.NUTRITION,
+            ChallengeTag.MOBILITY,
+            ChallengeTag.WELLNESS,
+            ChallengeTag.COMMUNITY_INVOLVEMENT,
+            ChallengeTag.OTHER,
+          ]),
+        ).min(1),
+        difficulty: z.enum([
+          ChallengeDifficulty.EASY,
+          ChallengeDifficulty.MEDIUM,
+          ChallengeDifficulty.HARD,
+        ]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const { name, description } = input;
 
+      return input;
+
+      /** 
       const organizationUserDetails = await ctx.prisma.userDetails.findUnique({
         where: {
           userId: ctx.session.user.id,
@@ -366,6 +391,7 @@ export const challengesRouter = router({
       });
 
       return challenge;
+      */
     }),
 
   /**
