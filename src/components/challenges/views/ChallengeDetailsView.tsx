@@ -74,6 +74,7 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
             {!isLoading && data !== null && (
               <ChallengeDetailsHeader
                 challenge={data.challenge}
+                challengeTags={data.challengeTags}
                 enrolledPlayers={data.enrolledPlayerCount}
                 authorName={data.organizationName ?? ''}
               />

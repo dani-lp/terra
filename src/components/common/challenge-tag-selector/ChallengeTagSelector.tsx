@@ -23,7 +23,7 @@ export const ChallengeTagSelector = ({ selectedTags, setSelectedTags }: Props) =
     queryString === ''
       ? filteredTags
       : filteredTags.filter((tag) =>
-          t(`challenges.creation.tag.${tag}`).toLowerCase().includes(queryString.toLowerCase()),
+          t(`challenges.tags.${tag}`).toLowerCase().includes(queryString.toLowerCase()),
         );
 
   const handleAddTag = (tag: ChallengeTag) => {
@@ -70,7 +70,7 @@ export const ChallengeTagSelector = ({ selectedTags, setSelectedTags }: Props) =
                       )}
                       aria-hidden="true"
                     />
-                    <span className="ml-3 truncate">{t(`challenges.creation.tag.${tag}`)}</span>
+                    <span className="ml-3 truncate">{t(`challenges.tags.${tag}`)}</span>
                   </div>
                 </Combobox.Option>
               ))}
@@ -83,7 +83,7 @@ export const ChallengeTagSelector = ({ selectedTags, setSelectedTags }: Props) =
         {selectedTags.map((tag) => (
           <Chip
             key={tag}
-            label={t(`challenges.creation.tag.${tag}`)}
+            label={t(`challenges.tags.${tag}`)}
             className={tagColors[tag]}
             onCloseClick={() => setSelectedTags(selectedTags.filter((t) => t !== tag))}
           />

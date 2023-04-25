@@ -88,8 +88,20 @@ export const challengesRouter = router({
       },
     });
 
+    const challengeTagsQuery = await ctx.prisma.challengeCategory.findMany({
+      where: {
+        challengeId: challenge.id,
+      },
+      select: {
+        tag: true,
+      },
+    });
+
+    const challengeTags = challengeTagsQuery.map((challengeTag) => challengeTag.tag);
+
     return {
       challenge,
+      challengeTags,
       enrolledPlayerCount,
       userIsAuthor,
       isPlayerEnrolled,
