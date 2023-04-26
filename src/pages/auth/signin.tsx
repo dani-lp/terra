@@ -1,6 +1,6 @@
 import { ChevronLeftIcon } from '@heroicons/react/20/solid';
-import type { NextPage } from 'next';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import type { GetServerSidePropsContext, NextPage } from 'next';
+import { getSession, signIn, signOut, useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Inter } from 'next/font/google';
@@ -84,8 +84,21 @@ const SignIn: NextPage = () => {
 
 export default SignIn;
 
-export const getServerSideProps = async ({ locale }: { locale: string }) => ({
-  props: {
-    ...(await serverSideTranslations(locale, ['auth'], nextI18nConfig, ['en'])),
-  },
-});
+export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+  const session = await getSession(context);
+
+  if (session) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      ...(await serverSideTranslations(context.locale ?? '', ['auth'], nextI18nConfig, ['en'])),
+    },
+  };
+};
