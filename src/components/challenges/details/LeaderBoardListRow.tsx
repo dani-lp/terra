@@ -12,7 +12,6 @@ type Props = {
 };
 
 export const LeaderBoardListRow = ({ position, image, name, username, score, onClick }: Props) => {
-  // TODO link to user profile
   return (
     <li
       onClick={onClick}

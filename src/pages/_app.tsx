@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { type Session } from 'next-auth';
-import { SessionProvider, useSession } from 'next-auth/react';
+import { SessionProvider } from 'next-auth/react';
 import { appWithTranslation } from 'next-i18next';
 import { type AppProps, type AppType } from 'next/app';
 import dynamic from 'next/dynamic';
@@ -26,38 +26,19 @@ type MyAppProps = AppProps & {
   pageProps: { session: Session | null };
 };
 
-const Layout = ({ Component, pageProps }: MyAppProps) => {
-  const { status } = useSession();
-
-  const getLayout = Component.getLayout ?? ((page) => page);
-
-  const layouts: Record<typeof status, React.ReactElement> = {
-    authenticated: getLayout(
-      <>
-        <TopProgressBar />
-        <Component {...pageProps} />
-      </>,
-    ),
-    unauthenticated: (
-      <>
-        <TopProgressBar />
-        <Component {...pageProps} />
-      </>
-    ),
-    loading: (
-      <>
-        <TopProgressBar />
-      </>
-    ),
-  };
-
-  return layouts[status];
-};
-
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }: MyAppProps) => {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
+  const layout = getLayout(
+    <>
+      <TopProgressBar />
+      <Component {...pageProps} />
+    </>,
+  );
+
   return (
     <>
       <Head>
@@ -67,9 +48,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
       <SessionProvider session={session} refetchOnWindowFocus>
-        {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
-        {/* @ts-ignore */}
-        <Layout Component={Component} pageProps={pageProps} />
+        {layout}
         {process.env.NODE_ENV === 'development' && <ToDevButton />}
       </SessionProvider>
     </>

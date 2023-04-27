@@ -70,10 +70,11 @@ export const TopBar = ({ setSidebarOpen }: Props) => {
             </div>
           </div>
           <div id="topbar-portal-container"></div>
-          <div>
+          <div className="flex items-center justify-center">
             <NavigationButtons className="hidden lg:flex" />
 
             <div className="inline-flex lg:hidden">
+              <NavigationButtons hideSettings />
               <button
                 type="button"
                 className="flex h-12 w-12 items-center justify-center rounded-lg text-neutral-500 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-neutral-500"
