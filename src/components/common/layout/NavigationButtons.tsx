@@ -11,10 +11,12 @@ import { classNames } from '@/const';
 import { trpc } from '@/utils/trpc';
 
 type Props = {
+  hideUser?: boolean;
+  hideSettings?: boolean;
   className?: string;
 };
 
-export const NavigationButtons = ({ className }: Props) => {
+export const NavigationButtons = ({ hideUser, hideSettings, className }: Props) => {
   const [playerDetailsOpen, setPlayerDetailsOpen] = React.useState(false);
   const [settingsModalOpen, setSettingsModalOpen] = useAtom(settingsModalOpenAtom);
   const { data: session, status } = useSession();
@@ -37,22 +39,24 @@ export const NavigationButtons = ({ className }: Props) => {
   return (
     <>
       <div className={classNames('items-center justify-center gap-2 p-2', className)}>
-        {session?.user?.role === 'PLAYER' && !isError && playerDataId !== '' && (
+        {session?.user?.role === 'PLAYER' && !isError && playerDataId !== '' && !hideUser && (
           <div
-            className="hidden cursor-pointer rounded-lg p-1 transition-colors hover:bg-black hover:text-white lg:block"
+            className="cursor-pointer rounded-lg p-1 transition-colors hover:bg-black hover:text-white"
             onClick={() => setPlayerDetailsOpen(true)}
           >
             {isPlayerDataLoading && <Skeleton className="h-6 w-6" />}
             {!isPlayerDataLoading && <UserIcon className="w-6" />}
           </div>
         )}
-        <button
-          onClick={() => setSettingsModalOpen(!settingsModalOpen)}
-          className="cursor-pointer rounded-lg p-1 transition-colors hover:bg-black hover:text-white"
-        >
-          {isLoading && <Skeleton className="h-6 w-6" />}
-          {!isLoading && <Cog6ToothIcon className="w-6" />}
-        </button>
+        {!hideSettings && (
+          <button
+            onClick={() => setSettingsModalOpen(!settingsModalOpen)}
+            className="cursor-pointer rounded-lg p-1 transition-colors hover:bg-black hover:text-white"
+          >
+            {isLoading && <Skeleton className="h-6 w-6" />}
+            {!isLoading && <Cog6ToothIcon className="w-6" />}
+          </button>
+        )}
       </div>
       <PlayerDetailsSlideOver
         playerId={playerDataId}
