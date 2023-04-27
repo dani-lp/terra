@@ -103,11 +103,15 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
             <h3 className="mb-2 ml-3 text-lg font-semibold leading-5 text-gray-900">
               {t('challenges.details.leaderboard')}
             </h3>
-            <LeaderBoardList loading={isLoading} />
+            <LeaderBoardList challengeId={challengeId} loading={isLoading} />
           </div>
         </div>
 
-        <ChallengeDetailsMobileContent challenge={data?.challenge} loading={isLoading} />
+        <ChallengeDetailsMobileContent
+          challengeId={challengeId}
+          challenge={data?.challenge}
+          loading={isLoading}
+        />
 
         {userCanAct && (
           <div className="fixed bottom-0 flex h-16 w-screen items-center justify-between gap-2 border-t-2 border-neutral-200 p-3 shadow md:hidden">

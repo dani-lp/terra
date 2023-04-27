@@ -1,4 +1,4 @@
-import { playerProcedure, router } from '@/server/trpc/trpc';
+import { playerProcedure, protectedProcedure, router } from '@/server/trpc/trpc';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 
@@ -89,5 +89,68 @@ export const participationRouter = router({
       });
 
       return true;
+    }),
+
+  /**
+   * Get the participations on a challenge. Used for rankings
+   */
+  getByChallenge: protectedProcedure
+    .input(
+      z.object({
+        challengeId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { challengeId } = input;
+
+      const rawParticipations = await ctx.prisma.participation.groupBy({
+        by: ['playerDataId'],
+        where: {
+          challengeId,
+          isValid: true,
+        },
+        _count: {
+          playerDataId: true,
+        },
+        orderBy: {
+          _count: {
+            playerDataId: 'desc',
+          },
+        },
+      });
+
+      const participationsWithUserData = await Promise.all(
+        rawParticipations.map(async (p) => {
+          const playerData = await ctx.prisma.playerData.findUnique({
+            where: {
+              id: p.playerDataId,
+            },
+            select: {
+              id: true,
+              userDetails: {
+                select: {
+                  user: {
+                    select: {
+                      name: true,
+                      image: true,
+                    },
+                  },
+                  username: true,
+                },
+              },
+            },
+          });
+
+          return {
+            playerId: p.playerDataId,
+            points: p._count.playerDataId,
+            name: playerData?.userDetails.user.name,
+            username: playerData?.userDetails.username,
+            image: playerData?.userDetails.user.image,
+          };
+        }),
+      );
+
+      return participationsWithUserData;
     }),
 });

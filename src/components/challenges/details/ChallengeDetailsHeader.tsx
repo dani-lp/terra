@@ -41,7 +41,7 @@ export const ChallengeDetailsHeader = ({
         </Link>
       </p>
 
-      <div className="mt-2 mb-4 flex flex-col">
+      <div className="my-2 flex flex-col">
         <div className="mt-2 flex items-center text-sm text-gray-500">
           <CalendarIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />
           {challenge.startDate.toLocaleDateString()} &ndash;{' '}
@@ -72,12 +72,18 @@ export const ChallengeDetailsHeader = ({
         )}
       </div>
 
-      <h3 className="mb-1 text-base font-semibold leading-6 text-gray-900 md:text-lg">Tags</h3>
-      <div className="mb-2 flex flex-wrap gap-2">
-        {tags.map((tag) => (
-          <Chip key={tag.name} label={tag.name} className={tag.color} />
-        ))}
-      </div>
+      {tags.length > 0 && (
+        <>
+          <h3 className="mb-1 mt-2 text-base font-semibold leading-6 text-gray-900 md:text-lg">
+            {t('challenges.creation.tags')}
+          </h3>
+          <div className="mb-2 flex flex-wrap gap-2">
+            {tags.map((tag) => (
+              <Chip key={tag.name} label={tag.name} className={tag.color} />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

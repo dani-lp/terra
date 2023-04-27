@@ -1,52 +1,35 @@
-import { useSession } from 'next-auth/react';
 import * as React from 'react';
 
 import { LeaderBoardListRow } from '@/components/challenges/details/LeaderBoardListRow';
 import { LeaderBoardListRowSkeleton } from '@/components/challenges/details/LeaderBoardListRowSkeleton';
 import { PlayerDetailsSlideOver } from '@/components/users';
 import { classNames } from '@/const';
+import { trpc } from '@/utils/trpc';
 
 type Props = {
   loading: boolean;
+  challengeId: string;
   className?: string;
 };
 
-export const LeaderBoardList = ({ loading, className }: Props) => {
-  const { data: session } = useSession();
+export const LeaderBoardList = ({
+  loading: challengeInfoLoading,
+  challengeId,
+  className,
+}: Props) => {
+  const { data, isLoading, isError, error } = trpc.participation.getByChallenge.useQuery({
+    challengeId,
+  });
   const [overviewPlayerId, setOverviewPlayerId] = React.useState<string | null>(null);
 
-  // TODO use actual values/query
-  const tempLeaderboardContent = [
-    {
-      name: 'John Smith',
-      username: 'jsmith',
-      score: 75,
-      image: session?.user?.image,
-      tempId: 'clc9t4kud0005debqizdl66u9',
-    },
-    {
-      name: 'Emily Davis',
-      username: 'edavis',
-      score: 92,
-      image: session?.user?.image,
-      tempId: 'clc9t4kud0005debqizdl66u9',
-    },
-    {
-      name: 'Tom Johnson',
-      username: 'tjohnson',
-      score: 81,
-      image: session?.user?.image,
-      tempId: 'clc9t4kud0005debqizdl66u9',
-    },
-    {
-      name: 'Sarah Lee',
-      username: 'slee',
-      score: 67,
-      image: session?.user?.image,
-      tempId: 'clc9t4kud0005debqizdl66u9',
-    },
-  ];
-  tempLeaderboardContent.sort((a, b) => b.score - a.score);
+  const leaderboardEntries = data ?? [];
+  const loading = isLoading || challengeInfoLoading;
+
+  if (isError) {
+    // TODO error page
+    console.error(error);
+    return null;
+  }
 
   return (
     <>
@@ -58,19 +41,17 @@ export const LeaderBoardList = ({ loading, className }: Props) => {
             ))}
           </>
         ) : (
-          <>
-            {tempLeaderboardContent.map((user, index) => (
-              <LeaderBoardListRow
-                key={user.username}
-                position={index + 1}
-                image={user.image ?? ''}
-                name={user.name}
-                username={user.username}
-                score={user.score}
-                onClick={() => setOverviewPlayerId(user.tempId)} // TODO use actual id
-              />
-            ))}
-          </>
+          leaderboardEntries.map((user, index) => (
+            <LeaderBoardListRow
+              key={user.username}
+              position={index + 1}
+              image={user.image ?? ''}
+              name={user.name ?? 'Unknown'}
+              username={user.username ?? '@unknown'}
+              score={user.points}
+              onClick={() => setOverviewPlayerId(user.playerId)}
+            />
+          ))
         )}
       </ol>
       <PlayerDetailsSlideOver
