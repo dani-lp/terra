@@ -1,6 +1,7 @@
-import { playerProcedure, router } from '@/server/trpc/trpc';
-import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
+
+import { playerProcedure, protectedProcedure, router } from '@/server/trpc/trpc';
+import { TRPCError } from '@trpc/server';
 
 export const participationRouter = router({
   // queries
@@ -13,7 +14,7 @@ export const participationRouter = router({
       z.object({
         challengeId: z.string(),
         comments: z.string().optional(),
-        date: z.date(),
+        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -74,20 +75,111 @@ export const participationRouter = router({
         });
       }
 
-      // 3. TODO Get resulting points from gamification engine
+      // 3. Get resulting points from gamification engine
+      let points: number;
+      switch (challenge.difficulty) {
+        case 'EASY':
+          points = 5;
+          break;
+        case 'MEDIUM':
+          points = 10;
+          break;
+        case 'HARD':
+          points = 15;
+          break;
+        default:
+          points = 0;
+          break;
+      }
 
-      // 3.5. TODO Save the file proof in EC2
+      await ctx.prisma.playerData.update({
+        where: {
+          id: userDetails?.playerData?.id,
+        },
+        data: {
+          experience: {
+            increment: points,
+          },
+        },
+      });
 
-      // 4. Create participation
-      await ctx.prisma.participation.create({
+      // TODO 4. Check for possible achievements
+
+      // TODO 4.5. Save the file proof in EC2
+
+      // 5. Create participation
+      const participation = await ctx.prisma.participation.create({
         data: {
           challengeId,
           comments,
-          date,
+          date: new Date(date),
           playerDataId: userDetails?.playerData?.id,
         },
       });
 
-      return true;
+      return participation;
+    }),
+
+  /**
+   * Get the participations on a challenge. Used for rankings
+   */
+  getByChallenge: protectedProcedure
+    .input(
+      z.object({
+        challengeId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { challengeId } = input;
+
+      const rawParticipations = await ctx.prisma.participation.groupBy({
+        by: ['playerDataId'],
+        where: {
+          challengeId,
+          isValid: true,
+        },
+        _count: {
+          playerDataId: true,
+        },
+        orderBy: {
+          _count: {
+            playerDataId: 'desc',
+          },
+        },
+      });
+
+      const participationsWithUserData = await Promise.all(
+        rawParticipations.map(async (p) => {
+          const playerData = await ctx.prisma.playerData.findUnique({
+            where: {
+              id: p.playerDataId,
+            },
+            select: {
+              id: true,
+              userDetails: {
+                select: {
+                  user: {
+                    select: {
+                      name: true,
+                      image: true,
+                    },
+                  },
+                  username: true,
+                },
+              },
+            },
+          });
+
+          return {
+            playerId: p.playerDataId,
+            points: p._count.playerDataId,
+            name: playerData?.userDetails.user.name,
+            username: playerData?.userDetails.username,
+            image: playerData?.userDetails.user.image,
+          };
+        }),
+      );
+
+      return participationsWithUserData;
     }),
 });

@@ -70,6 +70,7 @@ enum Role {
   ORGANIZATION
 }
 
+// User data models
 model UserDetails {
   id               String            @id @default(cuid())
   role             Role
@@ -91,11 +92,15 @@ model AdminData {
 }
 
 model PlayerData {
-  id                 String          @id @default(cuid())
+  id         String @id @default(cuid())
+  experience Int    @default(0)
+
   enrolledChallenges Challenge[]
   userDetails        UserDetails     @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)
   userDetailsId      String          @unique
   Participation      Participation[]
+
+  createdAt DateTime @default(now())
 }
 
 model OrganizationData {
@@ -115,43 +120,54 @@ model OrganizationData {
   createdAt         DateTime    @default(now())
 }
 
-// TODO add more entries
+// Main entities
 enum ChallengeTag {
   FITNESS
   RECYCLING
   ENVIRONMENT_CLEANING
-  MINDFULNESS
   NUTRITION
-  WELLNESS
   MOBILITY
-  ENERGY_CONSERVATION
-  COMMUNITY_INVOVEMENT
+  WELLNESS
+  COMMUNITY_INVOLVEMENT
   OTHER
 }
 
-// TODO: add challenge rewards functionality
+enum ChallengeDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
 model Challenge {
-  id                 String              @id @default(cuid())
-  name               String
-  description        String              @db.Text
-  image              String?
-  startDate          DateTime
-  endDate            DateTime
-  location           String?
-  isDraft            Boolean             @default(true)
-  organizationData   OrganizationData    @relation(fields: [organizationDataId], references: [id], onDelete: Cascade)
-  organizationDataId String
-  ChallengeCategory  ChallengeCategory[]
-  enrolledPlayers    PlayerData[]
-  Participation      Participation[]
+  id          String   @id @default(cuid())
+  name        String
+  description String   @db.Text
+  image       String?
+  startDate   DateTime
+  endDate     DateTime
+  location    String?
+  isDraft     Boolean  @default(true)
+
+  organizationData    OrganizationData    @relation(fields: [organizationDataId], references: [id], onDelete: Cascade)
+  organizationDataId  String
+  challengeCategories ChallengeCategory[]
+  enrolledPlayers     PlayerData[]
+  participations      Participation[]
+  difficulty          ChallengeDifficulty @default(EASY)
+
+  createdAt DateTime @default(now())
 
   @@index([organizationDataId])
 }
 
 model ChallengeCategory {
-  id         String       @id @default(cuid())
-  tag        ChallengeTag
-  challenges Challenge[]
+  id          String       @id @default(cuid())
+  tag         ChallengeTag
+  challenges  Challenge    @relation(fields: [challengeId], references: [id])
+  challengeId String
+
+  @@unique([tag, challengeId])
+  @@index([challengeId])
 }
 
 model Participation {
