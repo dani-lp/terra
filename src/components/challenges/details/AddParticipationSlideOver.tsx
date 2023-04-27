@@ -75,7 +75,13 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setErrors([]);
-    setDate(new Date(event.target.value).toISOString().substring(0, 10));
+    try {
+      const newDate = new Date(event.target.value).toISOString().substring(0, 10);
+      setDate(newDate);
+    } catch (error) {
+      console.error(error);
+      setDate('');
+    }
   };
 
   const handleCommentsChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
