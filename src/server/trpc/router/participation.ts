@@ -14,7 +14,7 @@ export const participationRouter = router({
       z.object({
         challengeId: z.string(),
         comments: z.string().optional(),
-        date: z.date(),
+        date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
       }),
     )
     .mutation(async ({ ctx, input }) => {
