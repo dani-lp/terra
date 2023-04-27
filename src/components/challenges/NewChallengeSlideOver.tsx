@@ -256,6 +256,7 @@ export const NewChallengeSlideOver = () => {
                   <ChallengeTagSelector
                     selectedTags={formValues.tags}
                     setSelectedTags={handleTagsChange}
+                    requiredField
                   />
                 </div>
                 <div className="space-y-6 pt-4 pb-5">

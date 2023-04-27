@@ -1,24 +1,23 @@
+import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
-import { ChallengeListRow, ChallengesFilterGroup } from '@/components/challenges';
-import { ChallengeDetailsModal } from '@/components/challenges/ChallengeDetailsModal';
-import { ChallengeRowSkeleton } from '@/components/challenges/ChallengeRowSkeleton';
-import { ChallengesViewTopBar } from '@/components/challenges/ChallengesViewTopBar';
+import {
+  ChallengeDetailsModal,
+  ChallengeListRow,
+  ChallengeRowSkeleton,
+  ChallengesFilterGroup,
+  ChallengesViewTopBar,
+  SmallFilterGroup,
+} from '@/components/challenges';
 import { useChallenges } from '@/components/challenges/hooks/useChallenges';
-import { SmallFilterGroup } from '@/components/challenges/SmallFilterGroup';
 import { Button } from '@/components/common';
 import { classNames } from '@/const';
 import { QUERY_PARAM_CHALLENGES_TAB } from '@/const/queryParams';
 import { useQueryParams } from '@/hooks/useQueryParams';
 import { trpc } from '@/utils/trpc';
 
-// TODO translations
-const tabs = [
-  { id: 'available', label: 'Available challenges', count: 235 },
-  { id: 'active', label: 'Active challenges', count: 12 },
-] as const;
-
 export const TerraChallengesViewPlayers = () => {
+  const { t } = useTranslation('challenges');
   const { getParamValue, setParam } = useQueryParams();
   const [modalChallengeId, setModalChallengeId] = React.useState<string>('');
   const activeTab = getParamValue(QUERY_PARAM_CHALLENGES_TAB) ?? 'available';
@@ -30,6 +29,11 @@ export const TerraChallengesViewPlayers = () => {
     console.error(error.message);
     throw new Error(error.message);
   }
+
+  const tabs = [
+    { id: 'available', label: t('challenges.overview.tabs.available'), count: 235 },
+    { id: 'active', label: t('challenges.overview.tabs.joined'), count: 12 },
+  ] as const;
 
   const handleTabChange = async (tabId: typeof tabs[number]['id']) => {
     if (tabId === 'available') {
@@ -44,7 +48,7 @@ export const TerraChallengesViewPlayers = () => {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center px-4">
+      <div className="mb-2 flex flex-col items-center justify-center px-4 pb-16 lg:pb-0">
         <div className="w-full max-w-6xl">
           {/* Mobile tabs */}
           <div className="mb-2 flex w-full items-center justify-center lg:hidden">
@@ -63,16 +67,18 @@ export const TerraChallengesViewPlayers = () => {
                     aria-current={activeTab === tab.id ? 'page' : undefined}
                   >
                     {tab.label}
-                    {/* {tab.count ? (
-                    <span
-                      className={classNames(
-                        activeTab === tab.id ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-900',
-                        'ml-3 rounded-full py-0.5 px-2.5 text-xs font-medium'
-                      )}
-                    >
-                      {tab.count}
-                    </span>
-                  ) : null} */}
+                    {tab.count ? (
+                      <span
+                        className={classNames(
+                          activeTab === tab.id
+                            ? 'bg-black text-gray-50'
+                            : 'bg-gray-100 text-gray-900',
+                          'ml-3 rounded-full py-0.5 px-2.5 text-xs font-medium',
+                        )}
+                      >
+                        {tab.count}
+                      </span>
+                    ) : null}
                   </button>
                 ))}
               </nav>
@@ -108,17 +114,17 @@ export const TerraChallengesViewPlayers = () => {
             </div>
           </div>
 
-          <div className="flex flex-col xl:flex-row xl:gap-4 xl:pt-2">
-            <div className="min-w-[250px] xl:px-0">
-              <div className="my-2 flex flex-col items-center justify-between xl:hidden">
+          <div className="lg:grid lg:grid-cols-7 lg:gap-4 lg:pt-2">
+            <div className="min-w-[250px] lg:col-span-2 lg:px-0">
+              <div className="my-2 flex flex-col items-center justify-between lg:hidden">
                 <SmallFilterGroup />
               </div>
-              <div className="hidden xl:block">
+              <div className="hidden lg:block">
                 <ChallengesFilterGroup showTitle />
               </div>
             </div>
             {!showEmptyState && (
-              <div className="w-full">
+              <div className="w-full lg:col-span-5">
                 <ChallengesViewTopBar className="mb-2 items-start px-0" />
                 <ul
                   role="list"
@@ -137,10 +143,9 @@ export const TerraChallengesViewPlayers = () => {
               </div>
             )}
             {showEmptyState && (
-              <div className="flex h-96 w-full flex-col items-center justify-center">
+              <div className="flex h-96 w-full flex-col items-center justify-center lg:col-span-5">
                 <p className="text-center text-neutral-500">
-                  {/* TODO remove placeholder */}
-                  No challenges found
+                  {t('challenges.overview.noChallengesFound')}
                 </p>
               </div>
             )}
@@ -148,7 +153,7 @@ export const TerraChallengesViewPlayers = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-0 flex h-16 w-screen items-center justify-between gap-2 border-t-2 border-neutral-200 p-3 shadow lg:hidden">
+      <div className="fixed bottom-0 flex h-16 w-screen items-center justify-between gap-2 border-t-2 border-neutral-200 bg-neutral-100 p-3 shadow lg:hidden">
         <Button variant="inverse">Prev</Button>
         <p className="text-xs">
           {/* TODO remove placeholder */}

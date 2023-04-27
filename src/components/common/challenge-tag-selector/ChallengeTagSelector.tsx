@@ -10,11 +10,12 @@ import { useTranslation } from 'next-i18next';
 type Props = {
   selectedTags: ChallengeTag[];
   setSelectedTags: (tags: ChallengeTag[]) => void;
+  requiredField?: boolean; 
 };
 
 const allTags = Object.values(ChallengeTag);
 
-export const ChallengeTagSelector = ({ selectedTags, setSelectedTags }: Props) => {
+export const ChallengeTagSelector = ({ selectedTags, setSelectedTags, requiredField = false }: Props) => {
   const [queryString, setQueryString] = React.useState<string>('');
   const { t } = useTranslation('challenges');
 
@@ -36,7 +37,7 @@ export const ChallengeTagSelector = ({ selectedTags, setSelectedTags }: Props) =
       <Combobox as="div" onChange={handleAddTag}>
         <Combobox.Label className="block text-sm font-medium leading-6 text-gray-900">
           {t('challenges.creation.tags')}
-          <span className="text-red-500"> *</span>
+          {requiredField && <span className="text-red-500"> *</span>}
         </Combobox.Label>
         <div className="relative mt-2">
           <Combobox.Input

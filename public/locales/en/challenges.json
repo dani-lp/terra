@@ -13,6 +13,13 @@
       "COMMUNITY_INVOLVEMENT": "Community involvement",
       "OTHER": "Other"
     },
+    "overview": {
+      "noChallengesFound": "No challenges found",
+      "tabs": {
+        "available": "Available",
+        "joined": "Joined"
+      }
+    },
     "creation": {
       "new": "New",
       "cancel": "Cancel",
