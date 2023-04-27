@@ -62,8 +62,12 @@ export const LeaderBoardList = ({
             <div className="mx-auto rounded-full bg-purple-100 p-2">
               <UserGroupIcon className="mx-auto h-8 w-8 text-purple-700" />
             </div>
-            <h3 className="mt-2 text-sm font-semibold text-gray-900">{t('challenges.details.noPlayers')}</h3>
-            <p className="mt-1 text-sm text-gray-500">{t('challenges.details.noPlayersDescription')}</p>
+            <h3 className="mt-2 text-sm font-semibold text-gray-900">
+              {t('challenges.details.noPlayers')}
+            </h3>
+            <p className="mt-1 text-sm text-gray-500">
+              {t('challenges.details.noPlayersDescription')}
+            </p>
           </div>
         )}
       </ol>

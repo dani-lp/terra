@@ -1,7 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { FlagIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import type { Achievement } from '@prisma/client';
 import { useTranslation } from 'next-i18next';
 import Image, { type StaticImageData } from 'next/image';
 import * as React from 'react';
@@ -16,33 +15,6 @@ import pfp3 from '../../../public/img/profile_bgs/profileBg3.jpg';
 
 const coverImageUrls = [pfp1, pfp2, pfp3];
 
-const tempAchievements: Achievement[] = [
-  {
-    id: '1',
-    tier: 'BRONZE',
-    challengeTag: 'COMMUNITY_INVOLVEMENT',
-    playerDataId: 'id',
-  },
-  {
-    id: '2',
-    tier: 'SILVER',
-    challengeTag: 'WELLNESS',
-    playerDataId: 'id',
-  },
-  {
-    id: '3',
-    tier: 'GOLD',
-    challengeTag: 'FITNESS',
-    playerDataId: 'id',
-  },
-  {
-    id: '4',
-    tier: 'BRONZE',
-    challengeTag: 'ENVIRONMENT_CLEANING',
-    playerDataId: 'id',
-  },
-];
-
 type Props = {
   playerId: string | null;
   open: boolean;
@@ -53,6 +25,9 @@ export const PlayerDetailsSlideOver = ({ playerId, open, setOpen }: Props) => {
   const { data, isLoading, isError, error } = trpc.user.getPlayerOverviewData.useQuery({
     playerId,
   });
+  const { data: achievementsData } = trpc.achievements.getByPlayer.useQuery({
+    playerDataId: playerId,
+  });
   const { t } = useTranslation('common');
 
   if (isError) {
@@ -61,6 +36,7 @@ export const PlayerDetailsSlideOver = ({ playerId, open, setOpen }: Props) => {
   }
 
   const coverImageUrl = coverImageUrls[(playerId ?? '0').charCodeAt(0) % 3] as StaticImageData;
+  const achievements = achievementsData ?? [];
 
   return (
     <Transition.Root show={open} as={React.Fragment}>
@@ -171,18 +147,18 @@ export const PlayerDetailsSlideOver = ({ playerId, open, setOpen }: Props) => {
                                     <p>{data.about}</p>
                                   </div>
                                 )}
-                                {tempAchievements.length > 0 && (
+                                {achievements.length > 0 && (
                                   <div className="py-2">
                                     <h6 className="mb-1 font-semibold leading-6 text-gray-900">
                                       {t('users.achievements')}
                                     </h6>
                                     <li className="grid grid-cols-1 gap-2 py-2">
-                                      {tempAchievements.map((achievement) => (
+                                      {achievements.map((achievement) => (
                                         <AchievementCardSmall
-                                          key={achievement.id}
-                                          tag={achievement.challengeTag}
+                                          key={`${achievement.tag}-${achievement.tier}`}
+                                          tag={achievement.tag}
                                           tier={achievement.tier}
-                                          entries={6} // TODO use real value
+                                          entries={achievement.entries}
                                         />
                                       ))}
                                     </li>

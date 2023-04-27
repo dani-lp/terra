@@ -99,7 +99,6 @@ model PlayerData {
   userDetails        UserDetails     @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)
   userDetailsId      String          @unique
   Participation      Participation[]
-  Achievement        Achievement[]
 
   createdAt DateTime @default(now())
 }
@@ -183,22 +182,5 @@ model Participation {
   proofUrl     String?
 
   @@index([challengeId])
-  @@index([playerDataId])
-}
-
-enum AchievementTier {
-  BRONZE // 5 challenges
-  SILVER // 10 challenges
-  GOLD // 15 challenges
-}
-
-// obtained when a player completes challenges of a certain tag 5/10/15 times
-model Achievement {
-  id           String         @id @default(cuid())
-  tier         AchievementTier
-  playerData   PlayerData     @relation(fields: [playerDataId], references: [id], onDelete: Cascade)
-  playerDataId String
-  challengeTag ChallengeTag
-
   @@index([playerDataId])
 }
