@@ -90,9 +90,9 @@ export const ChallengeDetailsModal = ({
                 )}
               </div>
               <div className="mb-2">
-                <dl className="mt-2 flex flex-wrap gap-4 capitalize sm:ml-3 sm:mt-1">
+                <dl className="mt-2 flex flex-wrap gap-4 capitalize">
                   <dt className="sr-only">{tChallenges('challenges.creation.difficulty')}</dt>
-                  <dd className="flex items-center text-sm font-medium text-gray-500 sm:mr-6">
+                  <dd className="flex items-center text-sm font-medium text-gray-500">
                     <StarIcon
                       className={classNames(
                         'mr-1 h-5 w-5 shrink-0',

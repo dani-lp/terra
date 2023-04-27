@@ -30,7 +30,7 @@ const Content = ({ challenge }: Pick<Props, 'challenge'>) => {
       </div>
 
       <div className="ml-2 flex shrink-0 flex-col items-end justify-center gap-2">
-        <div className="flex items-center text-xs font-medium text-gray-500 sm:mr-6">
+        <div className="flex items-center text-xs font-medium text-gray-500">
           <StarIcon
             className={classNames(
               'mr-1 h-5 w-5 shrink-0',
