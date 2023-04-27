@@ -20,9 +20,9 @@ export const PlayerLevel = ({ points }: Props) => {
       </span>
       <div className="flex w-full flex-col items-start justify-center gap-1">
         <span className="truncate font-medium text-gray-600">{t('users.level', { level })}</span>
-        <div className="h-2.5 w-full rounded-full bg-gray-200 dark:bg-gray-700">
+        <div className="h-2.5 w-full rounded-full bg-gray-200">
           <div
-            className="h-2.5 rounded-full bg-purple-600 dark:bg-purple-500"
+            className="h-2.5 rounded-full bg-purple-600"
             style={{ width: `${percentage}%` }}
           />
         </div>
