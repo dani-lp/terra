@@ -1,4 +1,4 @@
-import type { ChallengeDifficulty, ChallengeTag } from '@prisma/client';
+import type { AchievementTier, ChallengeDifficulty, ChallengeTag } from '@prisma/client';
 
 export const tagColors: Record<ChallengeTag, string> = {
   FITNESS: 'bg-indigo-100 text-indigo-700',
@@ -32,4 +32,10 @@ export const difficultyIconColors: Record<ChallengeDifficulty, string> = {
   EASY: 'text-green-500',
   MEDIUM: 'text-yellow-500',
   HARD: 'text-red-500',
+};
+
+export const achievementTierColors: Record<AchievementTier, string> = {
+  BRONZE: 'bg-yellow-700 text-white',
+  SILVER: 'bg-slate-400 text-white',
+  GOLD: 'bg-yellow-400 text-white',
 };

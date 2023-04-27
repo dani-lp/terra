@@ -42,9 +42,23 @@
     "PLAYER": "Player",
     "ORGANIZATION": "Organization"
   },
+  "tags": {
+    "FITNESS": "Fitness",
+    "RECYCLING": "Recycling",
+    "ENVIRONMENT_CLEANING": "Environment cleaning",
+    "NUTRITION": "Nutrition",
+    "MOBILITY": "Mobility",
+    "WELLNESS": "Wellness",
+    "COMMUNITY_INVOLVEMENT": "Community involvement",
+    "OTHER": "Other"
+  },
   "users": {
     "participatingChallenges_one": "Participating in {{count}} challenge",
     "participatingChallenges_other": "Participating in {{count}} challenges",
-    "level": "Level {{level}}"
+    "level": "Level {{level}}",
+    "achievementEntries_one": "{{count}} entry",
+    "achievementEntries_other": "{{count}} entries",
+    "about": "About",
+    "achievements": "Achievements"
   }
 }

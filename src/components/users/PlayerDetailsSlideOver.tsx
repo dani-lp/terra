@@ -1,12 +1,13 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { FlagIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
+import type { Achievement } from '@prisma/client';
 import { useTranslation } from 'next-i18next';
 import Image, { type StaticImageData } from 'next/image';
 import * as React from 'react';
 
 import { PlayerLevel } from '@/components/common';
-import { PlayerDetailsSlideOverContentSkeleton } from '@/components/users/PlayerDetailsSlideOverContentSkeleton';
+import { AchievementCardSmall, PlayerDetailsSlideOverContentSkeleton } from '@/components/users';
 import { trpc } from '@/utils/trpc';
 
 import pfp1 from '../../../public/img/profile_bgs/profileBg1.jpg';
@@ -15,14 +16,40 @@ import pfp3 from '../../../public/img/profile_bgs/profileBg3.jpg';
 
 const coverImageUrls = [pfp1, pfp2, pfp3];
 
+const tempAchievements: Achievement[] = [
+  {
+    id: '1',
+    tier: 'BRONZE',
+    challengeTag: 'COMMUNITY_INVOLVEMENT',
+    playerDataId: 'id',
+  },
+  {
+    id: '2',
+    tier: 'SILVER',
+    challengeTag: 'WELLNESS',
+    playerDataId: 'id',
+  },
+  {
+    id: '3',
+    tier: 'GOLD',
+    challengeTag: 'FITNESS',
+    playerDataId: 'id',
+  },
+  {
+    id: '4',
+    tier: 'BRONZE',
+    challengeTag: 'ENVIRONMENT_CLEANING',
+    playerDataId: 'id',
+  },
+];
+
 type Props = {
   playerId: string | null;
   open: boolean;
   setOpen: (open: boolean) => void;
-  withLogout?: boolean;
 };
 
-export const PlayerDetailsSlideOver = ({ playerId, open, setOpen, withLogout = false }: Props) => {
+export const PlayerDetailsSlideOver = ({ playerId, open, setOpen }: Props) => {
   const { data, isLoading, isError, error } = trpc.user.getPlayerOverviewData.useQuery({
     playerId,
   });
@@ -135,11 +162,33 @@ export const PlayerDetailsSlideOver = ({ playerId, open, setOpen, withLogout = f
                                   </div>
                                 </div>
                               </div>
-                              {data.about && (
-                                <div className="py-2">
-                                  <p>{data.about}</p>
-                                </div>
-                              )}
+                              <div>
+                                {data.about && (
+                                  <div className="py-2">
+                                    <h6 className="mb-1 font-semibold leading-6 text-gray-900">
+                                      {t('users.about')}
+                                    </h6>
+                                    <p>{data.about}</p>
+                                  </div>
+                                )}
+                                {tempAchievements.length > 0 && (
+                                  <div className="py-2">
+                                    <h6 className="mb-1 font-semibold leading-6 text-gray-900">
+                                      {t('users.achievements')}
+                                    </h6>
+                                    <li className="grid grid-cols-1 gap-2 py-2">
+                                      {tempAchievements.map((achievement) => (
+                                        <AchievementCardSmall
+                                          key={achievement.id}
+                                          tag={achievement.challengeTag}
+                                          tier={achievement.tier}
+                                          entries={6} // TODO use real value
+                                        />
+                                      ))}
+                                    </li>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           </div>
                         )}
