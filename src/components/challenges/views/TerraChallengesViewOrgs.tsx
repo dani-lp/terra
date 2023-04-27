@@ -10,12 +10,11 @@ import {
   NewChallengeSlideOver,
   SmallFilterGroup,
 } from '@/components/challenges';
-import { useChallenges } from '@/components/challenges/hooks/useChallenges';
-import { trpc } from '@/utils/trpc';
+import { useCreatedChallenges } from '@/components/challenges/hooks/';
 
 export const TerraChallengesViewOrgs = () => {
   const { t } = useTranslation('challenges');
-  const { filteredChallenges, isLoading, isError, error } = useChallenges(trpc.challenges.created);
+  const { challenges, isLoading, isError, error } = useCreatedChallenges();
   const [modalChallengeId, setModalChallengeId] = React.useState<string>('');
 
   if (error) {
@@ -23,7 +22,7 @@ export const TerraChallengesViewOrgs = () => {
     throw new Error(error.message);
   }
 
-  const showEmptyState = !isLoading && !isError && filteredChallenges.length === 0;
+  const showEmptyState = !isLoading && !isError && challenges.length === 0;
 
   return (
     <>
@@ -54,7 +53,7 @@ export const TerraChallengesViewOrgs = () => {
                   {isLoading && [...Array(3)].map((_, i) => <ChallengeRowSkeleton key={i} />)}
                   {!isLoading &&
                     !isError &&
-                    filteredChallenges.map((challenge) => (
+                    challenges.map((challenge) => (
                       <ChallengeListRow
                         key={challenge.id}
                         challenge={challenge}

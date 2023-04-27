@@ -37,3 +37,4 @@ export const createContext = async (opts: CreateNextContextOptions) => {
 };
 
 export type Context = inferAsyncReturnType<typeof createContext>;
+export type ContextPrismaClient = Context['prisma'];

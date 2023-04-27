@@ -1,11 +1,11 @@
 import { classNames } from '@/const';
-import type { Challenge } from '@prisma/client';
+import type { DisplayChallenge } from '@/types';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { ChallengeStats } from './ChallengeStats';
 
 type Props = {
-  challenge: Challenge & { enrolledPlayersCount: number };
+  challenge: DisplayChallenge;
   onClick?: () => void;
   asLink?: boolean;
 };

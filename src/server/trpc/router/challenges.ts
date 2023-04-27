@@ -110,75 +110,6 @@ export const challengesRouter = router({
   }),
 
   /**
-   * Edit a challenge, only available for organization users.
-   */
-  edit: organizationProcedure
-    .input(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-        description: z.string(),
-        startDate: z.string(),
-        endDate: z.string(),
-        location: z.string().nullable(),
-      }),
-    )
-    .mutation(async ({ ctx, input }) => {
-      const { id, name, description, startDate, endDate, location } = input;
-
-      const challenge = await ctx.prisma.challenge.findUnique({
-        where: {
-          id,
-        },
-      });
-
-      if (!challenge) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          cause: `Challenge with id '${id} not found'`,
-        });
-      }
-
-      const organization = await ctx.prisma.userDetails.findUnique({
-        where: {
-          userId: ctx.session.user.id,
-        },
-        select: {
-          organizationData: true,
-        },
-      });
-
-      if (!organization) {
-        throw new TRPCError({
-          code: 'NOT_FOUND',
-          cause: `Organization with user id '${ctx.session.user.id} not found'`,
-        });
-      }
-
-      if (challenge.organizationDataId !== organization.organizationData?.id) {
-        throw new TRPCError({
-          code: 'FORBIDDEN',
-          cause: `User with id '${ctx.session.user.id} is not allowed to edit challenge with id '${id}'`,
-        });
-      }
-
-      const updatedChallenge = await ctx.prisma.challenge.update({
-        where: {
-          id,
-        },
-        data: {
-          name,
-          description,
-          startDate: new Date(startDate),
-          endDate: new Date(endDate),
-          location,
-        },
-      });
-
-      return updatedChallenge;
-    }),
-
-  /**
    * Get a organization's (own) challenges, only available for logged in users.
    */
   created: organizationProcedure.query(async ({ ctx }) => {
@@ -191,7 +122,7 @@ export const challengesRouter = router({
       },
     });
 
-    const challenges = await ctx.prisma.challenge.findMany({
+    const rawChallenges = await ctx.prisma.challenge.findMany({
       where: {
         organizationDataId: organization?.organizationData?.id,
       },
@@ -205,12 +136,27 @@ export const challengesRouter = router({
         location: true,
         isDraft: true,
         organizationDataId: true,
+        difficulty: true,
+        challengeCategories: {
+          select: {
+            tag: true,
+          },
+        },
         _count: {
           select: {
             enrolledPlayers: true,
           },
         },
       },
+    });
+
+    const challenges = rawChallenges.map((challenge) => {
+      const { challengeCategories, ...challengeWithoutCategories } = challenge;
+
+      return {
+        ...challengeWithoutCategories,
+        tags: challengeCategories.map((category) => category.tag),
+      };
     });
 
     const challengesWithPlayerCount = challenges.map((challenge) => {
@@ -237,7 +183,7 @@ export const challengesRouter = router({
       },
     });
 
-    const enrolledChallenges = await ctx.prisma.challenge.findMany({
+    const rawChallenges = await ctx.prisma.challenge.findMany({
       where: {
         enrolledPlayers: {
           some: {
@@ -255,6 +201,12 @@ export const challengesRouter = router({
         location: true,
         isDraft: true,
         organizationDataId: true,
+        difficulty: true,
+        challengeCategories: {
+          select: {
+            tag: true,
+          },
+        },
         _count: {
           select: {
             enrolledPlayers: true,
@@ -263,7 +215,16 @@ export const challengesRouter = router({
       },
     });
 
-    const enrolledChallengesWithPlayerCount = enrolledChallenges.map((challenge) => {
+    const challenges = rawChallenges.map((challenge) => {
+      const { challengeCategories, ...challengeWithoutCategories } = challenge;
+
+      return {
+        ...challengeWithoutCategories,
+        tags: challengeCategories.map((category) => category.tag),
+      };
+    });
+
+    const enrolledChallengesWithPlayerCount = challenges.map((challenge) => {
       const { _count, ...challengeWithoutCount } = challenge;
       return {
         ...challengeWithoutCount,
@@ -287,7 +248,7 @@ export const challengesRouter = router({
       },
     });
 
-    const availableChallenges = await ctx.prisma.challenge.findMany({
+    const rawChallenges = await ctx.prisma.challenge.findMany({
       where: {
         enrolledPlayers: {
           every: {
@@ -307,6 +268,12 @@ export const challengesRouter = router({
         location: true,
         isDraft: true,
         organizationDataId: true,
+        difficulty: true,
+        challengeCategories: {
+          select: {
+            tag: true,
+          },
+        },
         _count: {
           select: {
             enrolledPlayers: true,
@@ -315,7 +282,16 @@ export const challengesRouter = router({
       },
     });
 
-    const availableChallengesWithPlayerCount = availableChallenges.map((challenge) => {
+    const challenges = rawChallenges.map((challenge) => {
+      const { challengeCategories, ...challengeWithoutCategories } = challenge;
+
+      return {
+        ...challengeWithoutCategories,
+        tags: challengeCategories.map((category) => category.tag),
+      };
+    });
+
+    const availableChallengesWithPlayerCount = challenges.map((challenge) => {
       const { _count, ...challengeWithoutCount } = challenge;
       return {
         ...challengeWithoutCount,
@@ -424,6 +400,75 @@ export const challengesRouter = router({
       });
 
       return challenge;
+    }),
+
+  /**
+   * Edit a challenge, only available for organization users.
+   */
+  edit: organizationProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        description: z.string(),
+        startDate: z.string(),
+        endDate: z.string(),
+        location: z.string().nullable(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, name, description, startDate, endDate, location } = input;
+
+      const challenge = await ctx.prisma.challenge.findUnique({
+        where: {
+          id,
+        },
+      });
+
+      if (!challenge) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: `Challenge with id '${id} not found'`,
+        });
+      }
+
+      const organization = await ctx.prisma.userDetails.findUnique({
+        where: {
+          userId: ctx.session.user.id,
+        },
+        select: {
+          organizationData: true,
+        },
+      });
+
+      if (!organization) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: `Organization with user id '${ctx.session.user.id} not found'`,
+        });
+      }
+
+      if (challenge.organizationDataId !== organization.organizationData?.id) {
+        throw new TRPCError({
+          code: 'FORBIDDEN',
+          cause: `User with id '${ctx.session.user.id} is not allowed to edit challenge with id '${id}'`,
+        });
+      }
+
+      const updatedChallenge = await ctx.prisma.challenge.update({
+        where: {
+          id,
+        },
+        data: {
+          name,
+          description,
+          startDate: new Date(startDate),
+          endDate: new Date(endDate),
+          location,
+        },
+      });
+
+      return updatedChallenge;
     }),
 
   /**
