@@ -1,83 +1,16 @@
-import { Dialog, RadioGroup } from '@headlessui/react';
+import { Dialog } from '@headlessui/react';
 import { MapPinIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import * as React from 'react';
 
-import { Alert, ChallengeTagSelector } from '@/components/common';
-import { classNames, config } from '@/const';
+import { Alert, ChallengeDifficultySelector, ChallengeTagSelector } from '@/components/common';
+import { config } from '@/const';
 import { trpc } from '@/utils/trpc';
 import type { ChallengeDifficulty, ChallengeTag } from '@prisma/client';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { Button, DateInputWithIcon } from '../common';
 import { SlideOver } from '../common/layout/SlideOver';
-
-type DifficultyListEntry = {
-  checkedClassName: string;
-  ringClassName: string;
-};
-
-const difficultyLookup: Record<ChallengeDifficulty, DifficultyListEntry> = {
-  EASY: {
-    checkedClassName: 'bg-green-300',
-    ringClassName: 'ring-green-300',
-  },
-  MEDIUM: {
-    checkedClassName: 'bg-yellow-300',
-    ringClassName: 'ring-yellow-300',
-  },
-  HARD: {
-    checkedClassName: 'bg-red-300',
-    ringClassName: 'ring-red-300',
-  },
-};
-
-const difficulties: ChallengeDifficulty[] = ['EASY', 'MEDIUM', 'HARD'];
-
-type DifficultyRadioButtonsProps = {
-  difficulty: ChallengeDifficulty;
-  setDifficulty: (value: ChallengeDifficulty) => void;
-};
-
-const DifficultyRadioButtons = ({ difficulty, setDifficulty }: DifficultyRadioButtonsProps) => {
-  const { t } = useTranslation('challenges');
-
-  return (
-    <div>
-      <p className="text-sm font-medium leading-6 text-gray-900">
-        {t('challenges.creation.difficulty')}
-        <span className="text-red-500"> *</span>
-      </p>
-
-      <RadioGroup value={difficulty} onChange={setDifficulty} className="mt-1">
-        <RadioGroup.Label className="sr-only">
-          {t('challenges.creation.difficultySrMsg')}
-        </RadioGroup.Label>
-        <div className="flex flex-col items-center justify-between gap-2 min-[550px]:flex-row">
-          {difficulties.map((option) => (
-            <RadioGroup.Option
-              key={option}
-              value={option}
-              className={({ active, checked }) =>
-                classNames(
-                  active ? `ring-2 ring-offset-2 ${difficultyLookup[option].ringClassName}` : '',
-                  checked
-                    ? difficultyLookup[option].checkedClassName
-                    : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50',
-                  'flex w-full flex-1 cursor-pointer items-center justify-center rounded-md p-3 text-sm font-semibold uppercase focus:outline-none',
-                )
-              }
-            >
-              <RadioGroup.Label as="span">
-                {t(`challenges.creation.difficulties.${option.toLocaleLowerCase()}`)}
-              </RadioGroup.Label>
-            </RadioGroup.Option>
-          ))}
-        </div>
-      </RadioGroup>
-    </div>
-  );
-};
 
 type FormValues = {
   name: string;
@@ -122,33 +55,33 @@ export const NewChallengeSlideOver = () => {
     const newErrors: string[] = [];
 
     if (!name) {
-      newErrors.push(t('challenges.creation.errors.missingName'));
+      newErrors.push(t('challenges.errors.missingName'));
     } else if (name.length < 5) {
-      newErrors.push(t('challenges.creation.errors.shortName'));
+      newErrors.push(t('challenges.errors.shortName'));
     }
     if (!difficulty) {
-      newErrors.push(t('challenges.creation.errors.missingDifficulty'));
+      newErrors.push(t('challenges.errors.missingDifficulty'));
     }
     if (!tags || tags.length === 0) {
-      newErrors.push(t('challenges.creation.errors.missingTags'));
+      newErrors.push(t('challenges.errors.missingTags'));
     }
     if (!description) {
-      newErrors.push(t('challenges.creation.errors.missingDescription'));
+      newErrors.push(t('challenges.errors.missingDescription'));
     }
     if (!startDate) {
-      newErrors.push(t('challenges.creation.errors.missingStartDate'));
+      newErrors.push(t('challenges.errors.missingStartDate'));
     }
     if (!endDate) {
-      newErrors.push(t('challenges.creation.errors.missingEndDate'));
+      newErrors.push(t('challenges.errors.missingEndDate'));
     }
     if (new Date(startDate) > new Date(endDate)) {
-      newErrors.push(t('challenges.creation.errors.invalidDateRange'));
+      newErrors.push(t('challenges.errors.invalidDateRange'));
     }
     if (new Date(endDate) < new Date()) {
-      newErrors.push(t('challenges.creation.errors.invalidEndDate'));
+      newErrors.push(t('challenges.errors.invalidEndDate'));
     }
     if (location.length === 1) {
-      newErrors.push(t('challenges.creation.errors.shortLocation'));
+      newErrors.push(t('challenges.errors.shortLocation'));
     }
 
     setErrors(newErrors);
@@ -248,9 +181,9 @@ export const NewChallengeSlideOver = () => {
                     </div>
                   </div>
 
-                  <DifficultyRadioButtons
+                  <ChallengeDifficultySelector
                     difficulty={formValues.difficulty}
-                    setDifficulty={(newDifficulty) => handleDifficultyChange(newDifficulty)}
+                    setDifficulty={handleDifficultyChange}
                   />
 
                   <ChallengeTagSelector
@@ -427,7 +360,7 @@ export const NewChallengeSlideOver = () => {
               shown={errors.length > 0}
               content={{
                 type: 'error',
-                title: `${t('challenges.creation.errors.title')}:`,
+                title: `${t('challenges.errors.title')}:`,
                 errors,
               }}
             />

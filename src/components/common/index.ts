@@ -1,5 +1,6 @@
 export * from './alert';
 export * from './button';
+export * from './challenge-difficulty-selector';
 export * from './challenge-tag-selector';
 export * from './chip';
 export * from './form';

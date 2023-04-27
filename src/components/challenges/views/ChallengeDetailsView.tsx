@@ -142,6 +142,7 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
           open={editChallengeSlideOverOpen}
           setOpen={setEditChallengeSlideOverOpen}
           challenge={data.challenge}
+          challengeTags={data.challengeTags}
         />
       )}
     </>

@@ -51,20 +51,20 @@
       "draftAccess": {
         "title": "Private to you",
         "description": "Create a draft version of the challenge."
-      },
-      "errors": {
-        "title": "There are some errors in your submission",
-        "missingName": "Please enter a name for the challenge",
-        "shortName": "The name of the challenge is too short",
-        "missingDifficulty": "Please select a difficulty level",
-        "missingTags": "Select at least one tag",
-        "missingDescription": "The challenge is missing a description",
-        "missingStartDate": "You must provide a start date",
-        "missingEndDate": "You must provide an end date",
-        "invalidDateRange": "The end date must be after the start date",
-        "invalidEndDate": "The end date must be in the future",
-        "shortLocation": "The location is too short (must be at least 1 character)"
       }
+    },
+    "errors": {
+      "title": "There are some errors in your submission",
+      "missingName": "Please enter a name for the challenge",
+      "shortName": "The name of the challenge is too short",
+      "missingDifficulty": "Please select a difficulty level",
+      "missingTags": "Select at least one tag",
+      "missingDescription": "The challenge is missing a description",
+      "missingStartDate": "You must provide a start date",
+      "missingEndDate": "You must provide an end date",
+      "invalidDateRange": "The end date must be after the start date",
+      "invalidEndDate": "The end date must be in the future",
+      "shortLocation": "The location is too short (must be at least 1 character)"
     },
     "details": {
       "actionButton": {
@@ -101,14 +101,6 @@
       "endDate": "End date",
       "location": "Location",
       "learnAbout": "Learn more about challenges",
-      "errors": {
-        "title": "There are some errors in your submission",
-        "missingName": "Please enter a name for the challenge",
-        "shortName": "The name of the challenge is too short",
-        "missingDescription": "The challenge is missing a description",
-        "missingStartDate": "You must provide a start date",
-        "missingEndDate": "You must provide an end date"
-      },
       "other": {
         "closePanel": "Close panel"
       }

@@ -409,15 +409,47 @@ export const challengesRouter = router({
     .input(
       z.object({
         id: z.string(),
-        name: z.string(),
+        name: z.string().min(5),
         description: z.string(),
-        startDate: z.string(),
-        endDate: z.string(),
-        location: z.string().nullable(),
+        startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        location: z.string(),
+        tags: z
+          .array(
+            z.enum([
+              ChallengeTag.FITNESS,
+              ChallengeTag.RECYCLING,
+              ChallengeTag.ENVIRONMENT_CLEANING,
+              ChallengeTag.NUTRITION,
+              ChallengeTag.MOBILITY,
+              ChallengeTag.WELLNESS,
+              ChallengeTag.COMMUNITY_INVOLVEMENT,
+              ChallengeTag.OTHER,
+            ]),
+          )
+          .min(1),
+        difficulty: z.enum([
+          ChallengeDifficulty.EASY,
+          ChallengeDifficulty.MEDIUM,
+          ChallengeDifficulty.HARD,
+        ]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { id, name, description, startDate, endDate, location } = input;
+      const { id, name, description, startDate, endDate, location, tags, difficulty } = input;
+
+      if (new Date(startDate) > new Date(endDate)) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Start date must be before end date',
+        });
+      }
+      if (new Date(endDate) < new Date()) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'End date must be in the future',
+        });
+      }
 
       const challenge = await ctx.prisma.challenge.findUnique({
         where: {
@@ -464,6 +496,13 @@ export const challengesRouter = router({
           description,
           startDate: new Date(startDate),
           endDate: new Date(endDate),
+          difficulty,
+          challengeCategories: {
+            deleteMany: {},
+            create: tags.map((tag) => ({
+              tag,
+            })),
+          },
           location,
         },
       });
