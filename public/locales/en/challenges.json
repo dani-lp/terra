@@ -79,7 +79,9 @@
         "open": "Open",
         "closed": "Closed"
       },
-      "leaderboard": "Leaderboard"
+      "leaderboard": "Leaderboard",
+      "noPlayers": "No players",
+      "noPlayersDescription": "No players have participated in this challenge yet!"
     },
     "enrollModal": {
       "title": "Join challenge",
