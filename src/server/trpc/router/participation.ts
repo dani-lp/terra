@@ -103,11 +103,9 @@ export const participationRouter = router({
         },
       });
 
-      // TODO 4. Check for possible achievements
+      // TODO 3.5. Save the file proof in EC2
 
-      // TODO 4.5. Save the file proof in EC2
-
-      // 5. Create participation
+      // 4. Create participation
       const participation = await ctx.prisma.participation.create({
         data: {
           challengeId,
