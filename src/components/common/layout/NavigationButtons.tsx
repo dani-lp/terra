@@ -62,7 +62,6 @@ export const NavigationButtons = ({ hideUser, hideSettings, className }: Props) 
         playerId={playerDataId}
         open={playerDetailsOpen}
         setOpen={setPlayerDetailsOpen}
-        withLogout
       />
     </>
   );
