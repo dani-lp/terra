@@ -3,7 +3,8 @@
     "openSidebar": "Open sidebar",
     "closeSidebar": "Close sidebar",
     "closePanel": "Close panel",
-    "selectATab": "Select a tab"
+    "selectATab": "Select a tab",
+    "status": "Status"
   },
   "actions": {
     "close": "Close",

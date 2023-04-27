@@ -1,4 +1,4 @@
-import type { ChallengeTag } from '@prisma/client';
+import type { ChallengeDifficulty, ChallengeTag } from '@prisma/client';
 
 export const tagColors: Record<ChallengeTag, string> = {
   FITNESS: 'bg-indigo-100 text-indigo-700',
@@ -20,4 +20,16 @@ export const tagDotColors: Record<ChallengeTag, string> = {
   WELLNESS: 'bg-blue-300',
   COMMUNITY_INVOLVEMENT: 'bg-red-300',
   OTHER: 'bg-gray-300',
+};
+
+export const difficultyColors: Record<ChallengeDifficulty, string> = {
+  EASY: 'bg-green-200 text-green-800',
+  MEDIUM: 'bg-yellow-200 text-yellow-800',
+  HARD: 'bg-red-200 text-red-800',
+};
+
+export const difficultyIconColors: Record<ChallengeDifficulty, string> = {
+  EASY: 'text-green-500',
+  MEDIUM: 'text-yellow-500',
+  HARD: 'text-red-500',
 };
