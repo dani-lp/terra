@@ -573,7 +573,7 @@ export const challengesRouter = router({
     .query(async ({ ctx, input }) => {
       const { orgDetailsId } = input;
 
-      const challenges = await ctx.prisma.challenge.findMany({
+      const rawChallenges = await ctx.prisma.challenge.findMany({
         where: {
           organizationDataId: orgDetailsId,
         },
@@ -586,6 +586,12 @@ export const challengesRouter = router({
           endDate: true,
           location: true,
           organizationDataId: true,
+          difficulty: true,
+          challengeCategories: {
+            select: {
+              tag: true,
+            },
+          },
           isDraft: true,
           _count: {
             select: {
@@ -593,6 +599,15 @@ export const challengesRouter = router({
             },
           },
         },
+      });
+
+      const challenges = rawChallenges.map((challenge) => {
+        const { challengeCategories, ...challengeWithoutCategories } = challenge;
+
+        return {
+          ...challengeWithoutCategories,
+          tags: challengeCategories.map((category) => category.tag),
+        };
       });
 
       const challengesWithEnrolledPlayers = challenges.map((challenge) => {
