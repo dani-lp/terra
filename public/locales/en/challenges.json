@@ -1,5 +1,71 @@
 {
   "challenges": {
+    "common": {
+      "closingOn": "Closing on {{date}}"
+    },
+    "tags": {
+      "FITNESS": "Fitness",
+      "RECYCLING": "Recycling",
+      "ENVIRONMENT_CLEANING": "Environment cleaning",
+      "NUTRITION": "Nutrition",
+      "MOBILITY": "Mobility",
+      "WELLNESS": "Wellness",
+      "COMMUNITY_INVOLVEMENT": "Community involvement",
+      "OTHER": "Other"
+    },
+    "overview": {
+      "noChallengesFound": "No challenges found",
+      "tabs": {
+        "available": "Available",
+        "joined": "Joined"
+      }
+    },
+    "creation": {
+      "new": "New",
+      "cancel": "Cancel",
+      "create": "Create challenge",
+      "name": "Challenge name",
+      "description": "Description",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "location": "Location",
+      "locationPlaceholder": "Where is the challenge taking place?",
+      "difficulty": "Difficulty",
+      "difficulties": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Challenging"
+      },
+      "difficultySrMsg": "Choose a difficulty level",
+      "tags": "Tags",
+      "addTags": "Add tags...",
+      "privacy": "Privacy",
+      "publicAccess": {
+        "title": "Public access",
+        "description": "Everyone will be able to take part in the challenge."
+      },
+      "protectedAccess": {
+        "title": "Private to organization members",
+        "description": "Only members of your organization will be able to participate."
+      },
+      "draftAccess": {
+        "title": "Private to you",
+        "description": "Create a draft version of the challenge."
+      }
+    },
+    "errors": {
+      "title": "There are some errors in your submission",
+      "missingName": "Please enter a name for the challenge",
+      "shortName": "The name of the challenge is too short",
+      "missingDifficulty": "Please select a difficulty level",
+      "missingTags": "Select at least one tag",
+      "missingDescription": "The challenge is missing a description",
+      "missingStartDate": "You must provide a start date",
+      "missingEndDate": "You must provide an end date",
+      "invalidDateRange": "The end date must be after the start date",
+      "invalidEndDate": "The end date must be in the future",
+      "shortLocation": "The location is too short (must be at least 1 character)"
+    },
     "details": {
       "actionButton": {
         "edit": "Edit challenge",
@@ -13,7 +79,9 @@
         "open": "Open",
         "closed": "Closed"
       },
-      "leaderboard": "Leaderboard"
+      "leaderboard": "Leaderboard",
+      "noPlayers": "No players",
+      "noPlayersDescription": "No players have participated in this challenge yet!"
     },
     "enrollModal": {
       "title": "Join challenge",
@@ -35,14 +103,6 @@
       "endDate": "End date",
       "location": "Location",
       "learnAbout": "Learn more about challenges",
-      "errors": {
-        "title": "There are some errors in your submission",
-        "missingName": "Please enter a name for the challenge",
-        "shortName": "The name of the challenge is too short",
-        "missingDescription": "The challenge is missing a description",
-        "missingStartDate": "You must provide a start date",
-        "missingEndDate": "You must provide an end date"
-      },
       "other": {
         "closePanel": "Close panel"
       }

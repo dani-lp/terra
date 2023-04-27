@@ -1,3 +1,4 @@
+export * from './DateInputWithIcon';
 export * from './FieldWrapper';
 export * from './InputField';
 export * from './SelectField';

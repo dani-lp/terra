@@ -1,41 +1,13 @@
-import { Alert, Button } from '@/components/common';
+import { Alert, Button, DateInputWithIcon } from '@/components/common';
 import { trpc } from '@/utils/trpc';
 import { Dialog, Transition } from '@headlessui/react';
-import { CalendarDaysIcon, CalendarIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
+import { CalendarIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { PhotoIcon } from '@heroicons/react/24/solid';
 import type { Challenge } from '@prisma/client';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import * as React from 'react';
-
-type ExternalInputProps = {
-  handleInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-const DateInputWithIcon = ({ handleInputChange }: ExternalInputProps) => {
-  const { t } = useTranslation('challenges');
-
-  return (
-    <div>
-      <label htmlFor="date" className="block text-sm font-medium leading-6 text-gray-900">
-        {t('challenges.participationSlideOver.dateField')}
-      </label>
-      <div className="relative mt-2 rounded-md shadow-sm">
-        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-          <CalendarDaysIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-        </div>
-        <input
-          type="date"
-          name="date"
-          id="date"
-          className="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
-          onChange={handleInputChange}
-        />
-      </div>
-    </div>
-  );
-};
 
 const FileInput = () => {
   const { t } = useTranslation('challenges');
@@ -89,17 +61,27 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
   const utils = trpc.useContext();
   const registerParticipationMutation = trpc.participation.register.useMutation({
     onSuccess: async () => {
-      await utils.challenges.get.invalidate();
+      await Promise.all([
+        utils.challenges.get.invalidate,
+        utils.participation.getByChallenge.invalidate,
+        utils.user.getPlayerOverviewData.invalidate,
+      ]);
     },
   });
 
-  const [date, setDate] = React.useState<Date>(new Date());
+  const [date, setDate] = React.useState<string>(new Date().toISOString().substring(0, 10));
   const [comments, setComments] = React.useState<string>('');
   const [errors, setErrors] = React.useState<string[]>([]);
 
   const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setErrors([]);
-    setDate(new Date(event.target.value));
+    try {
+      const newDate = new Date(event.target.value).toISOString().substring(0, 10);
+      setDate(newDate);
+    } catch (error) {
+      console.error(error);
+      setDate('');
+    }
   };
 
   const handleCommentsChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -109,7 +91,7 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const isDateValid = date > challenge.startDate && date < challenge.endDate;
+    const isDateValid = new Date(date) > challenge.startDate && new Date(date) < challenge.endDate;
 
     if (!date || !isDateValid) {
       setErrors([t('challenges.participationSlideOver.errors.date')]);
@@ -199,7 +181,13 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
                       <div className="flex flex-1 flex-col justify-between">
                         <div className="divide-y divide-gray-200 px-4 sm:px-6">
                           <div className="space-y-6 pb-5 pt-6">
-                            <DateInputWithIcon handleInputChange={handleDateChange} />
+                            <DateInputWithIcon
+                              label={t('challenges.participationSlideOver.dateField')}
+                              name="date"
+                              value={date}
+                              handleInputChange={handleDateChange}
+                              required
+                            />
 
                             <div>
                               <label

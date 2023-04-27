@@ -6,6 +6,7 @@ import type { Challenge } from '@prisma/client';
 import { useState } from 'react';
 
 type Props = {
+  challengeId: string;
   challenge: Challenge | undefined;
   loading: boolean;
 };
@@ -22,7 +23,7 @@ const tabs = [
   },
 ] as const;
 
-export const ChallengeDetailsMobileContent = ({ challenge, loading }: Props) => {
+export const ChallengeDetailsMobileContent = ({ challengeId, challenge, loading }: Props) => {
   const [selectedTab, setSelectedTab] = useState<typeof tabs[number]['name']>(tabs[0].name);
 
   return (
@@ -67,7 +68,7 @@ export const ChallengeDetailsMobileContent = ({ challenge, loading }: Props) => 
       )}
 
       {selectedTab === 'Leaderboard' && (
-        <LeaderBoardList loading={loading} />
+        <LeaderBoardList challengeId={challengeId} loading={loading} />
       )}
     </div>
   );

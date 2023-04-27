@@ -44,7 +44,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
     props: {
       ...(await serverSideTranslations(
         context.locale ?? '',
-        ['common', 'navigation', 'orgs'],
+        ['common', 'navigation', 'orgs', 'challenges'],
         nextI18nConfig,
         ['en'],
       )),

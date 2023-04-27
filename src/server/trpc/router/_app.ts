@@ -1,16 +1,16 @@
-import { challengesRouter } from '@/server/trpc/router/challenges';
 import { router } from '../trpc';
-import { authRouter } from './auth';
+import { achievementsRouter } from './achievements';
+import { challengesRouter } from './challenges';
 import { devRouter } from './dev';
+import { participationRouter } from './participation';
 import { userRouter } from './user';
-import { participationRouter } from '@/server/trpc/router/participation';
 
 export const appRouter = router({
-  auth: authRouter,
   user: userRouter,
   dev: devRouter,
   challenges: challengesRouter,
   participation: participationRouter,
+  achievements: achievementsRouter,
 });
 
 // export type definition of API

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import type { OrganizationData } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
-import { protectedProcedure, router } from '../trpc';
+import { playerProcedure, protectedProcedure, router } from '../trpc';
 
 export const userRouter = router({
   /**
@@ -143,8 +143,37 @@ export const userRouter = router({
         username: playerUserDetails.username,
         image: user.image,
         about: playerUserDetails.about ?? '',
+        experiencePoints: playerData.experience,
         challengeEnrollmentCount,
       };
+    }),
+
+  /**
+   * Get a player's playerData ID from their base user ID
+   */
+  getPlayerDataId: playerProcedure
+    .input(z.object({ userId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const { userId } = input;
+
+      if (!userId) {
+        return null;
+      }
+
+      const playerData = await ctx.prisma.playerData.findUnique({
+        where: {
+          userDetailsId: userId,
+        },
+      });
+
+      if (!playerData) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: `Player playerData with userDetailsId ${userId} not found`,
+        });
+      }
+
+      return playerData.id;
     }),
 
   /**
