@@ -112,7 +112,7 @@ export const participationRouter = router({
         data: {
           challengeId,
           comments,
-          date,
+          date: new Date(date),
           playerDataId: userDetails?.playerData?.id,
         },
       });
