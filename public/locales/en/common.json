@@ -44,6 +44,7 @@
   },
   "users": {
     "participatingChallenges_one": "Participating in {{count}} challenge",
-    "participatingChallenges_other": "Participating in {{count}} challenges"
+    "participatingChallenges_other": "Participating in {{count}} challenges",
+    "level": "Level {{level}}"
   }
 }

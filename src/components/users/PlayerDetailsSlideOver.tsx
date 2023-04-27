@@ -5,9 +5,10 @@ import { useTranslation } from 'next-i18next';
 import Image, { type StaticImageData } from 'next/image';
 import * as React from 'react';
 
+import { PlayerLevel } from '@/components/common';
+import { PlayerDetailsSlideOverContentSkeleton } from '@/components/users/PlayerDetailsSlideOverContentSkeleton';
 import { trpc } from '@/utils/trpc';
 
-import { PlayerDetailsSlideOverContentSkeleton } from '@/components/users/PlayerDetailsSlideOverContentSkeleton';
 import pfp1 from '../../../public/img/profile_bgs/profileBg1.jpg';
 import pfp2 from '../../../public/img/profile_bgs/profileBg2.jpg';
 import pfp3 from '../../../public/img/profile_bgs/profileBg3.jpg';
@@ -18,9 +19,10 @@ type Props = {
   playerId: string | null;
   open: boolean;
   setOpen: (open: boolean) => void;
+  withLogout?: boolean;
 };
 
-export const PlayerDetailsSlideOver = ({ playerId, open, setOpen }: Props) => {
+export const PlayerDetailsSlideOver = ({ playerId, open, setOpen, withLogout = false }: Props) => {
   const { data, isLoading, isError, error } = trpc.user.getPlayerOverviewData.useQuery({
     playerId,
   });
@@ -53,10 +55,10 @@ export const PlayerDetailsSlideOver = ({ playerId, open, setOpen }: Props) => {
             <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
               <Transition.Child
                 as={React.Fragment}
-                enter="transform transition ease-in-out duration-500 sm:duration-700"
+                enter="transform transition ease-in-out duration-500"
                 enterFrom="translate-x-full"
                 enterTo="translate-x-0"
-                leave="transform transition ease-in-out duration-500 sm:duration-700"
+                leave="transform transition ease-in-out duration-500"
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full"
               >
@@ -94,19 +96,15 @@ export const PlayerDetailsSlideOver = ({ playerId, open, setOpen }: Props) => {
                         {isLoading && <PlayerDetailsSlideOverContentSkeleton />}
                         {!isLoading && data && (
                           <div className="mx-auto max-w-5xl px-6 sm:px-8 lg:px-10">
-                            <div className="-mt-12 sm:-mt-16 sm:flex sm:items-end sm:space-x-5">
-                              <div className="flex">
-                                <Image
-                                  className="h-24 w-24 rounded-full ring-4 ring-white sm:h-32 sm:w-32"
-                                  height={96}
-                                  width={96}
-                                  src={data.image ?? ''} // TODO placeholder profile image
-                                  alt=""
-                                />
-                              </div>
-                            </div>
-                            <div className="mt-4 divide-y divide-gray-200">
-                              <div>
+                            <div className="-mt-6 flex items-center gap-4 sm:-mt-10 sm:space-x-2">
+                              <Image
+                                className="h-24 w-24 rounded-full ring-4 ring-white sm:h-32 sm:w-32"
+                                height={96}
+                                width={96}
+                                src={data.image ?? ''} // TODO placeholder profile image
+                                alt=""
+                              />
+                              <div className="-mb-6 flex flex-col">
                                 <div className="min-w-0 flex-1">
                                   <Dialog.Title
                                     as="h2"
@@ -117,6 +115,13 @@ export const PlayerDetailsSlideOver = ({ playerId, open, setOpen }: Props) => {
                                 </div>
 
                                 <p className="text-sm text-neutral-500">@{data.username}</p>
+                              </div>
+                            </div>
+                            <div className="mt-2 divide-y divide-gray-200">
+                              <div>
+                                <div className="mt-4 mb-2">
+                                  <PlayerLevel points={data.experiencePoints} />
+                                </div>
 
                                 <div className="mt-2 mb-4 flex flex-col">
                                   <div className="mt-2 flex items-center text-sm text-gray-500">

@@ -25,7 +25,15 @@ const pointsPerLevel = (level: number) => {
   }
 };
 
-export const getLevelProgression = (xpPoints: number) => {
+type GetLevelProgressionReturn = {
+  level: number; // current player level
+  currentPoints: number; // current points over the bottom bound
+  neededPoints: number; // points needed to reach the upper bound
+  bottomBound: number; // bottom bound of current level range
+  upperBound: number; // upper bound of current level range
+};
+
+export const getLevelProgression = (xpPoints: number): GetLevelProgressionReturn => {
   let level = 1;
 
   while (xpPoints >= pointsPerLevel(level + 1) && level <= 10) {
@@ -33,8 +41,20 @@ export const getLevelProgression = (xpPoints: number) => {
   }
 
   if (level >= 10) {
-    return { level: 10, currentPoints: 0 };
+    return {
+      level: 10,
+      currentPoints: 0,
+      neededPoints: 0,
+      bottomBound: pointsPerLevel(10),
+      upperBound: 0,
+    };
   }
 
-  return { level, currentPoints: xpPoints - pointsPerLevel(level) };
+  return {
+    level,
+    currentPoints: xpPoints - pointsPerLevel(level),
+    neededPoints: pointsPerLevel(level + 1) - xpPoints,
+    bottomBound: pointsPerLevel(level),
+    upperBound: pointsPerLevel(level + 1),
+  };
 };

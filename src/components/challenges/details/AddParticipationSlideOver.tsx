@@ -89,8 +89,11 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
   const utils = trpc.useContext();
   const registerParticipationMutation = trpc.participation.register.useMutation({
     onSuccess: async () => {
-      await utils.challenges.get.invalidate();
-      await utils.participation.getByChallenge.invalidate();
+      await Promise.all([
+        utils.challenges.get.invalidate,
+        utils.participation.getByChallenge.invalidate,
+        utils.user.getPlayerOverviewData.invalidate,
+      ]);
     },
   });
 

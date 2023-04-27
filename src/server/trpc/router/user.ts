@@ -143,6 +143,7 @@ export const userRouter = router({
         username: playerUserDetails.username,
         image: user.image,
         about: playerUserDetails.about ?? '',
+        experiencePoints: playerData.experience,
         challengeEnrollmentCount,
       };
     }),

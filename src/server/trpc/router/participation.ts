@@ -1,6 +1,7 @@
+import { z } from 'zod';
+
 import { playerProcedure, protectedProcedure, router } from '@/server/trpc/trpc';
 import { TRPCError } from '@trpc/server';
-import { z } from 'zod';
 
 export const participationRouter = router({
   // queries
@@ -74,12 +75,40 @@ export const participationRouter = router({
         });
       }
 
-      // 3. TODO Get resulting points from gamification engine
+      // 3. Get resulting points from gamification engine
+      let points: number;
+      switch (challenge.difficulty) {
+        case 'EASY':
+          points = 5;
+          break;
+        case 'MEDIUM':
+          points = 10;
+          break;
+        case 'HARD':
+          points = 15;
+          break;
+        default:
+          points = 0;
+          break;
+      }
 
-      // 3.5. TODO Save the file proof in EC2
+      await ctx.prisma.playerData.update({
+        where: {
+          id: userDetails?.playerData?.id,
+        },
+        data: {
+          experience: {
+            increment: points,
+          },
+        },
+      });
 
-      // 4. Create participation
-      await ctx.prisma.participation.create({
+      // TODO 4. Check for possible achievements
+
+      // TODO 4.5. Save the file proof in EC2
+
+      // 5. Create participation
+      const participation = await ctx.prisma.participation.create({
         data: {
           challengeId,
           comments,
@@ -88,7 +117,7 @@ export const participationRouter = router({
         },
       });
 
-      return true;
+      return participation;
     }),
 
   /**
