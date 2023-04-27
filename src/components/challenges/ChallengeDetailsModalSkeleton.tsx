@@ -13,10 +13,10 @@ export const ChallengeDetailsModalSkeleton = () => {
       </div>
       <div className="mt-2 sm:justify-between">
         <div className="mb-2 sm:flex">
-          <p className="flex items-center text-sm text-gray-600">
+          <div className="flex items-center text-sm text-gray-600">
             <UserGroupIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-500" aria-hidden="true" />
             <Skeleton className="h-4 w-40" />
-          </p>
+          </div>
           {/* <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
                       <MapPinIcon className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400" aria-hidden="true" />
                       {position.location}

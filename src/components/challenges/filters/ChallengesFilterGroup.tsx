@@ -3,6 +3,7 @@ import { PlayersFilter } from './PlayersFilter';
 import { StatusFilter } from './StatusFilter';
 import { Button } from '@/components/common';
 import { useChallengeSearchActions } from '@/store/useChallengeSearchStore';
+import { TagsFilter } from './TagsFilter';
 
 type Props = {
   className?: string;
@@ -23,6 +24,7 @@ export const ChallengesFilterGroup = ({ className, showTitle = true}: Props) => 
       <div className="flex flex-col gap-4 p-4">
         <PlayersFilter />
         <StatusFilter />
+        <TagsFilter />
       </div>
     </div>
   );

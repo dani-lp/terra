@@ -40,7 +40,7 @@ export const ChallengesViewTopBar = ({
   return (
     <div
       className={classNames(
-        'sticky top-0 z-10 hidden w-full justify-center xl:flex',
+        'sticky top-0 z-10 hidden w-full justify-center lg:flex',
         className,
       )}
     >
