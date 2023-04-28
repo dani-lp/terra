@@ -14,6 +14,7 @@ import { AddParticipationSlideOver } from '@/components/challenges/details/AddPa
 import { Button } from '@/components/common';
 import { Skeleton } from '@/components/common/skeleton';
 import { trpc } from '@/utils/trpc';
+import Head from 'next/head';
 
 type Props = {
   challengeId: string;
@@ -26,6 +27,7 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
   const [addParticipationSlideOverOpen, setAddParticipationSlideOverOpen] = React.useState(false);
   const [editChallengeSlideOverOpen, setEditChallengeSlideOverOpen] = React.useState(false);
   const { t } = useTranslation('challenges');
+  const { t: tCommon } = useTranslation('common');
 
   if (!challengeId) {
     // TODO error page
@@ -63,6 +65,15 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
 
   return (
     <>
+      {data ? (
+        <Head>
+          <title>{tCommon('titles.challengeDetailsName', { name: data.challenge.name })}</title>
+        </Head>
+      ) : (
+        <Head>
+          <title>{tCommon('titles.challengeDetails')}</title>
+        </Head>
+      )}
       <div className="overflow-hidden">
         <div className="md:grid md:grid-cols-2 md:gap-4 md:p-4 lg:gap-8">
           <div className="flex flex-col gap-2 md:col-span-1 md:max-w-md">

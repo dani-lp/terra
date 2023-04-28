@@ -1,5 +1,4 @@
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
@@ -18,9 +17,6 @@ const Challenge: NextPageWithLayout = () => {
 
   return (
     <>
-      <Head>
-        <title>Challenge</title>
-      </Head>
       <ChallengeDetailsView challengeId={challengeId ?? ''} />
     </>
   );

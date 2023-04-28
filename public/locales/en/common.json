@@ -6,7 +6,16 @@
     "selectATab": "Select a tab",
     "status": "Status"
   },
+  "auth": {
+    "messages": {
+      "welcomeBack": "Welcome back!",
+      "enterEmail": "Enter your email to sign in to your account",
+      "signInWithEmail": "Sign in with email",
+      "signOut": "Sign out"
+    }
+  },
   "actions": {
+    "back": "Back",
     "close": "Close",
     "edit": "Edit",
     "join": "Join in",
@@ -60,5 +69,18 @@
     "achievementEntries_other": "{{count}} entries",
     "about": "About",
     "achievements": "Achievements"
+  },
+  "titles": {
+    "landing": "Welcome to Terra",
+    "home": "Home - Terra",
+    "signIn": "Sign in to Terra",
+    "challengesOverview": "Challenges Overview - Terra",
+    "challengeDetails": "Challenge Details",
+    "challengeDetailsName": "Challenge Details - {{name}}",
+    "organizationsOverview": "Organizations Overview - Terra",
+    "organizationDetails": "Organization Details",
+    "organizationDetailsName": "Organizations Details - {{name}}",
+    "about": "About - Terra",
+    "drafts": "Drafts - Terra"
   }
 }

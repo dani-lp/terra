@@ -1,15 +1,17 @@
+import type { Role } from '@prisma/client';
 import type { GetServerSidePropsContext } from 'next';
+import { getSession, useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import * as React from 'react';
+import type { NextPageWithLayout } from '../_app';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
 import { TerraChallengesViewOrgs, TerraChallengesViewPlayers } from '@/components/challenges';
 import { MainLayout } from '@/components/common';
 import { QUERY_PARAM_CALLBACK_URL } from '@/const/queryParams';
-import type { Role } from '@prisma/client';
-import { getSession, useSession } from 'next-auth/react';
-import type { NextPageWithLayout } from '../_app';
 
 const RoleViews = {
   ADMIN: TerraChallengesViewOrgs,
@@ -18,6 +20,7 @@ const RoleViews = {
 } satisfies { [key in keyof typeof Role]: React.FC };
 
 const Challenges: NextPageWithLayout = () => {
+  const { t } = useTranslation('common');
   const { data: session, status } = useSession();
 
   // TODO use EmptyView component
@@ -30,7 +33,7 @@ const Challenges: NextPageWithLayout = () => {
   return (
     <>
       <Head>
-        <title>Challenges - Terra</title>
+        <title>{t('titles.challengesOverview')}</title>
       </Head>
 
       {/* TODO use loading page/skeleton */}

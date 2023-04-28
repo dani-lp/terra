@@ -18,7 +18,7 @@ import { useQueryParams } from '@/hooks/useQueryParams';
 const inter = Inter({ subsets: ['latin'] });
 
 const SignIn: NextPage = () => {
-  const { t } = useTranslation('auth');
+  const { t } = useTranslation('common');
   const { data: session, status } = useSession();
   const { getParamValue } = useQueryParams();
 
@@ -30,7 +30,7 @@ const SignIn: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Sign in to Terra</title>
+        <title>{t('titles.signIn')}</title>
       </Head>
       <main
         className={classNames(
@@ -43,7 +43,7 @@ const SignIn: NextPage = () => {
           className="absolute top-4 left-1 inline-flex h-10 items-center justify-center rounded-lg bg-transparent py-2 px-4 text-sm font-medium transition-colors hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-400 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=open]:bg-transparent sm:left-4 md:top-8 md:left-8"
         >
           <ChevronLeftIcon className="h-5 w-5" />
-          {t('auth.actions.back')}
+          {t('actions.back')}
         </Link>
         <div className="-mt-28 flex w-full max-w-xs flex-col items-center justify-center text-center">
           <Link href="/">
@@ -98,7 +98,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
 
   return {
     props: {
-      ...(await serverSideTranslations(context.locale ?? '', ['auth'], nextI18nConfig, ['en'])),
+      ...(await serverSideTranslations(context.locale ?? '', ['common'], nextI18nConfig, ['en'])),
     },
   };
 };

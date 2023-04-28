@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import Head from 'next/head';
 
 import {
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export const OrgDetailsView = ({ orgDetailsId }: Props) => {
+  const { t } = useTranslation('common');
   const { data, isLoading, isError, error } = trpc.user.getOrgDetails.useQuery({
     orgDetailsId: orgDetailsId ?? '',
   });
@@ -24,9 +26,13 @@ export const OrgDetailsView = ({ orgDetailsId }: Props) => {
 
   return (
     <>
-      <Head>
-        <title>Organization{data ? ` - ${data.orgDetails.name}` : ''}</title>
-      </Head>
+      {data ? (
+        <Head>
+          <title>{t('titles.organizationDetailsName', { name: data.orgDetails.name })}</title>
+        </Head>
+      ) : (
+        <Head>{t('titles.organizationDetails')}</Head>
+      )}
       <div className="flex flex-col md:grid md:grid-cols-2 md:gap-4 md:p-4">
         <div className="flex flex-col gap-2 md:col-span-1">
           {isLoading && <OrgsDetailsHeaderSkeleton />}
