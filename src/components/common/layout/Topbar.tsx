@@ -65,15 +65,15 @@ export const TopBar = ({ setSidebarOpen }: Props) => {
             <Link href="/">
               <Image className="h-8 w-auto" height={32} width={32} src="/logo.png" alt="Terra" />
             </Link>
-            <div className="ml-6 hidden space-x-2 lg:flex">
+            <div className="ml-6 hidden space-x-2 md:flex">
               <TopBarNavigation />
             </div>
           </div>
           <div id="topbar-portal-container"></div>
           <div className="flex items-center justify-center">
-            <NavigationButtons className="hidden lg:flex" />
+            <NavigationButtons className="hidden md:flex" />
 
-            <div className="inline-flex lg:hidden">
+            <div className="inline-flex md:hidden">
               <NavigationButtons hideSettings />
               <button
                 type="button"
