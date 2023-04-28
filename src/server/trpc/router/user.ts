@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 import type { OrganizationData } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
-import { playerProcedure, protectedProcedure, router } from '../trpc';
+import { protectedProcedure, router } from '../trpc';
 
 export const userRouter = router({
   /**
@@ -71,7 +71,7 @@ export const userRouter = router({
         about: organizationUserDetails.about ?? '',
         country: organizationData.country,
         challengeCount,
-        username: organizationUserDetails.username, // TODO is this needed?
+        username: organizationUserDetails.username,
       };
     }),
 
@@ -151,12 +151,16 @@ export const userRouter = router({
   /**
    * Get a player's playerData ID from their base user ID
    */
-  getPlayerDataId: playerProcedure
+  getPlayerDataId: protectedProcedure
     .input(z.object({ userId: z.string() }))
     .query(async ({ ctx, input }) => {
       const { userId } = input;
 
       if (!userId) {
+        return null;
+      }
+
+      if (ctx.session.user.role !== 'PLAYER') {
         return null;
       }
 

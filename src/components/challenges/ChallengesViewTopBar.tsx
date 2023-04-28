@@ -1,8 +1,10 @@
+import { useTranslation } from 'next-i18next';
+import { createPortal } from 'react-dom';
+
 import { NewChallengeSlideOver } from '@/components/challenges/NewChallengeSlideOver';
 import { SearchBar } from '@/components/common/form/SearchBar';
 import { classNames } from '@/const';
 import { useChallengeSearch, useChallengeSearchActions } from '@/store/useChallengeSearchStore';
-import { createPortal } from 'react-dom';
 
 type Props = {
   showNewChallengeButton?: boolean;
@@ -15,6 +17,7 @@ export const ChallengesViewTopBar = ({
   usePortal = false,
   className = '',
 }: Props) => {
+  const { t } = useTranslation('challenges');
   const search = useChallengeSearch();
   const { setSearchString } = useChallengeSearchActions();
 
@@ -26,7 +29,7 @@ export const ChallengesViewTopBar = ({
             <SearchBar
               value={search}
               onChange={(e) => setSearchString(e.currentTarget.value)}
-              placeholder="Search your challenges..." // TODO i18n
+              placeholder={t('challenges.details.searchChallenges') ?? ''}
               className="mb-0 h-10"
             />
             {showNewChallengeButton && <NewChallengeSlideOver />}
@@ -39,16 +42,13 @@ export const ChallengesViewTopBar = ({
 
   return (
     <div
-      className={classNames(
-        'sticky top-0 z-10 hidden w-full justify-center lg:flex',
-        className,
-      )}
+      className={classNames('sticky top-0 z-10 hidden w-full justify-center lg:flex', className)}
     >
       <div className="flex h-full w-full max-w-6xl items-center justify-between gap-2">
         <SearchBar
           value={search}
           onChange={(e) => setSearchString(e.currentTarget.value)}
-          placeholder="Search your challenges..." // TODO i18n
+          placeholder={t('challenges.details.searchChallenges') ?? ''}
           className="mb-0 h-10"
         />
         {showNewChallengeButton && <NewChallengeSlideOver />}

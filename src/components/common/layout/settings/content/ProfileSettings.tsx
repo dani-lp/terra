@@ -1,10 +1,10 @@
-import { useSession } from 'next-auth/react';
-import Image from 'next/image';
-import { useTranslation } from 'next-i18next';
 import { InputField, TextareaField } from '@/components/common';
+import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import Image from 'next/image';
 import { OrgUsernameField } from './components/OrgUsernameField';
 
-import { useUsername, useAbout, useSettingsActions } from '@/store/useSettingsStore';
+import { useAbout, useSettingsActions, useUsername } from '@/store/useSettingsStore';
 
 export const ProfileSettings = () => {
   const username = useUsername();
@@ -14,57 +14,50 @@ export const ProfileSettings = () => {
   const { t } = useTranslation('common');
 
   if (!session?.user) {
-    // TODO remove this
-    return (
-      <div>User not logged in</div>
-    );
+    return <div></div>;
   }
 
-  // TODO translate labels
   return (
     <div className="h-full w-full">
-      <span className="text-sm text-neutral-500 sm:text-base">{t('settings.descriptions.profileDescription')}</span>
+      <span className="text-sm text-neutral-500 sm:text-base">
+        {t('settings.descriptions.profileDescription')}
+      </span>
 
       <div className="mt-6 flex flex-col lg:flex-row">
         <div className="grow space-y-6">
           <div>
-            {session.user.role === 'ORGANIZATION'
-              ? (
-                <OrgUsernameField
-                  value={username}
-                  onChange={setUsername}
-                />
-              )
-              : (
-                <InputField
-                  label="Username"
-                  className="h-[42px]"
-                  value={username}
-                  onChange={(e) => setUsername(e.currentTarget.value)}
-                />
-              )
-            }
+            {session.user.role === 'ORGANIZATION' ? (
+              <OrgUsernameField value={username} onChange={setUsername} />
+            ) : (
+              <InputField
+                label={t('settings.fields.username') ?? ''}
+                className="h-[42px]"
+                value={username}
+                onChange={(e) => setUsername(e.currentTarget.value)}
+              />
+            )}
           </div>
 
           <div>
             <TextareaField
               id="about"
-              label="About"
+              label={t('settings.fields.about') ?? ''}
               name="About"
               rows={3}
               value={about ?? ''}
               onChange={(e) => setAbout(e.currentTarget.value)}
             />
-            {/* TODO translate this */}
             <p className="mt-2 text-sm text-gray-500">
-              Brief description for your organization.
+              {session.user.role === 'ORGANIZATION'
+                ? t('settings.descriptions.aboutOrg')
+                : t('settings.descriptions.aboutPlayer')}
             </p>
           </div>
         </div>
 
         <div className="mt-6 grow lg:mt-0 lg:ml-6 lg:shrink-0 lg:grow-0">
           <p className="text-sm font-medium text-gray-700" aria-hidden="true">
-            Photo
+            {t('settings.fields.photo')}
           </p>
           <div className="mt-1 lg:hidden">
             <div className="flex items-center">
@@ -86,9 +79,8 @@ export const ProfileSettings = () => {
                     htmlFor="mobile-user-photo"
                     className="pointer-events-none relative text-sm font-medium leading-4 text-gray-700"
                   >
-                    {/* TODO translate this */}
-                    <span>Change</span>
-                    <span className="sr-only"> user photo</span>
+                    <span>{t('settings.fields.photoOverlay')}</span>
+                    <span className="sr-only">{t('settings.fields.photoOverlayA11y')}</span>
                   </label>
                   <input
                     id="mobile-user-photo"
@@ -113,8 +105,8 @@ export const ProfileSettings = () => {
               htmlFor="desktop-user-photo"
               className="absolute inset-0 flex h-full w-full items-center justify-center bg-black/75 text-sm font-medium text-white opacity-0 focus-within:opacity-100 hover:opacity-100"
             >
-              <span>Change</span>
-              <span className="sr-only"> user photo</span>
+              <span>{t('settings.fields.photoOverlay')}</span>
+              <span className="sr-only">{t('settings.fields.photoOverlayA11y')}</span>
               <input
                 type="file"
                 id="desktop-user-photo"
@@ -128,15 +120,8 @@ export const ProfileSettings = () => {
 
       {session.user.role === 'ORGANIZATION' && (
         <div className="mt-6">
-          <InputField
-            id="website"
-            label="Website URL"
-            name="website"
-          />
-          {/* TODO translate this */}
-          <p className="mt-2 text-sm text-gray-500">
-            Website URL for your organization.
-          </p>
+          <InputField id="website" label={t('settings.fields.website') ?? ''} name="website" />
+          <p className="mt-2 text-sm text-gray-500">{t('settings.descriptions.websiteUrl')}</p>
         </div>
       )}
     </div>

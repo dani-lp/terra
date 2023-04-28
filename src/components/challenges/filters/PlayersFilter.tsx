@@ -1,11 +1,14 @@
+import { useTranslation } from 'next-i18next';
+
 import { InputField } from '@/components/common';
 import {
-  useChallengeSearchPlayerNumber,
   useChallengeSearchActions,
+  useChallengeSearchPlayerNumber,
 } from '@/store/useChallengeSearchStore';
 
 // TODO completely change this, use a slider
 export const PlayersFilter = () => {
+  const { t } = useTranslation('challenges');
   const { setPlayerNumber } = useChallengeSearchActions();
   const playerNumber = useChallengeSearchPlayerNumber();
 
@@ -31,7 +34,7 @@ export const PlayersFilter = () => {
   return (
     <InputField
       type="number"
-      label="Players"
+      label={t('challenges.details.filters.players') ?? ''}
       value={playerNumber}
       onChange={handleChange}
       onBlur={handleBlur}

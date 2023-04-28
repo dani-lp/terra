@@ -16,21 +16,23 @@ import { useAtom } from 'jotai';
 import { signOut } from 'next-auth/react';
 
 const tabs: SelectOptionWithIcon[] = [
-  { id: '1', label: 'profile', icon: UserCircleIcon },
-  { id: '2', label: 'account', icon: Cog6ToothIcon },
-  { id: '3', label: 'notifications', icon: BellIcon },
+  { id: 'profile', label: 'profile', icon: UserCircleIcon },
+  { id: 'account', label: 'account', icon: Cog6ToothIcon },
+  { id: 'notifications', label: 'notifications', icon: BellIcon },
 ];
 
-const sections: { [key: string]: () => JSX.Element } = {
-  '1': ProfileSettings,
-  '2': AccountSettings,
-  '3': NotificationSettings,
+type TabKey = typeof tabs[number]['id'];
+
+const sections: Record<TabKey, () => JSX.Element> = {
+  profile: ProfileSettings,
+  account: AccountSettings,
+  notifications: NotificationSettings,
 };
 
 export const SettingsModal = () => {
   const [open, setOpen] = useAtom(settingsModalOpenAtom);
   const { data, isLoading, isError, error } = trpc.user.getSelfData.useQuery();
-  const [selectedTabKey, setSelectedTabKey] = React.useState<string>('1');
+  const [selectedTabKey, setSelectedTabKey] = React.useState<TabKey>('profile');
   const { t } = useTranslation('common');
   const { load } = useSettingsActions();
 
@@ -66,8 +68,7 @@ export const SettingsModal = () => {
       >
         <div className="flex w-full flex-col items-start justify-center p-4 sm:p-6">
           <div className="flex w-full items-center justify-between">
-            {/* TODO translate */}
-            <h2 className="mb-1 text-2xl font-bold">Settings</h2>
+            <h2 className="mb-1 text-2xl font-bold">{t('settings.title')}</h2>
             <button
               type="button"
               className="ml-1 flex h-10 w-10 items-center justify-center rounded-lg focus:outline-none focus:ring-2 focus:ring-inset focus:ring-black"
@@ -130,16 +131,16 @@ export const SettingsModal = () => {
 
         <div className="mt-auto flex w-full justify-between border-t-2 border-gray-100 p-4 sm:px-8">
           <div>
-            <Button variant="inverseRed" onClick={() => signOut({ callbackUrl: '/' })}>
-              Log out
+            <Button variant="inverseRed" noBorder onClick={() => signOut({ callbackUrl: '/' })}>
+              {t('settings.buttons.logout')}
             </Button>
           </div>
           <div className="flex justify-end">
             <Button variant="inverse" onClick={() => setOpen(false)}>
-              Cancel
+              {t('settings.buttons.cancel')}
             </Button>
             <Button type="submit" className="ml-5">
-              Save
+              {t('settings.buttons.save')}
             </Button>
           </div>
         </div>

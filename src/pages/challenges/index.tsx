@@ -36,7 +36,6 @@ const Challenges: NextPageWithLayout = () => {
         <title>{t('titles.challengesOverview')}</title>
       </Head>
 
-      {/* TODO use loading page/skeleton */}
       {isLoading && <div>Loading...</div>}
       {!isLoading && <RoleView />}
     </>

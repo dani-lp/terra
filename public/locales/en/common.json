@@ -23,10 +23,27 @@
     "viewDetails": "View details"
   },
   "settings": {
+    "title": "Settings",
+    "buttons": {
+      "logout": "Log out",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "fields": {
+      "username": "Username",
+      "about": "About",
+      "photo": "Photo",
+      "photoOverlay": "Change",
+      "photoOverlayA11y": " user photo",
+      "website": "Website URL"
+    },
     "descriptions": {
       "profileDescription": "This information will be displayed publicly. Be careful what you share!",
       "accountDescription": "Private information, only visible to you.",
-      "notificationsDescription": ""
+      "notificationsDescription": "",
+      "aboutOrg": "Brief description about your organization.",
+      "aboutPlayer": "Brief description about yourself.",
+      "websiteUrl": "Website URL for your organization."
     },
     "tabs": {
       "profile": "Profile",

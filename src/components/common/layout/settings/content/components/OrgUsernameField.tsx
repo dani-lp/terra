@@ -1,12 +1,16 @@
+import { useTranslation } from 'next-i18next';
+
 type OrgUsernameFieldProps = {
   value: string;
   onChange: (value: string) => void;
 };
 
 export const OrgUsernameField = ({ value, onChange }: OrgUsernameFieldProps) => {
+  const { t } = useTranslation('common');
+
   return (
     <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-      Username
+      {t('settings.fields.username')}
       <div className="mt-1 flex rounded-lg shadow-sm">
         <span className="inline-flex items-center rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 px-3 text-gray-500 sm:text-sm">
           terra.com/orgs/

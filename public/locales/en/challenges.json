@@ -79,9 +79,18 @@
         "open": "Open",
         "closed": "Closed"
       },
+      "filters": {
+        "players": "Players",
+        "status": "Status"
+      },
+      "tabs": {
+        "leaderboard": "Leaderboard",
+        "overview": "Overview"
+      },
       "leaderboard": "Leaderboard",
       "noPlayers": "No players",
-      "noPlayersDescription": "No players have participated in this challenge yet!"
+      "noPlayersDescription": "No players have participated in this challenge yet!",
+      "searchChallenges": "Search your challenges..."
     },
     "enrollModal": {
       "title": "Join challenge",

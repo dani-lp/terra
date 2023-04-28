@@ -37,7 +37,6 @@ const useSettingsStore = create<Settings>((set) => ({
 }));
 
 // selectors
-// TODO add new selectors as needed
 export const useUsername = () => useSettingsStore((state) => state.username);
 export const useAbout = () => useSettingsStore((state) => state.about);
 export const useSettingsActions = () => useSettingsStore((state) => state.actions);
