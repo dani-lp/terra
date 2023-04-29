@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           },
           userId: user.id,
           role: callbackUrlIsNewOrg ? 'ORGANIZATION' : 'PLAYER',
-          username: user.name,
+          username: user.name?.replace(/ /g, '_') || '',
           about: '',
           playerData: {
             create: {},

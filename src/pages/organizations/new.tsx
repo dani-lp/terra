@@ -1,19 +1,28 @@
 import { UserCircleIcon } from '@heroicons/react/24/solid';
+import { useFormik } from 'formik';
 import type { GetServerSidePropsContext, NextPage } from 'next';
 import { getSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
+import Image from 'next/image';
+import * as React from 'react';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
 import { Button } from '@/components/common';
+import { ConfirmSubmissionModal } from '@/components/organizations';
 import { classNames } from '@/const';
-import Image from 'next/image';
+import { trpc } from '@/utils/trpc';
 
 const inter = Inter({ subsets: ['latin'] });
 
-const PageHeader = () => {
+
+type PageHeaderProps = {
+  onSubmit: () => void;
+}
+
+const PageHeader = ({ onSubmit }: PageHeaderProps) => {
   const { t } = useTranslation('newOrg');
 
   return (
@@ -24,15 +33,60 @@ const PageHeader = () => {
           {t('header')}
         </h2>
       </div>
-      <div className="flex md:mt-0">
+      <div onClick={onSubmit} className="flex md:mt-0">
         <Button type="button">{t('actions.submit')}</Button>
       </div>
     </div>
   );
 };
 
+type ProfileFormData = {
+  name: string;
+  username: string;
+  website: string;
+  about: string;
+};
+
+type PrivateFormData = {
+  country: string; // TODO strongly type?
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  phone: string;
+};
+
 const SignIn: NextPage = () => {
   const { t } = useTranslation('newOrg');
+  const [confirmModalOpen, setConfirmModalOpen] = React.useState(false);
+  const utils = trpc.useContext();
+  const {
+    data: profileOrgData,
+    isLoading: isProfileOrgDataLoading,
+    isError: isProfileOrgDataError,
+    error: profileOrgDataError,
+  } = trpc.auth.getProfileOrgData.useQuery();
+  const {
+    data: privateOrgData,
+    isLoading: isPrivateOrgDataLoading,
+    isError: isPrivateOrgDataError,
+    error: privateOrgDataError,
+  } = trpc.auth.getPrivateOrgData.useQuery();
+
+  const isLoading = isProfileOrgDataLoading || isPrivateOrgDataLoading;
+  const isError = isProfileOrgDataError || isPrivateOrgDataError;
+
+  const updateProfileOrgData = trpc.auth.updateProfileOrgData.useMutation({
+    onSuccess: async () => {
+      await utils.auth.getProfileOrgData.invalidate();
+    },
+  });
+  const updatePrivateOrgData = trpc.auth.updatePrivateOrgData.useMutation({
+    onSuccess: async () => {
+      await utils.auth.getPrivateOrgData.invalidate();
+    },
+  });
+  const submitRequest = trpc.auth.submitRegistrationRequest.useMutation();
 
   /**
    * Workflow:
@@ -42,6 +96,59 @@ const SignIn: NextPage = () => {
    * 4.- If "submit" is clicked when data is wrong/incomplete, show errors in the form
    * 5.- If "submit" is clicked when data is correct, show a confirmation message that sends the activation request
    */
+
+  const profileForm = useFormik<ProfileFormData>({
+    initialValues: {
+      name: profileOrgData?.name || '',
+      username: profileOrgData?.username || '',
+      website: profileOrgData?.website || '',
+      about: profileOrgData?.about || '',
+    },
+    onSubmit: (values) => {
+      updateProfileOrgData.mutate(values);
+    },
+    enableReinitialize: true,
+  });
+
+  const privateForm = useFormik<PrivateFormData>({
+    initialValues: {
+      country: privateOrgData?.country || '',
+      address: privateOrgData?.address || '',
+      city: privateOrgData?.city || '',
+      state: privateOrgData?.state || '',
+      zip: privateOrgData?.zip || '',
+      phone: privateOrgData?.phone || '',
+    },
+    onSubmit: (values) => {
+      updatePrivateOrgData.mutate(values);
+    },
+    enableReinitialize: true,
+  });
+
+  const handleOpenConfirmModal = () => {
+    // TODO validation
+    setConfirmModalOpen(true);
+  };
+
+  const handleSubmit = () => {
+    return null;
+  };
+
+  if (isLoading) {
+    // TODO loading page
+    return null;
+  }
+
+  if (isError) {
+    if (isProfileOrgDataError) {
+      console.error(profileOrgDataError);
+    }
+    if (isPrivateOrgDataError) {
+      console.error(privateOrgDataError);
+    }
+    // TODO error page
+    return null;
+  }
 
   return (
     <>
@@ -55,7 +162,7 @@ const SignIn: NextPage = () => {
         )}
       >
         <div className="max-w-7xl space-y-10 divide-y divide-gray-900/10">
-          <PageHeader />
+          <PageHeader onSubmit={handleOpenConfirmModal} />
 
           <div className="grid grid-cols-1 gap-8 pt-10 md:grid-cols-3">
             <div className="px-4 sm:px-0">
@@ -65,7 +172,10 @@ const SignIn: NextPage = () => {
               <p className="mt-1 text-sm leading-6 text-gray-600">{t('profile.message')}</p>
             </div>
 
-            <form className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+            <form
+              onSubmit={profileForm.handleSubmit}
+              className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
+            >
               <div className="px-4 py-6 sm:p-8">
                 <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-3">
@@ -81,7 +191,8 @@ const SignIn: NextPage = () => {
                         type="text"
                         name="name"
                         id="name"
-                        autoComplete="given-name"
+                        value={profileForm.values.name}
+                        onChange={profileForm.handleChange}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -104,6 +215,8 @@ const SignIn: NextPage = () => {
                           type="text"
                           name="username"
                           id="username"
+                          value={profileForm.values.username}
+                          onChange={profileForm.handleChange}
                           className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                         />
                       </div>
@@ -127,6 +240,8 @@ const SignIn: NextPage = () => {
                           type="text"
                           name="website"
                           id="website"
+                          value={profileForm.values.website}
+                          onChange={profileForm.handleChange}
                           className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                           placeholder="www.example.com"
                         />
@@ -147,8 +262,9 @@ const SignIn: NextPage = () => {
                         id="about"
                         name="about"
                         rows={3}
+                        value={profileForm.values.about}
+                        onChange={profileForm.handleChange}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
-                        defaultValue={''}
                       />
                     </div>
                     <p className="mt-3 text-sm leading-6 text-gray-600">
@@ -173,10 +289,19 @@ const SignIn: NextPage = () => {
                 </div>
               </div>
               <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 p-4 sm:px-8">
-                <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
+                <button
+                  onClick={profileForm.handleReset}
+                  type="button"
+                  className="text-sm font-semibold leading-6 text-gray-900"
+                >
                   {t('actions.cancel')}
                 </button>
-                <Button type="submit">{t('actions.save')}</Button>
+                <Button
+                  disabled={isProfileOrgDataLoading || updateProfileOrgData.isLoading}
+                  type="submit"
+                >
+                  {t('actions.save')}
+                </Button>
               </div>
             </form>
           </div>
@@ -189,7 +314,11 @@ const SignIn: NextPage = () => {
               <p className="mt-1 text-sm leading-6 text-gray-600">{t('private.message')}</p>
             </div>
 
-            <form className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+            <form
+              onSubmit={privateForm.handleSubmit}
+              onBlur={privateForm.handleBlur}
+              className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
+            >
               <div className="px-4 py-6 sm:p-8">
                 <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-4">
@@ -224,9 +353,10 @@ const SignIn: NextPage = () => {
                     <div className="mt-2">
                       <input
                         type="text"
-                        name="street-address"
-                        id="street-address"
-                        autoComplete="street-address"
+                        name="address"
+                        id="address"
+                        value={privateForm.values.address}
+                        onChange={privateForm.handleChange}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -244,7 +374,8 @@ const SignIn: NextPage = () => {
                         type="text"
                         name="city"
                         id="city"
-                        autoComplete="address-level2"
+                        value={privateForm.values.city}
+                        onChange={privateForm.handleChange}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -252,7 +383,7 @@ const SignIn: NextPage = () => {
 
                   <div className="sm:col-span-2">
                     <label
-                      htmlFor="region"
+                      htmlFor="state"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
                       {t('private.state')}
@@ -260,9 +391,10 @@ const SignIn: NextPage = () => {
                     <div className="mt-2">
                       <input
                         type="text"
-                        name="region"
-                        id="region"
-                        autoComplete="address-level1"
+                        name="state"
+                        id="state"
+                        value={privateForm.values.state}
+                        onChange={privateForm.handleChange}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -270,7 +402,7 @@ const SignIn: NextPage = () => {
 
                   <div className="sm:col-span-2">
                     <label
-                      htmlFor="postal-code"
+                      htmlFor="zip"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
                       {t('private.postalCode')}
@@ -278,9 +410,10 @@ const SignIn: NextPage = () => {
                     <div className="mt-2">
                       <input
                         type="text"
-                        name="postal-code"
-                        id="postal-code"
-                        autoComplete="postal-code"
+                        name="zip"
+                        id="zip"
+                        value={privateForm.values.zip}
+                        onChange={privateForm.handleChange}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -288,7 +421,7 @@ const SignIn: NextPage = () => {
 
                   <div className="sm:col-span-3">
                     <label
-                      htmlFor="first-name"
+                      htmlFor="phone"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
                       {t('private.phoneNumber')}
@@ -296,9 +429,10 @@ const SignIn: NextPage = () => {
                     <div className="mt-2">
                       <input
                         type="text"
-                        name="first-name"
-                        id="first-name"
-                        autoComplete="given-name"
+                        name="phone"
+                        id="phone"
+                        value={privateForm.values.phone}
+                        onChange={privateForm.handleChange}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -306,15 +440,31 @@ const SignIn: NextPage = () => {
                 </div>
               </div>
               <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 p-4 sm:px-8">
-                <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
+                <button
+                  onClick={privateForm.handleReset}
+                  type="button"
+                  className="text-sm font-semibold leading-6 text-gray-900"
+                >
                   {t('actions.cancel')}
                 </button>
-                <Button type="submit">{t('actions.save')}</Button>
+                <Button
+                  disabled={isPrivateOrgDataLoading || updatePrivateOrgData.isLoading}
+                  type="submit"
+                >
+                  {t('actions.save')}
+                </Button>
               </div>
             </form>
           </div>
         </div>
       </main>
+
+      <ConfirmSubmissionModal
+        open={confirmModalOpen}
+        setOpen={setConfirmModalOpen}
+        submissionLoading={submitRequest.isLoading}
+        onSubmit={handleSubmit}
+      />
     </>
   );
 };

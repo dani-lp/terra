@@ -27,5 +27,9 @@
         "cancel": "Cancel",
         "save": "Save",
         "submit": "Submit"
+    },
+    "confirmModal": {
+        "title": "Confirm your application",
+        "message": "Are you sure you want to submit your application? You will not be able to edit it after submission. You will be able to change your organization's data after your request has been approved."
     }
 }
