@@ -12,19 +12,11 @@ import nextI18nConfig from '@/../next-i18next.config.mjs';
 import googleLogo from '@/../public/google-logo.png';
 import { Button } from '@/components/common/';
 import { classNames } from '@/const';
-import { QUERY_PARAM_CALLBACK_URL } from '@/const/queryParams';
-import { useQueryParams } from '@/hooks/useQueryParams';
 
 const inter = Inter({ subsets: ['latin'] });
 
-const SignIn: NextPage = () => {
+const SignInOrgs: NextPage = () => {
   const { t } = useTranslation('auth');
-  const { getParamValue } = useQueryParams();
-
-  const callbackUrlQueryParam = getParamValue(QUERY_PARAM_CALLBACK_URL);
-  const callbackUrl = Array.isArray(callbackUrlQueryParam)
-    ? callbackUrlQueryParam[0]
-    : callbackUrlQueryParam;
 
   return (
     <>
@@ -48,12 +40,19 @@ const SignIn: NextPage = () => {
           <Link href="/">
             <Image src="/logo.png" alt="logo" width={60} height={60} className="mb-4" />
           </Link>
-          <h1 className="mb-2 text-4xl font-bold">{t('messages.welcomeBack')}</h1>
-          <span className="mb-4 text-neutral-500">{t('messages.signInWithProvider')}</span>
+          <h1 className="mb-2 text-4xl font-bold">{t('messagesOrgs.requestAccess')}</h1>
+          <span className="text-neutral-500">{t('messagesOrgs.orgRegistrationConfirm')}</span>
+          <Link
+            href="/about"
+            className="mt-1 mb-4 font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+          >
+            {t('messagesOrgs.readTerms')}
+          </Link>
+
           <Button
             type="button"
             variant="inverse"
-            onClick={() => signIn('google', { callbackUrl: callbackUrl ?? '/' })}
+            onClick={() => signIn('google', { callbackUrl: '/organizations/new' })}
             className="mb-4 w-full"
           >
             <div className="mr-2 flex items-center justify-center rounded-full bg-white p-1">
@@ -65,8 +64,11 @@ const SignIn: NextPage = () => {
 
           <div className="mt-4 w-full border-t border-neutral-200"></div>
           <p className="mt-6 text-center text-sm text-gray-500">
-            {t('messages.isOrganization')}{' '}
-            <Link href="/auth/orgs" className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+            {t('messages.isPlayer')}{' '}
+            <Link
+              href="/auth/signin"
+              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
+            >
               {t('messages.linkToOrg')}
             </Link>
           </p>
@@ -76,7 +78,7 @@ const SignIn: NextPage = () => {
   );
 };
 
-export default SignIn;
+export default SignInOrgs;
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const session = await getSession(context);

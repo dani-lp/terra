@@ -104,16 +104,18 @@ model PlayerData {
 }
 
 model OrganizationData {
-  id                String      @id @default(cuid())
-  name              String      @unique
-  image             String
-  website           String
-  phone             String?
-  address           String?
-  city              String?
-  state             String?
-  zip               String?
-  country           String
+  id       String  @id @default(cuid())
+  name     String  @unique
+  image    String
+  website  String
+  phone    String?
+  address  String?
+  city     String?
+  state    String?
+  zip      String?
+  country  String
+  accepted Boolean @default(false)
+
   userDetails       UserDetails @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)
   userDetailsId     String      @unique
   createdChallenges Challenge[]
