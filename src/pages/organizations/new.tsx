@@ -14,30 +14,33 @@ import Image from 'next/image';
 const inter = Inter({ subsets: ['latin'] });
 
 const PageHeader = () => {
+  const { t } = useTranslation('newOrg');
+
   return (
     <div className="m-4 -mb-5 flex items-center justify-between gap-4 sm:mx-0 md:mb-0">
       <div className="flex min-w-0 flex-1 items-center justify-start gap-4">
         <Image className="hidden lg:block" height={42} width={42} src="/logo.png" alt="Terra" />
         <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-          Organization Registration Request
+          {t('header')}
         </h2>
       </div>
       <div className="flex md:mt-0">
-        <Button type="button">Submit</Button>
+        <Button type="button">{t('actions.submit')}</Button>
       </div>
     </div>
   );
 };
 
 const SignIn: NextPage = () => {
-  const { t } = useTranslation('auth');
+  const { t } = useTranslation('newOrg');
 
   /**
    * Workflow:
    * 1.- Fetch information from DB, in two different queries
    * 2.- When clicking on "save", save it to the DB, in two different mutations
-   * 3.- If "submit" is clicked when data is wrong/incomplete, show errors in the form
-   * 4.- If "submit" is clicked when data is correct, show a confirmation message that sends the activation request
+   * 3.- When clicking on "cancel", the newly added data is discarded and the old one is added
+   * 4.- If "submit" is clicked when data is wrong/incomplete, show errors in the form
+   * 5.- If "submit" is clicked when data is correct, show a confirmation message that sends the activation request
    */
 
   return (
@@ -56,10 +59,10 @@ const SignIn: NextPage = () => {
 
           <div className="grid grid-cols-1 gap-8 pt-10 md:grid-cols-3">
             <div className="px-4 sm:px-0">
-              <h2 className="text-base font-semibold leading-7 text-gray-900">Profile</h2>
-              <p className="mt-1 text-sm leading-6 text-gray-600">
-                This information will be displayed publicly so be careful what you share.
-              </p>
+              <h2 className="text-base font-semibold leading-7 text-gray-900">
+                {t('profile.title')}
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-600">{t('profile.message')}</p>
             </div>
 
             <form className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
@@ -70,7 +73,7 @@ const SignIn: NextPage = () => {
                       htmlFor="name"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Organization name
+                      {t('profile.organizationName')}
                       <span className="text-red-500"> *</span>
                     </label>
                     <div className="mt-2">
@@ -89,12 +92,12 @@ const SignIn: NextPage = () => {
                       htmlFor="username"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Username/handle
+                      {t('profile.username')}
                       <span className="text-red-500"> *</span>
                     </label>
                     <div className="mt-2">
                       <div className="flex rounded-lg shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-black sm:max-w-md">
-                        <span className="flex select-none items-center pl-3 text-gray-500 sm:text-sm">
+                        <span className="-mt-0.5 flex select-none items-center pl-3 text-gray-500 sm:text-sm">
                           @
                         </span>
                         <input
@@ -112,7 +115,7 @@ const SignIn: NextPage = () => {
                       htmlFor="website"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Website
+                      {t('profile.website')}
                       <span className="text-red-500"> *</span>
                     </label>
                     <div className="mt-2">
@@ -136,7 +139,7 @@ const SignIn: NextPage = () => {
                       htmlFor="about"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      About
+                      {t('profile.about')}
                       <span className="text-red-500"> *</span>
                     </label>
                     <div className="mt-2">
@@ -149,7 +152,7 @@ const SignIn: NextPage = () => {
                       />
                     </div>
                     <p className="mt-3 text-sm leading-6 text-gray-600">
-                      Write a few sentences about your organization.
+                      {t('profile.aboutMessage')}
                     </p>
                   </div>
 
@@ -158,12 +161,12 @@ const SignIn: NextPage = () => {
                       htmlFor="photo"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Photo
+                      {t('profile.photo')}
                     </label>
                     <div className="mt-2 flex items-center gap-x-3">
                       <UserCircleIcon className="h-12 w-12 text-gray-300" aria-hidden="true" />
                       <Button type="button" variant="inverseBlack">
-                        Change
+                        {t('profile.change')}
                       </Button>
                     </div>
                   </div>
@@ -171,9 +174,9 @@ const SignIn: NextPage = () => {
               </div>
               <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 p-4 sm:px-8">
                 <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
-                  Cancel
+                  {t('actions.cancel')}
                 </button>
-                <Button type="submit">Save</Button>
+                <Button type="submit">{t('actions.save')}</Button>
               </div>
             </form>
           </div>
@@ -181,11 +184,9 @@ const SignIn: NextPage = () => {
           <div className="grid grid-cols-1 gap-8 pt-10 md:grid-cols-3">
             <div className="px-4 sm:px-0">
               <h2 className="text-base font-semibold leading-7 text-gray-900">
-                Private Organization Information
+                {t('private.title')}
               </h2>
-              <p className="mt-1 text-sm leading-6 text-gray-600">
-                Use a permanent address where you can receive mail.
-              </p>
+              <p className="mt-1 text-sm leading-6 text-gray-600">{t('private.message')}</p>
             </div>
 
             <form className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
@@ -196,7 +197,7 @@ const SignIn: NextPage = () => {
                       htmlFor="country"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Country
+                      {t('private.country')}
                       <span className="text-red-500"> *</span>
                     </label>
                     <div className="mt-2">
@@ -218,7 +219,7 @@ const SignIn: NextPage = () => {
                       htmlFor="street-address"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Street address
+                      {t('private.streetAddress')}
                     </label>
                     <div className="mt-2">
                       <input
@@ -236,7 +237,7 @@ const SignIn: NextPage = () => {
                       htmlFor="city"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      City
+                      {t('private.city')}
                     </label>
                     <div className="mt-2">
                       <input
@@ -254,7 +255,7 @@ const SignIn: NextPage = () => {
                       htmlFor="region"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      State / Province
+                      {t('private.state')}
                     </label>
                     <div className="mt-2">
                       <input
@@ -272,7 +273,7 @@ const SignIn: NextPage = () => {
                       htmlFor="postal-code"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      ZIP / Postal code
+                      {t('private.postalCode')}
                     </label>
                     <div className="mt-2">
                       <input
@@ -290,7 +291,7 @@ const SignIn: NextPage = () => {
                       htmlFor="first-name"
                       className="block text-sm font-medium leading-6 text-gray-900"
                     >
-                      Phone number
+                      {t('private.phoneNumber')}
                     </label>
                     <div className="mt-2">
                       <input
@@ -306,9 +307,9 @@ const SignIn: NextPage = () => {
               </div>
               <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 p-4 sm:px-8">
                 <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
-                  Cancel
+                  {t('actions.cancel')}
                 </button>
-                <Button type="submit">Save</Button>
+                <Button type="submit">{t('actions.save')}</Button>
               </div>
             </form>
           </div>

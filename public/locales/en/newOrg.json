@@ -1,3 +1,31 @@
 {
-    "title": "Register your organization - Terra"
+    "title": "Register your organization - Terra",
+    "header": "Organization Registration Request",
+    "profile": {
+        "title": "Profile",
+        "message": "This information will be displayed publicly, so be careful what you share.",
+        "organizationName": "Organization name",
+        "username": "Username",
+        "website": "Website",
+        "websitePlaceholder": "https://www.example.com",
+        "about": "About",
+        "aboutMessage": "Write a few sentences about your organization. This will be displayed on your profile page.",
+        "photo": "Photo",
+        "change": "Change"
+    },
+    "private": {
+        "title": "Private Organization Information",
+        "message": "This information will be kept private and will not be shared with other users. Its purpose is to contact you in case of any issues.",
+        "country": "Country",
+        "streetAddress": "Street address",
+        "city": "City",
+        "state": "State / Province",
+        "postalCode": "ZIP / Postal code",
+        "phoneNumber": "Phone number" 
+    },
+    "actions": {
+        "cancel": "Cancel",
+        "save": "Save",
+        "submit": "Submit"
+    }
 }
