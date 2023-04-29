@@ -11,17 +11,18 @@ import * as React from 'react';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
 import { Button } from '@/components/common';
-import { ConfirmSubmissionModal } from '@/components/organizations';
-import { classNames } from '@/const';
+import { ConfirmSubmissionModal, LogOutModal } from '@/components/organizations';
+import { classNames, QUERY_PARAM_CALLBACK_URL } from '@/const';
 import { trpc } from '@/utils/trpc';
 
 const inter = Inter({ subsets: ['latin'] });
 
 type PageHeaderProps = {
+  onLogOut: () => void;
   onSubmit: () => void;
 };
 
-const PageHeader = ({ onSubmit }: PageHeaderProps) => {
+const PageHeader = ({ onLogOut, onSubmit }: PageHeaderProps) => {
   const { t } = useTranslation('newOrg');
 
   return (
@@ -32,8 +33,13 @@ const PageHeader = ({ onSubmit }: PageHeaderProps) => {
           {t('header')}
         </h2>
       </div>
-      <div onClick={onSubmit} className="flex md:mt-0">
-        <Button type="button">{t('actions.submit')}</Button>
+      <div className="flex gap-2 md:mt-0">
+        <Button onClick={onLogOut} variant="inverseRed" noBorder type="button">
+          {t('actions.logOut')}
+        </Button>
+        <Button onClick={onSubmit} type="button">
+          {t('actions.submit')}
+        </Button>
       </div>
     </div>
   );
@@ -58,6 +64,7 @@ type PrivateFormData = {
 const SignIn: NextPage = () => {
   const { t } = useTranslation('newOrg');
   const [confirmModalOpen, setConfirmModalOpen] = React.useState(false);
+  const [logOutModalOpen, setLogOutModalOpen] = React.useState(false);
   const utils = trpc.useContext();
   const {
     data: profileOrgData,
@@ -161,7 +168,7 @@ const SignIn: NextPage = () => {
         )}
       >
         <div className="max-w-7xl space-y-10 divide-y divide-gray-900/10">
-          <PageHeader onSubmit={handleOpenConfirmModal} />
+          <PageHeader onLogOut={() => setLogOutModalOpen(true)} onSubmit={handleOpenConfirmModal} />
 
           <div className="grid grid-cols-1 gap-8 pt-10 md:grid-cols-3">
             <div className="px-4 sm:px-0">
@@ -464,6 +471,8 @@ const SignIn: NextPage = () => {
         submissionLoading={submitRequest.isLoading}
         onSubmit={handleSubmit}
       />
+
+      <LogOutModal open={logOutModalOpen} setOpen={setLogOutModalOpen} t={t} />
     </>
   );
 };
@@ -473,14 +482,14 @@ export default SignIn;
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const session = await getSession(context);
 
-  // if (!session || session?.user?.role !== 'ORGANIZATION') {
-  //   return {
-  //     redirect: {
-  //       destination: '/',
-  //       permanent: false,
-  //     },
-  //   };
-  // }
+  if (!session || session?.user?.role !== 'ORGANIZATION') {
+    return {
+      redirect: {
+        destination: `/auth/signin?${QUERY_PARAM_CALLBACK_URL}=${context.resolvedUrl}`,
+        permanent: false,
+      },
+    };
+  }
 
   return {
     props: {

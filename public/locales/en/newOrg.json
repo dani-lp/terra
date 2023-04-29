@@ -26,10 +26,17 @@
     "actions": {
         "cancel": "Cancel",
         "save": "Save",
-        "submit": "Submit"
+        "submit": "Submit",
+        "logOut": "Log out"
     },
     "confirmModal": {
         "title": "Confirm your application",
         "message": "Are you sure you want to submit your application? You will not be able to edit it after submission. You will be able to change your organization's data after your request has been approved."
+    },
+    "other": {
+        "logOut": "Log out",
+        "logOutTitle": "Are you sure you want to log out?",
+        "logOutMessage": "Are you sure you want to log out?",
+        "cancel": "Cancel"
     }
 }

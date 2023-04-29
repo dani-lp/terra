@@ -9,7 +9,13 @@ import * as React from 'react';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
 import { Button, Chip } from '@/components/common';
-import { classNames, submissionStatusColors, submissionStatusDotColor } from '@/const';
+import { LogOutModal } from '@/components/organizations';
+import {
+  classNames,
+  QUERY_PARAM_CALLBACK_URL,
+  submissionStatusColors,
+  submissionStatusDotColor,
+} from '@/const';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { trpc } from '@/utils/trpc';
 import Link from 'next/link';
@@ -21,6 +27,7 @@ const inter = Inter({ subsets: ['latin'] });
 const WaitingRoom: NextPageWithLayout = () => {
   const { t } = useTranslation('waitingRoom');
   const router = useRouter();
+  const [logOutModalOpen, setLogOutModalOpen] = React.useState(false);
   const { data: session } = useSession();
   const {
     data: profileOrgData,
@@ -128,6 +135,16 @@ const WaitingRoom: NextPageWithLayout = () => {
                 </Link>
               </div>
             )}
+            <div className="mt-4">
+              <Button
+                variant="primaryRed"
+                noBorder
+                onClick={() => setLogOutModalOpen(true)}
+                className="w-full"
+              >
+                {t('other.logOut')}
+              </Button>
+            </div>
           </div>
           <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:m-4 sm:rounded-xl lg:col-span-2">
             <div className="px-4 py-6 sm:p-8">
@@ -166,6 +183,8 @@ const WaitingRoom: NextPageWithLayout = () => {
           </div>
         </div>
       </main>
+
+      <LogOutModal open={logOutModalOpen} setOpen={setLogOutModalOpen} t={t} />
     </>
   );
 };
@@ -178,7 +197,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
   if (!session || session.user?.role !== 'ORGANIZATION') {
     return {
       redirect: {
-        destination: '/',
+        destination: `/auth/signin?${QUERY_PARAM_CALLBACK_URL}=${context.resolvedUrl}`,
         permanent: false,
       },
     };

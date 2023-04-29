@@ -31,6 +31,10 @@
     },
     "other": {
         "reason": "Reason",
-        "goHome": "Go to home"
+        "goHome": "Go to home",
+        "logOut": "Log out",
+        "logOutTitle": "Are you sure you want to log out?",
+        "logOutMessage": "Are you sure you want to log out?",
+        "cancel": "Cancel"
     }
 }
