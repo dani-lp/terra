@@ -5,20 +5,22 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
+import * as React from 'react';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
-import { Chip } from '@/components/common';
+import { Button, Chip } from '@/components/common';
 import { classNames, submissionStatusColors, submissionStatusDotColor } from '@/const';
-import { QUERY_PARAM_CALLBACK_URL } from '@/const/queryParams';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { trpc } from '@/utils/trpc';
-import { OrganizationAcceptanceState } from '@prisma/client';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import type { NextPageWithLayout } from '../_app';
 
 const inter = Inter({ subsets: ['latin'] });
 
 const WaitingRoom: NextPageWithLayout = () => {
   const { t } = useTranslation('waitingRoom');
+  const router = useRouter();
   const { data: session } = useSession();
   const {
     data: profileOrgData,
@@ -36,6 +38,18 @@ const WaitingRoom: NextPageWithLayout = () => {
   const isLoading = isProfileOrgDataLoading || isPrivateOrgDataLoading;
   const isError = isProfileOrgDataError || isPrivateOrgDataError;
 
+  const submissionStatus = profileOrgData?.status ?? 'PENDING';
+  const rejectionMessage = profileOrgData?.rejectionMessage ?? '';
+
+  React.useEffect(() => {
+    const redirectTo = async () => {
+      if (submissionStatus === 'UNSUBMITTED') {
+        await router.push('/organizations/new');
+      }
+    };
+    void redirectTo();
+  }, [router, submissionStatus]);
+
   if (isLoading) {
     // TODO loading page
     return null;
@@ -51,7 +65,6 @@ const WaitingRoom: NextPageWithLayout = () => {
     // TODO error page
     return null;
   }
-
   const listEntries = [
     {
       label: t('fields.organizationName'),
@@ -81,9 +94,6 @@ const WaitingRoom: NextPageWithLayout = () => {
     },
   ];
 
-  const submissionStatus = profileOrgData?.status ?? 'PENDING';
-  const rejectionMessage = profileOrgData?.rejectionMessage ?? '';
-
   return (
     <>
       <Head>
@@ -110,6 +120,13 @@ const WaitingRoom: NextPageWithLayout = () => {
                 <span className="font-semibold">{t('other.reason')}: </span>
                 {rejectionMessage}
               </p>
+            )}
+            {submissionStatus === 'ACCEPTED' && (
+              <div className="mt-4">
+                <Link href="/">
+                  <Button className="w-full">{t('other.goHome')}</Button>
+                </Link>
+              </div>
             )}
           </div>
           <div className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:m-4 sm:rounded-xl lg:col-span-2">
@@ -158,10 +175,10 @@ export default WaitingRoom;
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
   const session = await getSession(context);
 
-  if (!session) {
+  if (!session || session.user?.role !== 'ORGANIZATION') {
     return {
       redirect: {
-        destination: `/auth/signin?${QUERY_PARAM_CALLBACK_URL}=${context.resolvedUrl}`,
+        destination: '/',
         permanent: false,
       },
     };
