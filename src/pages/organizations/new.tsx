@@ -17,10 +17,9 @@ import { trpc } from '@/utils/trpc';
 
 const inter = Inter({ subsets: ['latin'] });
 
-
 type PageHeaderProps = {
   onSubmit: () => void;
-}
+};
 
 const PageHeader = ({ onSubmit }: PageHeaderProps) => {
   const { t } = useTranslation('newOrg');

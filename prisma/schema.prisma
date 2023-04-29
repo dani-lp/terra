@@ -103,19 +103,26 @@ model PlayerData {
   createdAt DateTime @default(now())
 }
 
+enum OrganizationAcceptanceState {
+  UNSUBMITTED
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
 model OrganizationData {
-  id        String  @id @default(cuid())
-  name      String  @unique
-  image     String
-  website   String
-  phone     String?
-  address   String?
-  city      String?
-  state     String?
-  zip       String?
-  country   String
-  accepted  Boolean @default(false)
-  submitted Boolean @default(false)
+  id               String                      @id @default(cuid())
+  name             String                      @unique
+  image            String
+  website          String
+  phone            String?
+  address          String?
+  city             String?
+  state            String?
+  zip              String?
+  country          String
+  approvalState    OrganizationAcceptanceState @default(UNSUBMITTED)
+  rejectionMessage String?
 
   userDetails       UserDetails @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)
   userDetailsId     String      @unique

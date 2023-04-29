@@ -23,6 +23,8 @@ export const authRouter = router({
       username: orgUserDetails.username,
       website: orgUserDetails.organizationData?.website,
       about: orgUserDetails.about,
+      status: orgUserDetails.organizationData?.approvalState,
+      rejectionMessage: orgUserDetails.organizationData?.rejectionMessage,
     };
   }),
 
@@ -189,7 +191,7 @@ export const authRouter = router({
     await ctx.prisma.organizationData.update({
       where: { userDetailsId: orgUserDetails.id },
       data: {
-        submitted: true,
+        approvalState: 'PENDING',
       },
     });
 

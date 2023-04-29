@@ -1,5 +1,9 @@
 import type { AchievementTier } from '@/types';
-import type { ChallengeDifficulty, ChallengeTag } from '@prisma/client';
+import type {
+  ChallengeDifficulty,
+  ChallengeTag,
+  OrganizationAcceptanceState,
+} from '@prisma/client';
 
 export const tagColors: Record<ChallengeTag, string> = {
   FITNESS: 'bg-indigo-100 text-indigo-700',
@@ -40,4 +44,18 @@ export const achievementTierColors: Record<AchievementTier, string> = {
   SILVER: 'bg-slate-400 text-white',
   GOLD: 'bg-yellow-400 text-white',
   PLATINUM: 'bg-cyan-300 text-white',
+};
+
+export const submissionStatusColors: Record<OrganizationAcceptanceState, string> = {
+  UNSUBMITTED: 'bg-gray-200 text-gray-800',
+  PENDING: 'bg-yellow-100 text-yellow-800',
+  ACCEPTED: 'bg-green-100 text-green-800',
+  REJECTED: 'bg-red-100 text-red-800',
+};
+
+export const submissionStatusDotColor: Record<OrganizationAcceptanceState, string> = {
+  UNSUBMITTED: 'bg-gray-500',
+  PENDING: 'bg-yellow-500',
+  ACCEPTED: 'bg-green-500',
+  REJECTED: 'bg-red-500',
 };
