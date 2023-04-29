@@ -52,7 +52,7 @@ export const LogOutModal = ({ open, setOpen, t }: Props) => {
                     >
                       {t('other.logOut')}
                     </Dialog.Title>
-                    <div className="mt-2">
+                    <div className="mt-2 px-8">
                       <p className="text-sm text-gray-500">{t('other.logOutMessage')}</p>
                     </div>
                   </div>
@@ -61,7 +61,7 @@ export const LogOutModal = ({ open, setOpen, t }: Props) => {
                   <Button
                     type="button"
                     variant="primaryRed"
-                    className="sm:col-start-2"
+                    className="w-full sm:col-start-2"
                     onClick={async () => {
                       await signOut({ callbackUrl: '/' });
                       setOpen(false);
@@ -72,7 +72,7 @@ export const LogOutModal = ({ open, setOpen, t }: Props) => {
                   <Button
                     type="button"
                     variant="inverse"
-                    className="mt-3 sm:col-start-1 sm:mt-0"
+                    className="mt-3 w-full sm:col-start-1 sm:mt-0"
                     onClick={() => setOpen(false)}
                     ref={cancelButtonRef}
                   >

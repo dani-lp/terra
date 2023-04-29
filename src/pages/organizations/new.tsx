@@ -33,7 +33,7 @@ const PageHeader = ({ onLogOut, onSubmit }: PageHeaderProps) => {
           {t('header')}
         </h2>
       </div>
-      <div className="flex gap-2 md:mt-0">
+      <div className="flex flex-col gap-2 md:mt-0 md:flex-row">
         <Button onClick={onLogOut} variant="inverseRed" noBorder type="button">
           {t('actions.logOut')}
         </Button>
