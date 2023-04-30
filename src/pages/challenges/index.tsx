@@ -2,16 +2,16 @@ import type { Role } from '@prisma/client';
 import type { GetServerSidePropsContext } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
-
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 import * as React from 'react';
-import type { NextPageWithLayout } from '../_app';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
 import { TerraChallengesViewOrgs, TerraChallengesViewPlayers } from '@/components/challenges';
 import { MainLayout } from '@/components/common';
 import { QUERY_PARAM_CALLBACK_URL } from '@/const/queryParams';
+import { prisma } from '@/server/db/client';
+import type { NextPageWithLayout } from '../_app';
 
 const RoleViews = {
   ADMIN: TerraChallengesViewOrgs,
@@ -58,6 +58,34 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         permanent: false,
       },
     };
+  }
+
+  if (session && session?.user?.role === 'ORGANIZATION') {
+    const orgUserDetails = await prisma.userDetails.findUnique({
+      where: { userId: session.user?.id },
+      select: { id: true },
+    });
+
+    const organizationData = await prisma.organizationData.findUnique({
+      where: { userDetailsId: orgUserDetails?.id },
+      select: { approvalState: true },
+    });
+
+    if (organizationData?.approvalState === 'UNSUBMITTED') {
+      return {
+        redirect: {
+          destination: '/organizations/new',
+          permanent: false,
+        },
+      };
+    } else if (organizationData?.approvalState !== 'ACCEPTED') {
+      return {
+        redirect: {
+          destination: '/organizations/waiting-room',
+          permanent: false,
+        },
+      };
+    } 
   }
 
   return {
