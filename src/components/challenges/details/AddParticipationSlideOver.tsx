@@ -212,6 +212,7 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
                             <div className="flex text-sm">
                               <Link
                                 href="/about"
+                                target="_blank"
                                 className="group inline-flex items-center text-gray-500 hover:text-gray-900"
                               >
                                 <QuestionMarkCircleIcon
