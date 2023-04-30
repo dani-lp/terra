@@ -1,3 +1,4 @@
+import { Dialog, Transition } from '@headlessui/react';
 import type { GetServerSidePropsContext } from 'next';
 import { getServerSession } from 'next-auth';
 import { getSession, useSession } from 'next-auth/react';
@@ -13,16 +14,85 @@ import { LogOutModal } from '@/components/organizations';
 import {
   classNames,
   QUERY_PARAM_CALLBACK_URL,
+  QUERY_PARAM_WAITING_ROOM_GREET,
   submissionStatusColors,
   submissionStatusDotColor,
 } from '@/const';
+import { useQueryParams } from '@/hooks/useQueryParams';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import { prisma } from '@/server/db/client';
 import { trpc } from '@/utils/trpc';
+import { CheckIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import type { NextPageWithLayout } from '../_app';
 
 const inter = Inter({ subsets: ['latin'] });
+
+const GreetingModal = () => {
+  const { t } = useTranslation('waitingRoom');
+  const { getParamValue, removeParam } = useQueryParams();
+  
+  const open = getParamValue(QUERY_PARAM_WAITING_ROOM_GREET) === 'true';
+  const handleClose = async () => {
+    await removeParam(QUERY_PARAM_WAITING_ROOM_GREET);
+  };
+
+  return (
+    <Transition.Root show={open} as={React.Fragment}>
+      <Dialog as="div" className="relative z-10" onClose={handleClose}>
+        <Transition.Child
+          as={React.Fragment}
+          enter="ease-out duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="ease-in duration-200"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <div className="fixed inset-0 bg-gray-500/75 transition-opacity" />
+        </Transition.Child>
+
+        <div className="fixed inset-0 z-10 overflow-y-auto">
+          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <Transition.Child
+              as={React.Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              enterTo="opacity-100 translate-y-0 sm:scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+              leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            >
+              <Dialog.Panel className="relative overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+                <div>
+                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                    <CheckIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
+                  </div>
+                  <div className="mt-3 text-center sm:mt-5">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-base font-semibold leading-6 text-gray-900"
+                    >
+                      {t('greetingModal.title')}
+                    </Dialog.Title>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500">{t('greetingModal.message')}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-5 sm:mt-6">
+                  <Button type="button" className="w-full" onClick={handleClose}>
+                    {t('greetingModal.close')}
+                  </Button>
+                </div>
+              </Dialog.Panel>
+            </Transition.Child>
+          </div>
+        </div>
+      </Dialog>
+    </Transition.Root>
+  );
+};
 
 const WaitingRoom: NextPageWithLayout = () => {
   const { t } = useTranslation('waitingRoom');
@@ -175,6 +245,7 @@ const WaitingRoom: NextPageWithLayout = () => {
       </main>
 
       <LogOutModal open={logOutModalOpen} setOpen={setLogOutModalOpen} t={t} />
+      <GreetingModal />
     </>
   );
 };

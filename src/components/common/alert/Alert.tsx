@@ -1,3 +1,4 @@
+import { classNames } from '@/const';
 import { CheckCircleIcon, ExclamationTriangleIcon, XCircleIcon } from '@heroicons/react/20/solid';
 
 type Content =
@@ -8,9 +9,10 @@ type Content =
 type Props = {
   content: Content;
   shown: boolean;
+  className?: string;
 };
 
-export const Alert = ({ content, shown }: Props) => {
+export const Alert = ({ content, shown, className }: Props) => {
   if (!shown) {
     return null;
   }
@@ -18,7 +20,7 @@ export const Alert = ({ content, shown }: Props) => {
   switch (content.type) {
     case 'warning':
       return (
-        <div className="rounded-md bg-yellow-50 p-4">
+        <div className={classNames('rounded-md bg-yellow-50 p-4', className)}>
           <div className="flex">
             <div className="shrink-0">
               <ExclamationTriangleIcon className="h-5 w-5 text-yellow-400" aria-hidden="true" />
@@ -34,7 +36,7 @@ export const Alert = ({ content, shown }: Props) => {
       );
     case 'error':
       return (
-        <div className="rounded-md bg-red-50 p-4">
+        <div className={classNames('rounded-md bg-red-50 p-4', className)}>
           <div className="flex">
             <div className="shrink-0">
               <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
@@ -54,7 +56,7 @@ export const Alert = ({ content, shown }: Props) => {
       );
     case 'success':
       return (
-        <div className="rounded-md bg-green-50 p-4">
+        <div className={classNames('rounded-md bg-green-50 p-4', className)}>
           <div className="flex">
             <div className="shrink-0">
               <CheckCircleIcon className="h-5 w-5 text-green-400" aria-hidden="true" />

@@ -7,12 +7,18 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
-import { Button, Spinner } from '@/components/common';
+import { Alert, Button, Spinner } from '@/components/common';
 import { ConfirmSubmissionModal, LogOutModal } from '@/components/organizations';
-import { classNames, QUERY_PARAM_CALLBACK_URL } from '@/const';
+import {
+  classNames,
+  QUERY_PARAM_CALLBACK_URL,
+  QUERY_PARAM_WAITING_ROOM_GREET,
+  urlRegex,
+} from '@/const';
 import { prisma } from '@/server/db/client';
 import { trpc } from '@/utils/trpc';
 
@@ -55,7 +61,7 @@ type ProfileFormData = {
 };
 
 type PrivateFormData = {
-  country: string; // TODO strongly type?
+  country: string;
   address: string;
   city: string;
   state: string;
@@ -65,8 +71,11 @@ type PrivateFormData = {
 
 const SignIn: NextPage = () => {
   const { t } = useTranslation('newOrg');
+  const router = useRouter();
   const [confirmModalOpen, setConfirmModalOpen] = React.useState(false);
   const [logOutModalOpen, setLogOutModalOpen] = React.useState(false);
+  const [profileFormErrors, setProfileFormErrors] = React.useState<Array<string>>([]);
+  const [privateFormErrors, setPrivateFormErrors] = React.useState<Array<string>>([]);
   const utils = trpc.useContext();
   const {
     data: profileOrgData,
@@ -113,6 +122,7 @@ const SignIn: NextPage = () => {
       about: profileOrgData?.about || '',
     },
     onSubmit: (values) => {
+      setProfileFormErrors([]);
       updateProfileOrgData.mutate(values);
     },
     enableReinitialize: true,
@@ -128,18 +138,77 @@ const SignIn: NextPage = () => {
       phone: privateOrgData?.phone || '',
     },
     onSubmit: (values) => {
+      setPrivateFormErrors([]);
       updatePrivateOrgData.mutate(values);
     },
     enableReinitialize: true,
   });
 
-  const handleOpenConfirmModal = () => {
-    // TODO validation
+  const validateProfileForm = () => {
+    const profileFormErrors: Array<string> = [];
+
+    if (!profileForm.values.name) {
+      profileFormErrors.push(t('profile.errors.missingName'));
+    } else if (profileForm.values.name.length < 3) {
+      profileFormErrors.push(t('profile.errors.shortName'));
+    }
+
+    if (!profileForm.values.username) {
+      profileFormErrors.push(t('profile.errors.missingUsername'));
+    } else if (profileForm.values.username.length < 3) {
+      profileFormErrors.push(t('profile.errors.shortUsername'));
+    } else if (profileForm.values.username.indexOf(' ') >= 0) {
+      profileFormErrors.push(t('profile.errors.usernameWithSpaces'));
+    }
+
+    if (!profileForm.values.website) {
+      profileFormErrors.push(t('profile.errors.missingWebsite'));
+    } else if (!urlRegex.test(profileForm.values.website)) {
+      profileFormErrors.push(t('profile.errors.invalidWebsite'));
+    }
+
+    if (!profileForm.values.about) {
+      profileFormErrors.push(t('profile.errors.missingAbout'));
+    } else if (profileForm.values.about.length < 10) {
+      profileFormErrors.push(t('profile.errors.shortAbout'));
+    }
+
+    setProfileFormErrors(profileFormErrors);
+    return profileFormErrors;
+  };
+
+  const validatePrivateForm = () => {
+    const privateFormErrors: Array<string> = [];
+
+    if (!privateForm.values.country) {
+      privateFormErrors.push(t('private.errors.missingCountry'));
+    } else if (privateForm.values.country.length < 3) {
+      privateFormErrors.push(t('private.errors.shortCountry'));
+    }
+
+    setPrivateFormErrors(privateFormErrors);
+    return privateFormErrors;
+  };
+
+  const handleOpenConfirmModal = async () => {
+    const profileFormErrors = validateProfileForm();
+    const privateFormErrors = validatePrivateForm();
+
+    if (profileFormErrors.length > 0 || privateFormErrors.length > 0) {
+      return;
+    }
     setConfirmModalOpen(true);
   };
 
-  const handleSubmit = () => {
-    return null;
+  const handleSubmit = async () => {
+    const submitRequestResult = await submitRequest.mutateAsync({
+      ...profileForm.values,
+      ...privateForm.values,
+    });
+
+    if (submitRequestResult) {
+      await router.push(`/organizations/waiting-room?${QUERY_PARAM_WAITING_ROOM_GREET}=true`);
+    }
   };
 
   if (isError) {
@@ -166,7 +235,9 @@ const SignIn: NextPage = () => {
       >
         <div className="max-w-7xl space-y-10 divide-y divide-gray-900/10">
           <PageHeader
-            isLoading={isLoading}
+            isLoading={
+              isLoading || updateProfileOrgData.isLoading || updatePrivateOrgData.isLoading
+            }
             onLogOut={() => setLogOutModalOpen(true)}
             onSubmit={handleOpenConfirmModal}
           />
@@ -297,29 +368,40 @@ const SignIn: NextPage = () => {
                     </label>
                     <div className="mt-2 flex items-center gap-x-3">
                       <UserCircleIcon className="h-12 w-12 text-gray-300" aria-hidden="true" />
-                      <Button type="button" variant="inverseBlack">
+                      <Button disabled type="button" variant="inverseBlack">
                         {t('profile.change')}
                       </Button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 p-4 sm:px-8">
-                <button
-                  onClick={profileForm.handleReset}
-                  type="button"
-                  className="text-sm font-semibold leading-6 text-gray-900"
-                >
-                  {t('actions.reset')}
-                </button>
-                <Button
-                  disabled={isProfileOrgDataLoading || updateProfileOrgData.isLoading}
-                  type="submit"
-                  className="min-h-[36px] min-w-[100px]"
-                  loading={updateProfileOrgData.isLoading}
-                >
-                  {t('actions.save')}
-                </Button>
+              <div className="flex flex-col items-center justify-center gap-4 border-t border-gray-900/10 p-4 sm:px-8">
+                <Alert
+                  shown={profileFormErrors.length > 0}
+                  content={{
+                    type: 'error',
+                    title: `${t('profile.errors.title')}:`,
+                    errors: profileFormErrors,
+                  }}
+                  className="w-full"
+                />
+                <div className="flex w-full items-center justify-end gap-x-6">
+                  <button
+                    onClick={profileForm.handleReset}
+                    type="button"
+                    className="text-sm font-semibold leading-6 text-gray-900"
+                  >
+                    {t('actions.reset')}
+                  </button>
+                  <Button
+                    disabled={isProfileOrgDataLoading || updateProfileOrgData.isLoading}
+                    type="submit"
+                    className="min-h-[36px] min-w-[100px]"
+                    loading={updateProfileOrgData.isLoading}
+                  >
+                    {t('actions.save')}
+                  </Button>
+                </div>
               </div>
             </form>
           </div>
@@ -344,7 +426,7 @@ const SignIn: NextPage = () => {
               )}
               <div className="px-4 py-6 sm:p-8">
                 <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                  <div className="sm:col-span-4">
+                  <div className="sm:col-span-3">
                     <label
                       htmlFor="country"
                       className="block text-sm font-medium leading-6 text-gray-900"
@@ -353,16 +435,15 @@ const SignIn: NextPage = () => {
                       <span className="text-red-500"> *</span>
                     </label>
                     <div className="mt-2">
-                      <select
-                        id="country"
+                      <input
+                        type="text"
                         name="country"
-                        autoComplete="country-name"
-                        className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-black sm:max-w-xs sm:text-sm sm:leading-6"
-                      >
-                        <option>United States</option>
-                        <option>Canada</option>
-                        <option>Mexico</option>
-                      </select>
+                        id="country"
+                        value={privateForm.values.country}
+                        onChange={privateForm.handleChange}
+                        disabled={isPrivateOrgDataLoading}
+                        className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
+                      />
                     </div>
                   </div>
 
@@ -467,22 +548,33 @@ const SignIn: NextPage = () => {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center justify-end gap-x-6 border-t border-gray-900/10 p-4 sm:px-8">
-                <button
-                  onClick={privateForm.handleReset}
-                  type="button"
-                  className="text-sm font-semibold leading-6 text-gray-900"
-                >
-                  {t('actions.reset')}
-                </button>
-                <Button
-                  disabled={isPrivateOrgDataLoading || updatePrivateOrgData.isLoading}
-                  type="submit"
-                  className="min-h-[36px] min-w-[100px]"
-                  loading={updatePrivateOrgData.isLoading}
-                >
-                  {t('actions.save')}
-                </Button>
+              <div className="flex flex-col items-center justify-center gap-4 border-t border-gray-900/10 p-4 sm:px-8">
+                <Alert
+                  shown={privateFormErrors.length > 0}
+                  content={{
+                    type: 'error',
+                    title: `${t('private.errors.title')}:`,
+                    errors: privateFormErrors,
+                  }}
+                  className="w-full"
+                />
+                <div className="flex w-full items-center justify-end gap-x-6">
+                  <button
+                    onClick={privateForm.handleReset}
+                    type="button"
+                    className="text-sm font-semibold leading-6 text-gray-900"
+                  >
+                    {t('actions.reset')}
+                  </button>
+                  <Button
+                    disabled={isPrivateOrgDataLoading || updatePrivateOrgData.isLoading}
+                    type="submit"
+                    className="min-h-[36px] min-w-[100px]"
+                    loading={updatePrivateOrgData.isLoading}
+                  >
+                    {t('actions.save')}
+                  </Button>
+                </div>
               </div>
             </form>
           </div>

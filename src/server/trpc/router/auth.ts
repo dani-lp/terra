@@ -175,26 +175,53 @@ export const authRouter = router({
       };
     }),
 
-  submitRegistrationRequest: organizationProcedure.mutation(async ({ ctx }) => {
-    const orgUserDetails = await ctx.prisma.userDetails.findUnique({
-      where: { userId: ctx.session.user?.id },
-      select: { id: true },
-    });
-
-    if (!orgUserDetails) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: 'User details not found',
+  submitRegistrationRequest: organizationProcedure
+    .input(
+      z.object({
+        name: z.string().min(3),
+        username: z.string().min(3).regex(/^\S+$/),
+        website: z.string().regex(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/), // TODO revise this monstrosity
+        about: z.string().min(10),
+        country: z.string().min(3),
+        address: z.string().optional(),
+        city: z.string().optional(),
+        state: z.string().optional(),
+        zip: z.string().optional(),
+        phone: z.string().optional(), // TODO better validation
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const orgUserDetails = await ctx.prisma.userDetails.update({
+        where: { userId: ctx.session.user?.id },
+        data: {
+          about: input.about,
+          username: input.username,
+        },
+        select: { id: true },
       });
-    }
 
-    await ctx.prisma.organizationData.update({
-      where: { userDetailsId: orgUserDetails.id },
-      data: {
-        approvalState: 'PENDING',
-      },
-    });
+      if (!orgUserDetails) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'User details not found',
+        });
+      }
 
-    return true;
-  }),
+      await ctx.prisma.organizationData.update({
+        where: { userDetailsId: orgUserDetails.id },
+        data: {
+          approvalState: 'PENDING',
+          website: input.website,
+          name: input.name,
+          country: input.country,
+          address: input.address,
+          city: input.city,
+          state: input.state,
+          zip: input.zip,
+          phone: input.phone,
+        },
+      });
+
+      return true;
+    }),
 });

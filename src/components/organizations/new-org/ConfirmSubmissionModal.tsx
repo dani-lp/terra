@@ -7,7 +7,7 @@ import * as React from 'react';
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  onSubmit: () => void;
+  onSubmit: () => Promise<void>;
   submissionLoading: boolean;
 };
 
@@ -63,7 +63,10 @@ export const ConfirmSubmissionModal = ({ open, setOpen, onSubmit, submissionLoad
                     type="button"
                     className="w-full sm:col-start-2"
                     disabled={submissionLoading}
-                    onClick={() => setOpen(false)}
+                    onClick={async () => {
+                      await onSubmit();
+                      setOpen(false);
+                    }}
                   >
                     {t('actions.submit')}
                   </Button>
@@ -72,11 +75,8 @@ export const ConfirmSubmissionModal = ({ open, setOpen, onSubmit, submissionLoad
                     variant="inverse"
                     className="mt-3 w-full sm:col-start-1 sm:mt-0"
                     disabled={submissionLoading}
-                    onClick={async () => {
-                      await onSubmit();
-                      setOpen(false);
-                    }}
                     ref={cancelButtonRef}
+                    onClick={() => setOpen(false)}
                   >
                     {t('actions.cancel')}
                   </Button>

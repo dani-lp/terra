@@ -36,5 +36,10 @@
         "logOutTitle": "Are you sure you want to log out?",
         "logOutMessage": "Are you sure you want to log out?",
         "cancel": "Cancel"
+    },
+    "greetingModal": {
+        "title": "Your application has been submitted",
+        "message": "Your application has been submitted. You will be granted access if it is approved.",
+        "close": "Close"
     }
 }
