@@ -44,6 +44,7 @@ const SignInOrgs: NextPage = () => {
           <span className="text-neutral-500">{t('messagesOrgs.orgRegistrationConfirm')}</span>
           <Link
             href="/about"
+            target="_blank"
             className="mt-1 mb-4 font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
           >
             {t('messagesOrgs.readTerms')}
