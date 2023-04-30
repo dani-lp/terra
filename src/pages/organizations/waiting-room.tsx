@@ -17,16 +17,15 @@ import {
   submissionStatusDotColor,
 } from '@/const';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import { prisma } from '@/server/db/client';
 import { trpc } from '@/utils/trpc';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import type { NextPageWithLayout } from '../_app';
 
 const inter = Inter({ subsets: ['latin'] });
 
 const WaitingRoom: NextPageWithLayout = () => {
   const { t } = useTranslation('waitingRoom');
-  const router = useRouter();
   const [logOutModalOpen, setLogOutModalOpen] = React.useState(false);
   const { data: session } = useSession();
   const {
@@ -47,15 +46,6 @@ const WaitingRoom: NextPageWithLayout = () => {
 
   const submissionStatus = profileOrgData?.status ?? 'PENDING';
   const rejectionMessage = profileOrgData?.rejectionMessage ?? '';
-
-  React.useEffect(() => {
-    const redirectTo = async () => {
-      if (submissionStatus === 'UNSUBMITTED') {
-        await router.push('/organizations/new');
-      }
-    };
-    void redirectTo();
-  }, [router, submissionStatus]);
 
   if (isLoading) {
     // TODO loading page
@@ -201,6 +191,27 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         permanent: false,
       },
     };
+  }
+
+  if (session) {
+    const orgUserDetails = await prisma.userDetails.findUnique({
+      where: { userId: session.user?.id },
+      select: { id: true },
+    });
+
+    const organizationData = await prisma.organizationData.findUnique({
+      where: { userDetailsId: orgUserDetails?.id },
+      select: { approvalState: true },
+    });
+
+    if (organizationData?.approvalState === 'UNSUBMITTED') {
+      return {
+        redirect: {
+          destination: '/organizations/new',
+          permanent: false,
+        },
+      };
+    }
   }
 
   return {

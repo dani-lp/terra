@@ -7,13 +7,13 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
 import { Button } from '@/components/common';
 import { ConfirmSubmissionModal, LogOutModal } from '@/components/organizations';
 import { classNames, QUERY_PARAM_CALLBACK_URL } from '@/const';
+import { prisma } from '@/server/db/client';
 import { trpc } from '@/utils/trpc';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -64,7 +64,6 @@ type PrivateFormData = {
 
 const SignIn: NextPage = () => {
   const { t } = useTranslation('newOrg');
-  const router = useRouter();
   const [confirmModalOpen, setConfirmModalOpen] = React.useState(false);
   const [logOutModalOpen, setLogOutModalOpen] = React.useState(false);
   const utils = trpc.useContext();
@@ -132,17 +131,6 @@ const SignIn: NextPage = () => {
     },
     enableReinitialize: true,
   });
-
-  const submissionStatus = profileOrgData?.status ?? 'UNSUBMITTED';
-
-  React.useEffect(() => {
-    const redirectTo = async () => {
-      if (submissionStatus !== 'UNSUBMITTED') {
-        await router.push('/organizations/waiting-room');
-      }
-    };
-    void redirectTo();
-  }, [router, submissionStatus]);
 
   const handleOpenConfirmModal = () => {
     // TODO validation
@@ -502,6 +490,27 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         permanent: false,
       },
     };
+  }
+
+  if (session) {
+    const orgUserDetails = await prisma.userDetails.findUnique({
+      where: { userId: session.user?.id },
+      select: { id: true },
+    });
+
+    const organizationData = await prisma.organizationData.findUnique({
+      where: { userDetailsId: orgUserDetails?.id },
+      select: { approvalState: true },
+    });
+
+    if (organizationData?.approvalState !== 'UNSUBMITTED') {
+      return {
+        redirect: {
+          destination: '/organizations/waiting-room',
+          permanent: false,
+        },
+      };
+    }
   }
 
   return {
