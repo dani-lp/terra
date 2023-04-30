@@ -7,6 +7,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { Inter } from 'next/font/google';
 import Head from 'next/head';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import * as React from 'react';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
@@ -63,6 +64,7 @@ type PrivateFormData = {
 
 const SignIn: NextPage = () => {
   const { t } = useTranslation('newOrg');
+  const router = useRouter();
   const [confirmModalOpen, setConfirmModalOpen] = React.useState(false);
   const [logOutModalOpen, setLogOutModalOpen] = React.useState(false);
   const utils = trpc.useContext();
@@ -130,6 +132,17 @@ const SignIn: NextPage = () => {
     },
     enableReinitialize: true,
   });
+
+  const submissionStatus = profileOrgData?.status ?? 'UNSUBMITTED';
+
+  React.useEffect(() => {
+    const redirectTo = async () => {
+      if (submissionStatus !== 'UNSUBMITTED') {
+        await router.push('/organizations/waiting-room');
+      }
+    };
+    void redirectTo();
+  }, [router, submissionStatus]);
 
   const handleOpenConfirmModal = () => {
     // TODO validation
