@@ -31,7 +31,14 @@
             "REJECTED": "Rejected"
         },
         "details": "Details",
-        "orgDetails": "Organization details"
+        "orgDetails": "Organization details",
+        "close": "Close",
+        "actions": "Actions",
+        "approve": "Approve",
+        "reject": "Reject",
+        "updateStatus": "Update status",
+        "message": "Message",
+        "messagePlaceholder": "Enter a message to send to the organization along with the status update. It must be at least 10 characters long."
     },
     "fields": {
         "organizationName": "Organization name",

@@ -18,11 +18,9 @@ export const EnrollModal = ({ open, setOpen, challengeId, challengeName }: Props
   const utils = trpc.useContext();
   const challengeEnrollment = trpc.challenges.enroll.useMutation({
     onSuccess: async () => {
-      await Promise.all([
-        utils.challenges.get.invalidate(),
-        utils.challenges.available.invalidate(),
-        utils.challenges.enrolled.invalidate(),
-      ]);
+      await utils.challenges.get.invalidate();
+      await utils.challenges.available.invalidate();
+      await utils.challenges.enrolled.invalidate();
     },
   });
   const { t } = useTranslation('challenges');

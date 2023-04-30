@@ -1,13 +1,15 @@
-import { Spinner } from '@/components/common';
-import {
-  OrgDetailsList,
-  type OrgDetailsListEntry,
-} from '@/components/organizations/OrgDetailsList';
-import { trpc } from '@/utils/trpc';
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
+
+import { Button, Chip, Spinner } from '@/components/common';
+import {
+  OrgDetailsList,
+  type OrgDetailsListEntry,
+} from '@/components/organizations/OrgDetailsList';
+import { submissionStatusColors } from '@/const';
+import { trpc } from '@/utils/trpc';
 
 type Props = {
   open: boolean;
@@ -17,8 +19,17 @@ type Props = {
 
 export const OrganizationDetailsSlideOver = ({ open, setOpen, selectedOrgId }: Props) => {
   const { t } = useTranslation('orgs');
+  const [message, setMessage] = React.useState('');
+  const utils = trpc.useContext();
   const { data, isLoading, isError, error } = trpc.auth.getAdminOrgDetails.useQuery({
     organizationId: selectedOrgId,
+  });
+  const updateStatusMutation = trpc.auth.changeOrganizationStatus.useMutation({
+    onSuccess: async () => {
+      await utils.auth.getAdminOrgData.invalidate();
+      await utils.auth.getAdminOrgDetails.invalidate();
+      setMessage('');
+    },
   });
 
   if (isError) {
@@ -80,6 +91,34 @@ export const OrganizationDetailsSlideOver = ({ open, setOpen, selectedOrgId }: P
     },
   ];
 
+  const approveButtonEnabled =
+    data &&
+    (data.status === 'PENDING' || data.status === 'REJECTED') &&
+    message.length > 10 &&
+    !updateStatusMutation.isLoading;
+
+  const rejectButtonEnabled =
+    data &&
+    (data.status === 'PENDING' || data.status === 'ACCEPTED') &&
+    message.length > 10 &&
+    !updateStatusMutation.isLoading;
+
+  const handleApproveOrg = () => {
+    updateStatusMutation.mutate({
+      organizationId: selectedOrgId,
+      message,
+      newStatus: 'ACCEPTED',
+    });
+  };
+
+  const handleRejectOrg = () => {
+    updateStatusMutation.mutate({
+      organizationId: selectedOrgId,
+      message,
+      newStatus: 'REJECTED',
+    });
+  };
+
   return (
     <Transition.Root show={open} as={React.Fragment}>
       <Dialog as="div" className="relative z-30" onClose={setOpen}>
@@ -110,34 +149,93 @@ export const OrganizationDetailsSlideOver = ({ open, setOpen, selectedOrgId }: P
                 leaveTo="translate-x-full"
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-xl">
-                  <div className="flex h-full flex-col overflow-y-scroll bg-white shadow-xl">
+                  <div className="flex h-full flex-col divide-y-2 divide-gray-300 bg-white shadow-xl">
                     {isLoading && (
                       <div className="absolute z-40 flex h-full w-full items-center justify-center bg-neutral-300/75">
                         <Spinner variant="dark" size="lg" />
                       </div>
                     )}
-                    <div className="px-4 py-6 sm:px-6">
-                      <div className="flex items-start justify-between">
-                        <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
-                          {t('admin.orgDetails')}
-                        </Dialog.Title>
-                        <div className="ml-3 flex h-7 items-center">
-                          <button
-                            type="button"
-                            className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-black"
-                            onClick={setOpen}
-                          >
-                            <span className="sr-only">Close panel</span>
-                            <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-                          </button>
+                    <div className="h-0 flex-1 overflow-y-auto">
+                      <div className="px-4 py-6 sm:px-6">
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center justify-center gap-4">
+                            <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
+                              {t('admin.orgDetails')}
+                            </Dialog.Title>
+                            {data?.status && (
+                              <Chip
+                                label={t(`admin.statuses.${data?.status}`)}
+                                className={submissionStatusColors[data?.status ?? 'UNSUBMITTED']}
+                              />
+                            )}
+                          </div>
+                          <div className="ml-3 flex h-7 items-center">
+                            <button
+                              type="button"
+                              className="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-black"
+                              onClick={setOpen}
+                            >
+                              <span className="sr-only">Close panel</span>
+                              <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="divide-y divide-gray-200">
+                        <div className="px-6 pb-5">
+                          <OrgDetailsList listEntries={listEntries} />
                         </div>
                       </div>
                     </div>
-                    <div className="divide-y divide-gray-200">
-                      <div className="px-6 pb-5">
-                        <OrgDetailsList listEntries={listEntries} />
+
+                    {data && data.status !== 'UNSUBMITTED' && (
+                      <div className="flex flex-col">
+                        <div className="flex shrink-0 flex-col gap-4 bg-white p-4 sm:grid sm:grid-cols-3">
+                          <div className="col-span-2">
+                            <label
+                              htmlFor="about"
+                              className="block text-sm font-medium leading-6 text-gray-900"
+                            >
+                              {t('admin.message')}
+                              <span className="text-red-500"> *</span>
+                            </label>
+                            <div className="mt-2">
+                              <textarea
+                                id="about"
+                                name="about"
+                                rows={3}
+                                value={message}
+                                onChange={(newText) => setMessage(newText.target.value)}
+                                className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
+                              />
+                            </div>
+                          </div>
+                          <div className="col-span-1 flex w-full flex-col items-start justify-start gap-2">
+                            <p className="block text-sm font-medium leading-6 text-gray-900">
+                              {t('admin.actions')}
+                            </p>
+                            <Button
+                              onClick={handleApproveOrg}
+                              disabled={!approveButtonEnabled}
+                              className="w-full"
+                            >
+                              {t('admin.approve')}
+                            </Button>
+                            <Button
+                              onClick={handleRejectOrg}
+                              disabled={!rejectButtonEnabled}
+                              variant="primaryRed"
+                              className="w-full"
+                            >
+                              {t('admin.reject')}
+                            </Button>
+                          </div>
+                        </div>
+                        <p className="px-4 pb-4 text-sm leading-6 text-gray-600">
+                          {t('admin.messagePlaceholder')}
+                        </p>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

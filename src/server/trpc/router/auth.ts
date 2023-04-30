@@ -1,4 +1,5 @@
 import { sanitizeWebsite } from '@/utils/utils';
+import { OrganizationAcceptanceState } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
 import { adminProcedure, organizationProcedure, router } from '../trpc';
@@ -305,6 +306,54 @@ export const authRouter = router({
           state: input.state,
           zip: input.zip,
           phone: input.phone,
+        },
+      });
+
+      return true;
+    }),
+
+  changeOrganizationStatus: adminProcedure
+    .input(
+      z.object({
+        organizationId: z.string().nullable(),
+        newStatus: z.nativeEnum(OrganizationAcceptanceState),
+        message: z.string().min(10),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!input.organizationId) {
+        return false;
+      }
+      
+      if (input.newStatus === 'PENDING' || input.newStatus === 'UNSUBMITTED') {
+        return false;
+      }
+
+      const organization = await ctx.prisma.organizationData.findUnique({
+        where: { id: input.organizationId },
+        select: {
+          approvalState: true,
+        },
+      });
+
+      if (!organization) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Organization not found',
+        });
+      }
+
+      const oldStatus = organization.approvalState;
+
+      if (oldStatus === 'UNSUBMITTED') {
+        return false;
+      }
+
+      await ctx.prisma.organizationData.update({
+        where: { id: input.organizationId },
+        data: {
+          approvalState: input.newStatus,
+          rejectionMessage: input.message,
         },
       });
 
