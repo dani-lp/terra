@@ -30,7 +30,8 @@
             "ACCEPTED": "Accepted",
             "REJECTED": "Rejected"
         },
-        "details": "Details"
+        "details": "Details",
+        "orgDetails": "Organization details"
     },
     "fields": {
         "organizationName": "Organization name",
