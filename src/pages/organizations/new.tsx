@@ -185,7 +185,7 @@ const SignIn: NextPage = () => {
             >
               {isProfileOrgDataLoading && (
                 <div className="absolute flex h-full w-full items-center justify-center bg-neutral-300/75">
-                  <Spinner size="lg" />
+                  <Spinner variant="dark" size="lg" />
                 </div>
               )}
               <div className="px-4 py-6 sm:p-8">
@@ -339,7 +339,7 @@ const SignIn: NextPage = () => {
             >
               {isPrivateOrgDataLoading && (
                 <div className="absolute flex h-full w-full items-center justify-center bg-neutral-300/75">
-                  <Spinner size="lg" />
+                  <Spinner variant="dark" size="lg" />
                 </div>
               )}
               <div className="px-4 py-6 sm:p-8">
