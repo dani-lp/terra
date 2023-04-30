@@ -30,52 +30,6 @@ export const userRouter = router({
   }),
 
   /**
-   * Get data of an organization to be shown in a overview modal, card, or similar
-   */
-  getOrganizationOverviewData: protectedProcedure
-    .input(z.object({ organizationId: z.string() }))
-    .query(async ({ ctx, input }) => {
-      const { organizationId } = input;
-
-      const organizationData = await ctx.prisma.organizationData.findUnique({
-        where: {
-          id: organizationId,
-        },
-      });
-
-      if (!organizationData) {
-        throw new TRPCError({ code: 'NOT_FOUND' });
-      }
-
-      const organizationUserDetails = await ctx.prisma.userDetails.findUnique({
-        where: {
-          userId: organizationData.userDetailsId,
-        },
-      });
-
-      if (!organizationUserDetails) {
-        throw new TRPCError({ code: 'NOT_FOUND' });
-      }
-
-      const challengeCount = await ctx.prisma.challenge.count({
-        where: {
-          organizationDataId: organizationId,
-        },
-      });
-
-      return {
-        organizationId: organizationData.id,
-        userDetailsId: organizationData.userDetailsId,
-        name: organizationData.name,
-        image: organizationData.image,
-        about: organizationUserDetails.about ?? '',
-        country: organizationData.country,
-        challengeCount,
-        username: organizationUserDetails.username,
-      };
-    }),
-
-  /**
    * Get data of a player to be shown in a overview modal, card, or similar
    */
   getPlayerOverviewData: protectedProcedure

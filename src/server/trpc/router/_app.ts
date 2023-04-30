@@ -1,5 +1,6 @@
 import { router } from '../trpc';
 import { achievementsRouter } from './achievements';
+import { authRouter } from './auth';
 import { challengesRouter } from './challenges';
 import { devRouter } from './dev';
 import { participationRouter } from './participation';
@@ -11,6 +12,7 @@ export const appRouter = router({
   challenges: challengesRouter,
   participation: participationRouter,
   achievements: achievementsRouter,
+  auth: authRouter,
 });
 
 // export type definition of API

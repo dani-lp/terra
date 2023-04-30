@@ -1,0 +1,60 @@
+{
+    "title": "Register your organization - Terra",
+    "header": "Organization Registration Request",
+    "profile": {
+        "title": "Profile",
+        "message": "This information will be displayed publicly, so be careful what you share.",
+        "organizationName": "Organization name",
+        "username": "Username",
+        "website": "Website",
+        "websitePlaceholder": "https://www.example.com",
+        "about": "About",
+        "aboutMessage": "Write a few sentences about your organization. This will be displayed on your profile page.",
+        "photo": "Photo",
+        "change": "Change",
+        "errors": {
+            "title": "There are some errors in your submission",
+            "missingName": "Please enter your organization's name.",
+            "shortName": "Your organization's name is too short. It must be at least 3 characters long.",
+            "missingUsername": "Please enter your account username.",
+            "shortUsername": "Your account username is too short. It must be at least 3 characters long.",
+            "usernameWithSpaces": "Your account username cannot contain spaces.",
+            "missingWebsite": "Please enter your organization's website.",
+            "invalidWebsite": "Please enter a valid website URL.",
+            "missingAbout": "Please enter a description of your organization.",
+            "shortAbout": "Your organization's description is too short. It must be at least 10 characters long."
+        }
+    },
+    "private": {
+        "title": "Private Organization Information",
+        "message": "This information will be kept private and will not be shared with other users. Its purpose is to contact you in case of any issues.",
+        "country": "Country",
+        "streetAddress": "Street address",
+        "city": "City",
+        "state": "State / Province",
+        "postalCode": "ZIP / Postal code",
+        "phoneNumber": "Phone number",
+        "errors": {
+            "title": "There are some errors in your submission",
+            "missingCountry": "Please enter your organization's country.",
+            "shortCountry": "Your organization's country is too short. It must be at least 3 characters long."
+        }
+    },
+    "actions": {
+        "cancel": "Cancel",
+        "reset": "Reset",
+        "save": "Save",
+        "submit": "Submit",
+        "logOut": "Log out"
+    },
+    "confirmModal": {
+        "title": "Confirm your application",
+        "message": "Are you sure you want to submit your application? You will not be able to edit it after submission. You will be able to change your organization's data after your request has been approved."
+    },
+    "other": {
+        "logOut": "Log out",
+        "logOutTitle": "Are you sure you want to log out?",
+        "logOutMessage": "Are you sure you want to log out?",
+        "cancel": "Cancel"
+    }
+}

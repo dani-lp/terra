@@ -7,6 +7,7 @@ import Head from 'next/head';
 import nextI18nConfig from '@/../next-i18next.config.mjs';
 import { MainLayout } from '@/components/common';
 import { QUERY_PARAM_CALLBACK_URL } from '@/const/queryParams';
+import { prisma } from '@/server/db/client';
 import type { NextPageWithLayout } from '../_app';
 
 const Drafts: NextPageWithLayout = () => {
@@ -39,6 +40,34 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
         permanent: false,
       },
     };
+  }
+
+  if (session && session?.user?.role === 'ORGANIZATION') {
+    const orgUserDetails = await prisma.userDetails.findUnique({
+      where: { userId: session.user?.id },
+      select: { id: true },
+    });
+
+    const organizationData = await prisma.organizationData.findUnique({
+      where: { userDetailsId: orgUserDetails?.id },
+      select: { approvalState: true },
+    });
+
+    if (organizationData?.approvalState === 'UNSUBMITTED') {
+      return {
+        redirect: {
+          destination: '/organizations/new',
+          permanent: false,
+        },
+      };
+    } else if (organizationData?.approvalState !== 'ACCEPTED') {
+      return {
+        redirect: {
+          destination: '/organizations/waiting-room',
+          permanent: false,
+        },
+      };
+    }
   }
 
   return {

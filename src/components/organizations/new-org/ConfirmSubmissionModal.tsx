@@ -1,33 +1,19 @@
+import { Button } from '@/components/common';
 import { Dialog, Transition } from '@headlessui/react';
 import { CheckIcon } from '@heroicons/react/24/outline';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
-import { Button } from '@/components/common';
-import { trpc } from '@/utils/trpc';
-
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  challengeId: string;
-  challengeName: string;
+  onSubmit: () => Promise<void>;
+  submissionLoading: boolean;
 };
 
-export const EnrollModal = ({ open, setOpen, challengeId, challengeName }: Props) => {
+export const ConfirmSubmissionModal = ({ open, setOpen, onSubmit, submissionLoading }: Props) => {
+  const { t } = useTranslation('newOrg');
   const cancelButtonRef = React.useRef(null);
-  const utils = trpc.useContext();
-  const challengeEnrollment = trpc.challenges.enroll.useMutation({
-    onSuccess: async () => {
-      await utils.challenges.get.invalidate();
-      await utils.challenges.available.invalidate();
-      await utils.challenges.enrolled.invalidate();
-    },
-  });
-  const { t } = useTranslation('challenges');
-
-  const onAccept = () => {
-    challengeEnrollment.mutate({ challengeId });
-  };
 
   return (
     <Transition.Root show={open} as={React.Fragment}>
@@ -65,12 +51,10 @@ export const EnrollModal = ({ open, setOpen, challengeId, challengeName }: Props
                       as="h3"
                       className="text-base font-semibold leading-6 text-gray-900"
                     >
-                      {t('challenges.enrollModal.title')}
+                      {t('confirmModal.title')}
                     </Dialog.Title>
                     <div className="mt-2">
-                      <p className="text-sm text-gray-500">
-                        {t('challenges.enrollModal.description', { name: challengeName })}
-                      </p>
+                      <p className="text-sm text-gray-500">{t('confirmModal.message')}</p>
                     </div>
                   </div>
                 </div>
@@ -78,24 +62,24 @@ export const EnrollModal = ({ open, setOpen, challengeId, challengeName }: Props
                   <Button
                     type="button"
                     className="w-full sm:col-start-2"
-                    onClick={() => {
-                      onAccept();
+                    disabled={submissionLoading}
+                    onClick={async () => {
+                      await onSubmit();
                       setOpen(false);
                     }}
                   >
-                    {t('challenges.enrollModal.join')}
+                    {t('actions.submit')}
                   </Button>
-                  <div className="mt-2 sm:mt-0">
-                    <Button
-                      type="button"
-                      className="w-full rounded-md sm:col-start-1"
-                      variant="inverse"
-                      onClick={() => setOpen(false)}
-                      ref={cancelButtonRef}
-                    >
-                      {t('challenges.enrollModal.cancel')}
-                    </Button>
-                  </div>
+                  <Button
+                    type="button"
+                    variant="inverse"
+                    className="mt-3 w-full sm:col-start-1 sm:mt-0"
+                    disabled={submissionLoading}
+                    ref={cancelButtonRef}
+                    onClick={() => setOpen(false)}
+                  >
+                    {t('actions.cancel')}
+                  </Button>
                 </div>
               </Dialog.Panel>
             </Transition.Child>

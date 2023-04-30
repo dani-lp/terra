@@ -29,10 +29,8 @@ export const ChallengeDetailsModal = ({
   const { data, isLoading, isError, error } = trpc.challenges.get.useQuery({ id: challengeId });
   const challengeEnrollment = trpc.challenges.enroll.useMutation({
     onSuccess: async () => {
-      await Promise.all([
-        utils.challenges.available.invalidate(),
-        utils.challenges.enrolled.invalidate(),
-      ]);
+      await utils.challenges.available.invalidate();
+      await utils.challenges.enrolled.invalidate();
       onExit();
     },
   });
