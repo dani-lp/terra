@@ -1,0 +1,25 @@
+{
+    "title": "About - Terra",
+    "signIn": "Sign In",
+    "home": "Go to Home",
+    "header": "Welcome to Terra",
+    "subtitle": "Join challenges that promote sustainability, positively compete with like-minded individuals, and make a positive impact on the environment.",
+    "introduction": {
+        "first": "Terra connects individuals and organizations who are passionate about promoting sustainable practices and making a positive impact on the environment. Our platform offers a fun and engaging way for players to participate in challenges that focus on sustainability, such as beach cleaning, recycling, or sustainable transport. By joining these challenges, players can gain experience, compete in different leaderboards, and earn achievements that recognize their contributions to a better planet.",
+        "motivation": "We believe that promoting sustainable practices is essential for the well-being of our planet, and we are committed to making a difference through our platform. We aim to create a community of like-minded individuals who share a passion for sustainability and are willing to take action to create a positive impact. Our platform offers a unique opportunity for individuals and organizations to collaborate and work towards a common goal of a sustainable future.",
+        "challengesLabel": "Contribute",
+        "challenges": " Join sustainable challenges, gain experience, compete, and earn achievements.",
+        "securityLabel": "Security",
+        "security": " Our administrators ensure no abuse is carried out, and the platform prioritizes user privacy and security.",
+        "constantUpdatesLabel": "Constant Updates",
+        "constantUpdates": " We continuously update and improve our platform with new features for the best user experience."
+    },
+    "players": {
+        "title": "For players",
+        "text": "Terra is designed to motivate players to take action for a better planet. Players can join different challenges and compete with others to earn experience, climb up leaderboards, and obtain achievements. By participating in these challenges, players are not only having fun, but they are also making a positive impact on the environment. Moreover, players can connect with others who share the same passion for sustainability and join forces to create an even greater impact."
+    },
+    "orgs": {
+        "title": "For organizations",
+        "text": "Our platform provides organizations with a unique opportunity to promote their own sustainability goals to a wider audience. By creating a challenge, organizations can engage with players who are passionate about sustainability and have a direct impact on their cause. Our administrators carefully review all challenge submissions to ensure the challenges are aligned with our values and are not being abused. Furthermore, our platform provides organizations with a great way to promote their brand and connect with potential customers who care about sustainability."
+    }
+}
