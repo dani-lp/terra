@@ -1,6 +1,7 @@
+import { sanitizeWebsite } from '@/utils/utils';
 import { TRPCError } from '@trpc/server';
 import { z } from 'zod';
-import { organizationProcedure, router } from '../trpc';
+import { adminProcedure, organizationProcedure, router } from '../trpc';
 
 export const authRouter = router({
   // Queries
@@ -51,6 +52,91 @@ export const authRouter = router({
       phone: orgUserDetails.organizationData?.phone,
     };
   }),
+
+  /**
+   * Get all organization data for admin organization view
+   */
+  getAdminOrgData: adminProcedure.query(async ({ ctx }) => {
+    const allOrgsRawData = await ctx.prisma.organizationData.findMany({
+      include: {
+        userDetails: {
+          include: {
+            user: {
+              select: {
+                email: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const organizations = allOrgsRawData.map((org) => ({
+      id: org.id,
+      name: org.name,
+      username: org.userDetails.username,
+      email: org.userDetails.user.email,
+      website: sanitizeWebsite(org.website),
+      image: org.userDetails.user.image,
+      status: org.approvalState,
+    }));
+
+    return organizations;
+  }),
+
+  getAdminOrgDetails: adminProcedure
+    .input(z.object({ organizationId: z.string().nullable() }))
+    .query(async ({ ctx, input }) => {
+      const { organizationId } = input;
+
+      if (!organizationId) {
+        return null;
+      }
+
+      const orgRawData = await ctx.prisma.organizationData.findUnique({
+        where: { id: organizationId },
+        include: {
+          userDetails: {
+            include: {
+              user: {
+                select: {
+                  email: true,
+                  image: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (!orgRawData) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          message: 'Organization not found',
+        });
+      }
+
+      const organization = {
+        id: orgRawData.id,
+        name: orgRawData.name,
+        username: orgRawData.userDetails.username,
+        about: orgRawData.userDetails.about,
+        email: orgRawData.userDetails.user.email,
+        website: sanitizeWebsite(orgRawData.website),
+        image: orgRawData.userDetails.user.image,
+        status: orgRawData.approvalState,
+        rejectionMessage: orgRawData.rejectionMessage,
+        country: orgRawData.country,
+        address: orgRawData.address,
+        city: orgRawData.city,
+        state: orgRawData.state,
+        zip: orgRawData.zip,
+        phone: orgRawData.phone,
+      };
+
+      return organization;
+    }),
 
   // Mutations
   updateProfileOrgData: organizationProcedure

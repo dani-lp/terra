@@ -13,5 +13,36 @@
             "button": "Back to organizations"
         },
         "bottomTitle": "Organization challenges"
+    },
+    "admin": {
+        "title": "Registered organizations",
+        "subtitle": "A list of all registered organizations in the system. Click on an organization details to process their applications.",
+        "tableHeading": {
+            "name": "Name",
+            "email": "Email",
+            "status": "Status",
+            "website": "Website",
+            "details": "Details"
+        },
+        "statuses": {
+            "UNSUBMITTED": "Unsubmitted",
+            "PENDING": "Pending",
+            "ACCEPTED": "Accepted",
+            "REJECTED": "Rejected"
+        },
+        "details": "Details"
+    },
+    "fields": {
+        "organizationName": "Organization name",
+        "username": "Username",
+        "website": "Website",
+        "email": "Email",
+        "about": "About",
+        "country": "Country",
+        "streetAddress": "Street address",
+        "city": "City",
+        "state": "State / Province",
+        "postalCode": "ZIP / Postal code",
+        "phoneNumber": "Phone number"
     }
 }

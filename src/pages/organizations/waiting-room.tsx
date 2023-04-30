@@ -10,7 +10,7 @@ import * as React from 'react';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
 import { Button, Chip } from '@/components/common';
-import { LogOutModal } from '@/components/organizations';
+import { LogOutModal, OrgDetailsList, type OrgDetailsListEntry } from '@/components/organizations';
 import {
   classNames,
   QUERY_PARAM_CALLBACK_URL,
@@ -31,7 +31,7 @@ const inter = Inter({ subsets: ['latin'] });
 const GreetingModal = () => {
   const { t } = useTranslation('waitingRoom');
   const { getParamValue, removeParam } = useQueryParams();
-  
+
   const open = getParamValue(QUERY_PARAM_WAITING_ROOM_GREET) === 'true';
   const handleClose = async () => {
     await removeParam(QUERY_PARAM_WAITING_ROOM_GREET);
@@ -132,30 +132,56 @@ const WaitingRoom: NextPageWithLayout = () => {
     // TODO error page
     return null;
   }
-  const listEntries = [
+
+  const listEntries: OrgDetailsListEntry[] = [
     {
       label: t('fields.organizationName'),
-      value: profileOrgData?.name,
+      value: profileOrgData?.name ?? '',
       asLink: false,
       required: true,
     },
-    { label: t('fields.username'), value: profileOrgData?.username, asLink: false, required: true },
-    { label: t('fields.website'), value: profileOrgData?.website, asLink: true, required: true },
-    { label: t('fields.email'), value: session?.user?.email, asLink: false, required: true },
-    { label: t('fields.about'), value: profileOrgData?.about, asLink: false, required: true },
-    { label: t('fields.country'), value: privateOrgData?.country, asLink: false, required: true },
+    {
+      label: t('fields.username'),
+      value: profileOrgData?.username ?? '',
+      asLink: false,
+      required: true,
+    },
+    {
+      label: t('fields.website'),
+      value: profileOrgData?.website ?? '',
+      asLink: true,
+      required: true,
+    },
+    { label: t('fields.email'), value: session?.user?.email ?? '', asLink: false, required: true },
+    { label: t('fields.about'), value: profileOrgData?.about ?? '', asLink: false, required: true },
+    {
+      label: t('fields.country'),
+      value: privateOrgData?.country ?? '',
+      asLink: false,
+      required: true,
+    },
     {
       label: t('fields.streetAddress'),
-      value: privateOrgData?.address,
+      value: privateOrgData?.address ?? '',
       asLink: false,
       required: false,
     },
-    { label: t('fields.city'), value: privateOrgData?.city, asLink: false, required: false },
-    { label: t('fields.state'), value: privateOrgData?.state, asLink: false, required: false },
-    { label: t('fields.postalCode'), value: privateOrgData?.zip, asLink: false, required: false },
+    { label: t('fields.city'), value: privateOrgData?.city ?? '', asLink: false, required: false },
+    {
+      label: t('fields.state'),
+      value: privateOrgData?.state ?? '',
+      asLink: false,
+      required: false,
+    },
+    {
+      label: t('fields.postalCode'),
+      value: privateOrgData?.zip ?? '',
+      asLink: false,
+      required: false,
+    },
     {
       label: t('fields.phoneNumber'),
-      value: privateOrgData?.phone,
+      value: privateOrgData?.phone ?? '',
       asLink: false,
       required: false,
     },
@@ -214,30 +240,7 @@ const WaitingRoom: NextPageWithLayout = () => {
                 </h3>
               </div>
               <div className="mt-4 border-t border-neutral-300">
-                <dl className="divide-y divide-neutral-200">
-                  {listEntries.map((entry) => (
-                    <div key={entry.label} className="py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                      <dt className="text-sm font-medium leading-6 text-gray-900">
-                        {entry.label}
-                        {entry.required && <span className="text-red-500"> *</span>}
-                      </dt>
-                      {entry.asLink ? (
-                        <a
-                          href={entry.value ?? '#'}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="mt-1 text-sm leading-6 text-gray-700 underline sm:col-span-2 sm:mt-0"
-                        >
-                          {entry.value}
-                        </a>
-                      ) : (
-                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                          {entry.value}
-                        </dd>
-                      )}
-                    </div>
-                  ))}
-                </dl>
+                <OrgDetailsList listEntries={listEntries} />
               </div>
             </div>
           </div>
