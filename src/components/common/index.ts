@@ -9,4 +9,5 @@ export * from './modal';
 export * from './options-button';
 export * from './player-level';
 export * from './side-drawer';
+export * from './spinner';
 export * from './toggle';

@@ -10,7 +10,7 @@ import Image from 'next/image';
 import * as React from 'react';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
-import { Button } from '@/components/common';
+import { Button, Spinner } from '@/components/common';
 import { ConfirmSubmissionModal, LogOutModal } from '@/components/organizations';
 import { classNames, QUERY_PARAM_CALLBACK_URL } from '@/const';
 import { prisma } from '@/server/db/client';
@@ -19,11 +19,12 @@ import { trpc } from '@/utils/trpc';
 const inter = Inter({ subsets: ['latin'] });
 
 type PageHeaderProps = {
+  isLoading?: boolean;
   onLogOut: () => void;
   onSubmit: () => void;
 };
 
-const PageHeader = ({ onLogOut, onSubmit }: PageHeaderProps) => {
+const PageHeader = ({ isLoading = false, onLogOut, onSubmit }: PageHeaderProps) => {
   const { t } = useTranslation('newOrg');
 
   return (
@@ -38,7 +39,7 @@ const PageHeader = ({ onLogOut, onSubmit }: PageHeaderProps) => {
         <Button onClick={onLogOut} variant="inverseRed" noBorder type="button">
           {t('actions.logOut')}
         </Button>
-        <Button onClick={onSubmit} type="button">
+        <Button onClick={onSubmit} disabled={isLoading} type="button">
           {t('actions.submit')}
         </Button>
       </div>
@@ -141,11 +142,6 @@ const SignIn: NextPage = () => {
     return null;
   };
 
-  if (isLoading) {
-    // TODO loading page
-    return null;
-  }
-
   if (isError) {
     if (isProfileOrgDataError) {
       console.error(profileOrgDataError);
@@ -169,7 +165,11 @@ const SignIn: NextPage = () => {
         )}
       >
         <div className="max-w-7xl space-y-10 divide-y divide-gray-900/10">
-          <PageHeader onLogOut={() => setLogOutModalOpen(true)} onSubmit={handleOpenConfirmModal} />
+          <PageHeader
+            isLoading={isLoading}
+            onLogOut={() => setLogOutModalOpen(true)}
+            onSubmit={handleOpenConfirmModal}
+          />
 
           <div className="grid grid-cols-1 gap-8 pt-10 md:grid-cols-3">
             <div className="px-4 sm:px-0">
@@ -181,8 +181,13 @@ const SignIn: NextPage = () => {
 
             <form
               onSubmit={profileForm.handleSubmit}
-              className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
+              className="relative overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
             >
+              {isProfileOrgDataLoading && (
+                <div className="absolute flex h-full w-full items-center justify-center bg-neutral-300/75">
+                  <Spinner size="lg" />
+                </div>
+              )}
               <div className="px-4 py-6 sm:p-8">
                 <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-3">
@@ -200,6 +205,7 @@ const SignIn: NextPage = () => {
                         id="name"
                         value={profileForm.values.name}
                         onChange={profileForm.handleChange}
+                        disabled={isProfileOrgDataLoading}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -224,6 +230,7 @@ const SignIn: NextPage = () => {
                           id="username"
                           value={profileForm.values.username}
                           onChange={profileForm.handleChange}
+                          disabled={isProfileOrgDataLoading}
                           className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                         />
                       </div>
@@ -249,6 +256,7 @@ const SignIn: NextPage = () => {
                           id="website"
                           value={profileForm.values.website}
                           onChange={profileForm.handleChange}
+                          disabled={isProfileOrgDataLoading}
                           className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                           placeholder="www.example.com"
                         />
@@ -271,6 +279,7 @@ const SignIn: NextPage = () => {
                         rows={3}
                         value={profileForm.values.about}
                         onChange={profileForm.handleChange}
+                        disabled={isProfileOrgDataLoading}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -301,11 +310,13 @@ const SignIn: NextPage = () => {
                   type="button"
                   className="text-sm font-semibold leading-6 text-gray-900"
                 >
-                  {t('actions.cancel')}
+                  {t('actions.reset')}
                 </button>
                 <Button
                   disabled={isProfileOrgDataLoading || updateProfileOrgData.isLoading}
                   type="submit"
+                  className="min-h-[36px] min-w-[100px]"
+                  loading={updateProfileOrgData.isLoading}
                 >
                   {t('actions.save')}
                 </Button>
@@ -324,8 +335,13 @@ const SignIn: NextPage = () => {
             <form
               onSubmit={privateForm.handleSubmit}
               onBlur={privateForm.handleBlur}
-              className="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
+              className="relative bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2"
             >
+              {isPrivateOrgDataLoading && (
+                <div className="absolute flex h-full w-full items-center justify-center bg-neutral-300/75">
+                  <Spinner size="lg" />
+                </div>
+              )}
               <div className="px-4 py-6 sm:p-8">
                 <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-4">
@@ -364,6 +380,7 @@ const SignIn: NextPage = () => {
                         id="address"
                         value={privateForm.values.address}
                         onChange={privateForm.handleChange}
+                        disabled={isPrivateOrgDataLoading}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -383,6 +400,7 @@ const SignIn: NextPage = () => {
                         id="city"
                         value={privateForm.values.city}
                         onChange={privateForm.handleChange}
+                        disabled={isPrivateOrgDataLoading}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -402,6 +420,7 @@ const SignIn: NextPage = () => {
                         id="state"
                         value={privateForm.values.state}
                         onChange={privateForm.handleChange}
+                        disabled={isPrivateOrgDataLoading}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -421,6 +440,7 @@ const SignIn: NextPage = () => {
                         id="zip"
                         value={privateForm.values.zip}
                         onChange={privateForm.handleChange}
+                        disabled={isPrivateOrgDataLoading}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -440,6 +460,7 @@ const SignIn: NextPage = () => {
                         id="phone"
                         value={privateForm.values.phone}
                         onChange={privateForm.handleChange}
+                        disabled={isPrivateOrgDataLoading}
                         className="block w-full rounded-lg border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-sm sm:leading-6"
                       />
                     </div>
@@ -452,11 +473,13 @@ const SignIn: NextPage = () => {
                   type="button"
                   className="text-sm font-semibold leading-6 text-gray-900"
                 >
-                  {t('actions.cancel')}
+                  {t('actions.reset')}
                 </button>
                 <Button
                   disabled={isPrivateOrgDataLoading || updatePrivateOrgData.isLoading}
                   type="submit"
+                  className="min-h-[36px] min-w-[100px]"
+                  loading={updatePrivateOrgData.isLoading}
                 >
                   {t('actions.save')}
                 </Button>
