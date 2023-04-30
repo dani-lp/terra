@@ -4,7 +4,8 @@
         "description": "Join a community of individuals committed to sustainability! Our web platform offers a fun and engaging way to complete challenges related to sustainable actions, such as recycling or cleaning the environment, as well as self-development challenges like exercising every day. Earn points, level up, and compete with others for rewards and recognition. Sign up now and be part of the movement towards a more sustainable world!",
         "links": {
             "getStarted": "Get started",
-            "signIn": "Sign in"
+            "signIn": "Sign in",
+            "registerAsOrg": "Register as an organization"
         },
         "a11y": {
             "closeMenu": "Close menu",
