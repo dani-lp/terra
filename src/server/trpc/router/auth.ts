@@ -65,7 +65,6 @@ export const authRouter = router({
     .mutation(async ({ ctx, input }) => {
       const orgUserDetails = await ctx.prisma.userDetails.upsert({
         where: { userId: ctx.session.user?.id },
-        include: { organizationData: true },
         update: {
           username: input.username,
           about: input.about,
@@ -85,30 +84,31 @@ export const authRouter = router({
         });
       }
 
-      let organizationData = orgUserDetails.organizationData;
-
-      if (!organizationData) {
-        organizationData = await ctx.prisma.organizationData.create({
-          data: {
-            userDetails: {
-              connect: {
-                id: orgUserDetails.id,
-              },
+      const organizationData = await ctx.prisma.organizationData.upsert({
+        where: { userDetailsId: orgUserDetails.id },
+        update: {
+          name: input.name,
+          website: input.website,
+        },
+        create: {
+          userDetails: {
+            connect: {
+              id: orgUserDetails.id,
             },
-            name: input.name,
-            website: input.website,
-            image: '',
-            country: '',
           },
-        });
-      }
+          name: input.name,
+          website: input.website,
+          image: '',
+          country: '',
+        },
+      });
 
       return {
-        organizationDataId: orgUserDetails.organizationData?.id,
-        name: input.name,
-        username: input.username,
-        website: input.website,
-        about: input.about,
+        organizationDataId: organizationData?.id,
+        name: organizationData.name,
+        username: orgUserDetails.username,
+        website: organizationData.website,
+        about: orgUserDetails.about,
       };
     }),
 
