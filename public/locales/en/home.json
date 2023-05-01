@@ -29,5 +29,26 @@
             "participatedOn": "Participated on ",
             "participatedOnInvalid": "Invalid participation on "
         }
+    },
+    "orgs": {
+        "title": "Terra - Home",
+        "info": {
+            "title": "Your organization info",
+            "subtitle": "An overview of you public organization information.",
+            "publicInformation": "Public information",
+            "joinedOn": "Joined on <1>{{date}}</1>"
+        },
+        "quickLinks": {
+            "title": "Quick links",
+            "subtitle": "A list of quick links to help you get around the site."
+        },
+        "stats": {
+            "title": "Monthly stats",
+            "subtitle": "Some overview stats about your monthly activity."
+        },
+        "recentActivity": {
+            "title": "Recent activity",
+            "subtitle": "Latest participations in your challenges."
+        }
     }
 }

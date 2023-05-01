@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { playerProcedure, router } from '../trpc';
+import { organizationProcedure, playerProcedure, router } from '../trpc';
 
 export const homeRouter = router({
   /**
@@ -28,7 +28,7 @@ export const homeRouter = router({
       });
     }
 
-    await new Promise(p => setTimeout(p, 2000));
+    await new Promise((p) => setTimeout(p, 2000));
 
     const today = new Date();
     const oneMonthAgo = new Date();
@@ -103,5 +103,50 @@ export const homeRouter = router({
     });
 
     return latestParticipations;
+  }),
+
+  // orgs
+  getSelfOrgDetails: organizationProcedure.query(async ({ ctx }) => {
+    const userDetails = await ctx.prisma.userDetails.findUnique({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      include: {
+        user: {
+          select: {
+            email: true,
+            image: true,
+          },
+        },
+      },
+    });
+
+    if (!userDetails) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        cause: 'User details not found',
+      });
+    }
+
+    const organizationData = await ctx.prisma.organizationData.findUnique({
+      where: {
+        userDetailsId: userDetails.id,
+      },
+    });
+
+    if (!organizationData) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        cause: 'Organization details not found',
+      });
+    }
+
+    return {
+      username: userDetails.username,
+      website: organizationData.website,
+      country: organizationData.country,
+      image: userDetails.user.image,
+      joinedOn: organizationData.createdAt,
+    };
   }),
 });
