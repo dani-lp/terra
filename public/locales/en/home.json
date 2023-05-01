@@ -24,7 +24,9 @@
         },
         "latestActivity": {
             "title": "Latest activity",
-            "subtitle": "A feed with your latest activity on challenge registration and participations."
+            "subtitle": "A feed with your latest activity on challenge registration and participations.",
+            "participatedOn": "Participated on ",
+            "participatedOnInvalid": "Invalid participation on "
         }
     }
 }

@@ -2,6 +2,11 @@ import { TRPCError } from '@trpc/server';
 import { playerProcedure, router } from '../trpc';
 
 export const homeRouter = router({
+  /**
+   * Get a player's self stats for the home page:
+   * - Number of participations in the last month
+   * - Number of active enrolled challenges
+   */
   getSelfStats: playerProcedure.query(async ({ ctx }) => {
     const userDetails = await ctx.prisma.userDetails.findUnique({
       where: {
@@ -31,7 +36,7 @@ export const homeRouter = router({
         },
       },
     });
-   
+
     const d = new Date();
     d.setMonth(d.getMonth() - 1);
     d.setHours(0, 0, 0, 0);
@@ -53,5 +58,46 @@ export const homeRouter = router({
       participationsThisMonth,
       enrolledChallengesCount,
     };
+  }),
+
+  getLatestActivityPlayer: playerProcedure.query(async ({ ctx }) => {
+    const userDetails = await ctx.prisma.userDetails.findUnique({
+      where: {
+        userId: ctx.session.user.id,
+      },
+      select: {
+        playerData: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!userDetails) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'User details not found',
+      });
+    }
+
+    const latestParticipations = await ctx.prisma.participation.findMany({
+      where: {
+        playerDataId: userDetails.playerData?.id,
+      },
+      orderBy: {
+        date: 'desc',
+      },
+      include: {
+        challenge: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      take: 3,
+    });
+
+    return latestParticipations;
   }),
 });
