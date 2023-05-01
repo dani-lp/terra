@@ -2,9 +2,35 @@ import { z } from 'zod';
 
 import type { OrganizationData } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
-import { protectedProcedure, router } from '../trpc';
+import { playerProcedure, protectedProcedure, router } from '../trpc';
 
 export const userRouter = router({
+  getSelfPoints: playerProcedure.query(async ({ ctx }) => {
+    const { user } = ctx.session;
+
+    const userDetails = await ctx.prisma.userDetails.findUnique({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    if (!userDetails) {
+      throw new TRPCError({ code: 'NOT_FOUND' });
+    }
+
+    const playerData = await ctx.prisma.playerData.findUnique({
+      where: {
+        userDetailsId: userDetails.id,
+      },
+    });
+
+    if (!playerData) {
+      throw new TRPCError({ code: 'NOT_FOUND' });
+    }
+
+    return playerData.experience;
+  }),
+
   /**
    * Get the user's own data
    */

@@ -1,0 +1,22 @@
+{
+    "players": {
+        "title": "Terra - Home",
+        "level": {
+            "title": "Your level",
+            "subtitle": "An overview of your current level, along with your highest achievements.",
+            "achievements": "Your achievements"
+        },
+        "quickLinks": {
+            "title": "Quick links",
+            "subtitle": "A list of quick links to help you get around the site."
+        },
+        "stats": {
+            "title": "Stats",
+            "subtitle": "Some overview stats about your monthly activity."
+        },
+        "latestActivity": {
+            "title": "Latest activity",
+            "subtitle": "A feed with your latest activity on challenge registration and participations."
+        }
+    }
+}

@@ -59,7 +59,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       session: await getServerSession(context.req, context.res, authOptions),
       ...(await serverSideTranslations(
         context.locale ?? '',
-        ['common', 'navigation', 'landing'],
+        ['common', 'navigation', 'landing', 'home'],
         nextI18nConfig,
         ['en'],
       )),
