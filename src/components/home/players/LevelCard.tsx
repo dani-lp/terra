@@ -53,6 +53,7 @@ export const LevelCard = () => {
                       tag={achievement.tag}
                       tier={achievement.tier}
                       entries={achievement.entries}
+                      noShadow
                     />
                   ))}
                 </li>

@@ -17,8 +17,10 @@
             "aboutMsg": "How Terra works and its goals."
         },
         "stats": {
-            "title": "Stats",
-            "subtitle": "Some overview stats about your monthly activity."
+            "title": "Monthly stats",
+            "subtitle": "Some overview stats about your monthly activity.",
+            "participationsThisMonth": "Participations this month",
+            "enrolledChallenges": "Enrolled challenges"
         },
         "latestActivity": {
             "title": "Latest activity",
