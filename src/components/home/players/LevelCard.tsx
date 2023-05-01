@@ -32,7 +32,7 @@ export const LevelCard = () => {
     }
   }
 
-  const achievements = achievementsData ?? [];
+  const achievements = (achievementsData ?? []).slice(0, 3);
 
   return (
     <HomeCard title={t('players.level.title')} subtitle={t('players.level.subtitle')}>
