@@ -4,7 +4,8 @@
         "level": {
             "title": "Your level",
             "subtitle": "An overview of your current level, along with your highest achievements.",
-            "achievements": "Your top achievements"
+            "achievements": "Your top achievements",
+            "noAchievements": "You have no achievements yet!"
         },
         "quickLinks": {
             "title": "Quick links",

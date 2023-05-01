@@ -116,6 +116,7 @@ export const achievementsRouter = router({
           },
         },
       },
+      take: 3,
     });
 
     const tagCounts: Record<ChallengeTag, number> = {
