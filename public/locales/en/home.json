@@ -40,7 +40,13 @@
         },
         "quickLinks": {
             "title": "Quick links",
-            "subtitle": "A list of quick links to help you get around the site."
+            "subtitle": "A list of quick links to help you get around the site.",
+            "challenges": "Your challenges",
+            "challengesMsg": "Your created challenges.",
+            "registrationSubmission": "Registration request",
+            "registrationSubmissionMsg": "Check your registration request status.",
+            "about": "About Terra",
+            "aboutMsg": "How Terra works and its goals."
         },
         "stats": {
             "title": "Monthly stats",
