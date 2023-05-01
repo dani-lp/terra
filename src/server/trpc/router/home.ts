@@ -28,18 +28,20 @@ export const homeRouter = router({
       });
     }
 
+    const today = new Date();
+    const oneMonthAgo = new Date();
+    oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+    oneMonthAgo.setHours(0, 0, 0, 0);
+
     const participationsThisMonth = await ctx.prisma.participation.count({
       where: {
         playerDataId: userDetails.playerData?.id,
         date: {
-          gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+          gte: oneMonthAgo.toISOString(),
+          lte: today.toISOString(),
         },
       },
     });
-
-    const d = new Date();
-    d.setMonth(d.getMonth() - 1);
-    d.setHours(0, 0, 0, 0);
 
     const enrolledChallengesCount = await ctx.prisma.challenge.count({
       where: {
@@ -49,7 +51,7 @@ export const homeRouter = router({
           },
         },
         endDate: {
-          gte: d,
+          gte: new Date(),
         },
       },
     });
