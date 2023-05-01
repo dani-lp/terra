@@ -8,7 +8,13 @@
         },
         "quickLinks": {
             "title": "Quick links",
-            "subtitle": "A list of quick links to help you get around the site."
+            "subtitle": "A list of quick links to help you get around the site.",
+            "availableChallenges": "Available challenges",
+            "availableChallengesMsg": "Challenges you can enroll in.",
+            "activeChallenges": "Active challenges",
+            "activeChallengesMsg": "Challenges you are currently participating in.",
+            "about": "About Terra",
+            "aboutMsg": "How Terra works and its goals."
         },
         "stats": {
             "title": "Stats",
