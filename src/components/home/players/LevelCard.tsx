@@ -36,32 +36,30 @@ export const LevelCard = () => {
 
   return (
     <HomeCard title={t('players.level.title')} subtitle={t('players.level.subtitle')}>
-      <div className="py-4">
-        {!isLoading && !isError && (
-          <>
-            <PlayerLevel points={points ?? 0} className="col-span-2 w-full" />
+      {!isLoading && !isError && (
+        <>
+          <PlayerLevel points={points ?? 0} className="col-span-2 w-full" />
 
-            {achievements.length > 0 && (
-              <div className="col-span-3 mt-4">
-                <h6 className="mb-1 font-semibold leading-6 text-gray-900">
-                  {t('players.level.achievements')}
-                </h6>
-                <li className="grid grid-cols-1 gap-2 py-2">
-                  {achievements.map((achievement) => (
-                    <AchievementCardSmall
-                      key={`${achievement.tag}-${achievement.tier}`}
-                      tag={achievement.tag}
-                      tier={achievement.tier}
-                      entries={achievement.entries}
-                      noShadow
-                    />
-                  ))}
-                </li>
-              </div>
-            )}
-          </>
-        )}
-      </div>
+          {achievements.length > 0 && (
+            <div className="col-span-3 mt-4">
+              <h6 className="mb-1 font-semibold leading-6 text-gray-900">
+                {t('players.level.achievements')}
+              </h6>
+              <li className="grid grid-cols-1 gap-2 py-2">
+                {achievements.map((achievement) => (
+                  <AchievementCardSmall
+                    key={`${achievement.tag}-${achievement.tier}`}
+                    tag={achievement.tag}
+                    tier={achievement.tier}
+                    entries={achievement.entries}
+                    noShadow
+                  />
+                ))}
+              </li>
+            </div>
+          )}
+        </>
+      )}
     </HomeCard>
   );
 };

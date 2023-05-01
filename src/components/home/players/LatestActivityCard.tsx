@@ -28,7 +28,7 @@ export const LatestActivityCard = () => {
       title={t('players.latestActivity.title')}
       subtitle={t('players.latestActivity.subtitle')}
     >
-      <div className="flow-root py-2">
+      <div className="flow-root ">
         <ul role="list">
           {participations.map((participation, i) => (
             <li key={participation.id}>

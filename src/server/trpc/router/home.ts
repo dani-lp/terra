@@ -28,6 +28,8 @@ export const homeRouter = router({
       });
     }
 
+    await new Promise(p => setTimeout(p, 2000));
+
     const today = new Date();
     const oneMonthAgo = new Date();
     oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);

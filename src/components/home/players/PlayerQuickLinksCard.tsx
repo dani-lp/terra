@@ -32,7 +32,7 @@ export const PlayerQuickLinksCard = () => {
 
   return (
     <HomeCard title={t('players.quickLinks.title')} subtitle={t('players.quickLinks.subtitle')}>
-      <ul role="list" className="grid grid-cols-1 gap-6 py-6 sm:grid-cols-2">
+      <ul role="list" className="grid grid-cols-1 gap-6 sm:grid-cols-2">
         {links.map((item, i) => (
           <QuickLink item={item} key={i} />
         ))}

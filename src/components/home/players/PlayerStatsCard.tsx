@@ -24,7 +24,7 @@ export const PlayerStatsCard = () => {
 
   return (
     <HomeCard title={t('players.stats.title')} subtitle={t('players.stats.subtitle')}>
-      <dl className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
+      <dl className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         {stats.map((item) => (
           <div
             key={item.name}
