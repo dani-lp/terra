@@ -1,0 +1,63 @@
+{
+    "players": {
+        "title": "Terra - Home",
+        "level": {
+            "title": "Your level",
+            "subtitle": "An overview of your current level, along with your highest achievements.",
+            "achievements": "Your top achievements",
+            "noAchievements": "You have no achievements yet!"
+        },
+        "quickLinks": {
+            "title": "Quick links",
+            "subtitle": "A list of quick links to help you get around the site.",
+            "availableChallenges": "Available challenges",
+            "availableChallengesMsg": "Challenges you can enroll in.",
+            "activeChallenges": "Active challenges",
+            "activeChallengesMsg": "Challenges you are currently participating in.",
+            "about": "About Terra",
+            "aboutMsg": "How Terra works and its goals."
+        },
+        "stats": {
+            "title": "Monthly stats",
+            "subtitle": "Some overview stats about your monthly activity.",
+            "participationsThisMonth": "Participations this month",
+            "enrolledChallenges": "Enrolled challenges"
+        },
+        "latestActivity": {
+            "title": "Latest activity",
+            "subtitle": "A feed with your latest activity on challenge registration and participations.",
+            "participatedOn": "Participated on ",
+            "participatedOnInvalid": "Invalid participation on "
+        }
+    },
+    "orgs": {
+        "title": "Terra - Home",
+        "info": {
+            "title": "Your organization info",
+            "subtitle": "An overview of you public organization information.",
+            "publicInformation": "Public information",
+            "joinedOn": "Joined on <1>{{date}}</1>"
+        },
+        "quickLinks": {
+            "title": "Quick links",
+            "subtitle": "A list of quick links to help you get around the site.",
+            "challenges": "Your challenges",
+            "challengesMsg": "Your created challenges.",
+            "registrationSubmission": "Registration request",
+            "registrationSubmissionMsg": "Check your registration request status.",
+            "about": "About Terra",
+            "aboutMsg": "How Terra works and its goals."
+        },
+        "stats": {
+            "title": "Monthly stats",
+            "subtitle": "Some overview stats about your monthly activity.",
+            "activeChallenges": "Active challenges", 
+            "challengeParticipations": "Challenge participations"
+        },
+        "recentActivity": {
+            "title": "Recent activity",
+            "subtitle": "Latest participations in your challenges.",
+            "by": " by "
+        }
+    }
+}

@@ -8,12 +8,13 @@ type Props = {
   tag: ChallengeTag;
   tier: AchievementTier;
   entries: number;
+  noShadow?: boolean;
 };
 
-export const AchievementCardSmall = ({ tag, tier, entries }: Props) => {
+export const AchievementCardSmall = ({ tag, tier, entries, noShadow = false }: Props) => {
   const { t } = useTranslation('common');
   return (
-    <li className="col-span-1 flex rounded-lg shadow-sm">
+    <li className={classNames('col-span-1 flex rounded-lg ', noShadow ? '' : 'shadow-sm')}>
       <div
         className={classNames(
           achievementTierColors[tier],

@@ -4,7 +4,7 @@ import { z } from 'zod';
 import type { AchievementTier } from '@/types';
 import { publicProcedure, router } from '../trpc';
 
-const getAchievementTier = (participationsCount: number): AchievementTier => {
+export const getAchievementTier = (participationsCount: number): AchievementTier => {
   if (participationsCount >= 40) {
     return 'PLATINUM';
   }

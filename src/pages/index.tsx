@@ -7,13 +7,22 @@ import Head from 'next/head';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
 import { MainLayout } from '@/components/common';
-import { LandingView } from '@/components/home';
+import { LandingView, OrgsHomeView, PlayersHomeView } from '@/components/home';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
+import type { Role } from '@prisma/client';
 import type { NextPageWithLayout } from './_app';
+
+const HomePages: Record<Role, () => JSX.Element> = {
+  ADMIN: () => <></>,
+  PLAYER: PlayersHomeView,
+  ORGANIZATION: OrgsHomeView,
+};
 
 const Home: NextPageWithLayout = () => {
   const { t } = useTranslation('common');
   const { data: session } = useSession();
+
+  const HomeView = HomePages[session?.user?.role ?? 'ADMIN'];
 
   if (session) {
     return (
@@ -24,7 +33,7 @@ const Home: NextPageWithLayout = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <MainLayout>
-          <div>Home placeholder</div>
+          <HomeView />
         </MainLayout>
       </>
     );
@@ -50,7 +59,7 @@ export const getServerSideProps = async (context: GetServerSidePropsContext) => 
       session: await getServerSession(context.req, context.res, authOptions),
       ...(await serverSideTranslations(
         context.locale ?? '',
-        ['common', 'navigation', 'landing'],
+        ['common', 'navigation', 'landing', 'home'],
         nextI18nConfig,
         ['en'],
       )),
