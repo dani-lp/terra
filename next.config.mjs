@@ -31,6 +31,9 @@ export default defineNextConfig({
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
-    ]
-  }
+    ],
+  },
+  experimental: {
+    esmExternals: false,
+  },
 });
