@@ -2,6 +2,7 @@ import { useFormik } from 'formik';
 import { useTranslation } from 'next-i18next';
 
 import { InputField } from '@/components/common/form';
+import { ActionButtons } from '@/components/common/layout/settings/content/ActionButtons';
 import { trpc } from '@/utils/trpc';
 
 type FormValues = {
@@ -12,7 +13,11 @@ type FormValues = {
   zip: string;
 };
 
-export const AccountSettings = () => {
+type Props = {
+  handleClose: () => void;
+};
+
+export const AccountSettings = ({ handleClose }: Props) => {
   const { t } = useTranslation('common');
   const utils = trpc.useContext();
   const { data, isLoading, isError, error } = trpc.settings.getOrgPrivateInfo.useQuery();
@@ -44,12 +49,15 @@ export const AccountSettings = () => {
   }
 
   return (
-    <div className="h-full w-full">
-      <span className="text-sm text-neutral-500 sm:text-base">
+    <form
+      onSubmit={formik.handleSubmit}
+      className="relative flex h-full w-full flex-col items-start overflow-auto"
+    >
+      <span className="w-full p-4 text-sm text-neutral-500 sm:text-base">
         {t('settings.descriptions.accountDescription')}
       </span>
 
-      <form className="mt-6 flex flex-col lg:flex-row">
+      <div className="flex w-full flex-col overflow-auto p-4 sm:p-6 lg:flex-row">
         <div className="grow space-y-6">
           <InputField
             id="address"
@@ -103,7 +111,9 @@ export const AccountSettings = () => {
             disabled={loading}
           />
         </div>
-      </form>
-    </div>
+      </div>
+
+      <ActionButtons handleClose={handleClose} />
+    </form>
   );
 };

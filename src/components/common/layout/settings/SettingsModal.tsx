@@ -2,13 +2,15 @@ import { classNames } from '@/const';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Cog6ToothIcon, UserCircleIcon } from '@heroicons/react/24/solid';
 import { useAtom } from 'jotai';
-import { signOut, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
-import { Button, Modal, type SelectOptionWithIcon } from '@/components/common';
+import { Modal, type SelectOptionWithIcon } from '@/components/common';
+import { OrgProfileSettings } from '@/components/common/layout/settings/content/OrgProfileSettings';
+import { PlayerProfileSettings } from '@/components/common/layout/settings/content/PlayerProfileSettings';
 import { settingsModalOpenAtom } from '@/components/common/layout/utils/atoms';
-import { AccountSettings, ProfileSettings } from './content';
+import { AccountSettings } from './content';
 
 const tabs: SelectOptionWithIcon[] = [
   { id: 'profile', label: 'profile', icon: UserCircleIcon },
@@ -17,32 +19,19 @@ const tabs: SelectOptionWithIcon[] = [
 
 type TabKey = typeof tabs[number]['id'];
 
-const sections: Record<TabKey, () => JSX.Element | null> = {
-  profile: ProfileSettings,
-  account: AccountSettings,
-};
-
 export const SettingsModal = () => {
   const [open, setOpen] = useAtom(settingsModalOpenAtom);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [selectedTabKey, setSelectedTabKey] = React.useState<TabKey>('profile');
   const { t } = useTranslation('common');
 
-  const SelectedSection = sections[selectedTabKey] ?? ProfileSettings;
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleClose = () => {
     setOpen(false);
   };
 
-  const authLoading = status === 'loading';
-
   return (
     <Modal open={open} setOpen={setOpen} fullScreen className="max-w-2xl">
-      <form
-        onSubmit={handleSubmit}
-        className="flex h-full w-full flex-col items-start justify-between"
-      >
+      <div className="flex h-full w-full flex-col items-start">
         <div className="flex w-full flex-col items-start justify-center px-4 pt-4 sm:px-6 sm:pt-6">
           <div className="flex w-full items-center justify-between">
             <h2 className="mb-1 text-2xl font-bold">{t('settings.title')}</h2>
@@ -93,26 +82,16 @@ export const SettingsModal = () => {
           )}
         </div>
 
-        <div className="w-full overflow-auto p-4 sm:p-6">
-          <SelectedSection />
+        <div className="h-full w-full overflow-auto">
+          {session?.user && session?.user.role === 'PLAYER' ? (
+            <PlayerProfileSettings handleClose={handleClose} />
+          ) : selectedTabKey === 'profile' ? (
+            <OrgProfileSettings handleClose={handleClose} />
+          ) : (
+            <AccountSettings handleClose={handleClose} />
+          )}
         </div>
-
-        <div className="mt-auto flex w-full justify-between border-t-2 border-gray-100 p-4 sm:px-8">
-          <div>
-            <Button variant="inverseRed" noBorder onClick={() => signOut({ callbackUrl: '/' })}>
-              {t('settings.buttons.logout')}
-            </Button>
-          </div>
-          <div className="flex justify-end">
-            <Button variant="inverse" onClick={() => setOpen(false)}>
-              {t('settings.buttons.cancel')}
-            </Button>
-            <Button type="submit" className="ml-5">
-              {t('settings.buttons.save')}
-            </Button>
-          </div>
-        </div>
-      </form>
+      </div>
     </Modal>
   );
 };

@@ -1,4 +1,5 @@
 import { InputField, TextareaField } from '@/components/common/form';
+import { ActionButtons } from '@/components/common/layout/settings/content/ActionButtons';
 import { trpc } from '@/utils/trpc';
 import { useFormik } from 'formik';
 import { useSession } from 'next-auth/react';
@@ -11,7 +12,11 @@ type FormValues = {
   about: string;
 };
 
-export const PlayerProfileSettings = () => {
+type Props = {
+  handleClose: () => void;
+};
+
+export const PlayerProfileSettings = ({ handleClose }: Props) => {
   const { t } = useTranslation('common');
   const { data: session } = useSession();
   const utils = trpc.useContext();
@@ -19,7 +24,7 @@ export const PlayerProfileSettings = () => {
   const updateInfoMutation = trpc.settings.updatePlayerProfile.useMutation({
     onSuccess: async () => {
       await utils.settings.getPlayerProfileInfo.invalidate();
-    }
+    },
   });
 
   const formik = useFormik<FormValues>({
@@ -42,12 +47,15 @@ export const PlayerProfileSettings = () => {
   }
 
   return (
-    <div className="h-full w-full">
-      <span className="text-sm text-neutral-500 sm:text-base">
+    <form
+      onSubmit={formik.handleSubmit}
+      className="relative flex h-full w-full flex-col items-start overflow-auto"
+    >
+      <span className="w-full p-4 text-sm text-neutral-500 sm:px-6 sm:text-base">
         {t('settings.descriptions.profileDescription')}
       </span>
 
-      <form onSubmit={formik.handleSubmit} className="mt-6 flex flex-col lg:flex-row">
+      <div className="flex w-full flex-col p-4 sm:p-6 lg:flex-row">
         <div className="grow space-y-6">
           <InputField
             id="name"
@@ -145,7 +153,9 @@ export const PlayerProfileSettings = () => {
             </label>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <ActionButtons handleClose={handleClose} />
+    </form>
   );
 };

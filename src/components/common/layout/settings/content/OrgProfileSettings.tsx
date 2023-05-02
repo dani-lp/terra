@@ -5,6 +5,7 @@ import { trpc } from '@/utils/trpc';
 import { useFormik } from 'formik';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { ActionButtons } from './ActionButtons';
 
 type FormValues = {
   organizationName: string;
@@ -14,7 +15,11 @@ type FormValues = {
   country: string;
 };
 
-export const OrgProfileSettings = () => {
+type Props = {
+  handleClose: () => void;
+};
+
+export const OrgProfileSettings = ({ handleClose }: Props) => {
   const { t } = useTranslation('common');
   const { data: session } = useSession();
   const utils = trpc.useContext();
@@ -47,12 +52,15 @@ export const OrgProfileSettings = () => {
   const loading = isLoading;
 
   return (
-    <div className="h-full w-full">
-      <span className="text-sm text-neutral-500 sm:text-base">
+    <form
+      onSubmit={formik.handleSubmit}
+      className="relative flex h-full w-full flex-col items-start overflow-auto"
+    >
+      <span className="w-full p-4 text-sm text-neutral-500 sm:text-base">
         {t('settings.descriptions.profileDescription')}
       </span>
 
-      <form className="mt-6 flex flex-col lg:flex-row">
+      <div className="flex w-full flex-col p-4 sm:p-6 lg:flex-row">
         <div className="grow space-y-6">
           <InputField
             id="organizationName"
@@ -172,7 +180,9 @@ export const OrgProfileSettings = () => {
             </label>
           </div>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <ActionButtons handleClose={handleClose} />
+    </form>
   );
 };

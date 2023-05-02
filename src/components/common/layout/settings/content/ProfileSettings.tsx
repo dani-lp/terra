@@ -1,9 +1,13 @@
 import { useSession } from 'next-auth/react';
 
-import { OrgProfileSettings } from './OrfProfileSettings';
+import { OrgProfileSettings } from './OrgProfileSettings';
 import { PlayerProfileSettings } from './PlayerProfileSettings';
 
-export const ProfileSettings = () => {
+type Props = {
+  handleClose: () => void;
+};
+
+export const ProfileSettings = ({ handleClose }: Props) => {
   const { data: session } = useSession();
 
   if (!session?.user) {
@@ -11,11 +15,11 @@ export const ProfileSettings = () => {
   }
 
   if (session.user.role === 'ORGANIZATION') {
-    return <OrgProfileSettings />;
+    return <OrgProfileSettings handleClose={handleClose} />;
   }
 
   if (session.user.role === 'PLAYER') {
-    return <PlayerProfileSettings />;
+    return <PlayerProfileSettings handleClose={handleClose} />;
   }
 
   return null;
