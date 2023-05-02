@@ -22,17 +22,24 @@
       "cancel": "Cancel"
     },
     "fields": {
+      "name": "Name",
+      "organizationName": "Organization name",
       "username": "Username",
       "about": "About",
       "photo": "Photo",
       "photoOverlay": "Change",
       "photoOverlayA11y": " user photo",
-      "website": "Website URL"
+      "website": "Website URL",
+      "country": "Country",
+      "address": "Address",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip",
+      "phone": "Phone"
     },
     "descriptions": {
       "profileDescription": "This information will be displayed publicly. Be careful what you share!",
       "accountDescription": "Private information, only visible to you.",
-      "notificationsDescription": "",
       "aboutOrg": "Brief description about your organization.",
       "aboutPlayer": "Brief description about yourself.",
       "websiteUrl": "Website URL for your organization."
@@ -41,6 +48,22 @@
       "profile": "Profile",
       "account": "Account",
       "notifications": "Notifications"
+    },
+    "errors": {
+      "title": "There are some errors in your submission",
+      "missingNamePlayers": "Please enter your name.",
+      "shortNamePlayers": "Your name is too short. It must be at least 3 characters long.",
+      "missingNameOrgs": "Please enter your organization's name.",
+      "shortNameOrgs": "Your organization's name is too short. It must be at least 3 characters long.",
+      "missingUsername": "Please enter your account username.",
+      "shortUsername": "Your account username is too short. It must be at least 3 characters long.",
+      "usernameWithSpaces": "Your account username cannot contain spaces.",
+      "missingAbout": "Please enter a description of your profile.",
+      "shortAbout": "Your profile description is too short. It must be at least 10 characters long.",
+      "missingWebsite": "Please enter your organization's website.",
+      "invalidWebsite": "Please enter a valid website URL.",
+      "missingCountry": "Please enter your organization's country.",
+      "shortCountry": "Your organization's country is too short. It must be at least 3 characters long."
     }
   },
   "sidebar": {

@@ -220,7 +220,6 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
                                   aria-hidden="true"
                                 />
                                 <span className="ml-2">
-                                  {/* TODO add to "about" page */}
                                   {t('challenges.participationSlideOver.learnAbout')}
                                 </span>
                               </Link>

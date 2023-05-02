@@ -16,17 +16,11 @@ export const TextareaField = (
   {
     id,
     label,
-    name,
-    value,
     rows = 5,
-    required = false,
-    disabled = false,
-    onChange,
     className,
     wrapperClassName,
-    placeholder = '',
-    autoFocus = false,
-    children
+    children,
+    ...props
   }: TextareaFieldProps) => {
   return (
     <FieldWrapper label={label} className={wrapperClassName}>
@@ -34,13 +28,7 @@ export const TextareaField = (
         id={id}
         rows={rows}
         className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm ${className}`}
-        name={name}
-        value={value}
-        required={required}
-        disabled={disabled}
-        placeholder={placeholder}
-        onChange={onChange}
-        autoFocus={autoFocus}
+        {...props}
       />
       {children}
     </FieldWrapper>
