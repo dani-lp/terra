@@ -1,10 +1,12 @@
-import { InputField, TextareaField } from '@/components/common/form';
-import { ActionButtons } from '@/components/common/layout/settings/content/ActionButtons';
-import { trpc } from '@/utils/trpc';
 import { useFormik } from 'formik';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
+import * as React from 'react';
+
+import { InputField, TextareaField } from '@/components/common/form';
+import { ActionButtons } from '@/components/common/layout/settings/content/ActionButtons';
+import { trpc } from '@/utils/trpc';
 
 type FormValues = {
   name: string;
@@ -18,12 +20,14 @@ type Props = {
 
 export const PlayerProfileSettings = ({ handleClose }: Props) => {
   const { t } = useTranslation('common');
+  const [errors, setErrors] = React.useState<string[]>([]);
   const { data: session } = useSession();
   const utils = trpc.useContext();
   const { data, isLoading, isError, error } = trpc.settings.getPlayerProfileInfo.useQuery();
   const updateInfoMutation = trpc.settings.updatePlayerProfile.useMutation({
     onSuccess: async () => {
       await utils.settings.getPlayerProfileInfo.invalidate();
+      handleClose();
     },
   });
 
@@ -34,7 +38,35 @@ export const PlayerProfileSettings = ({ handleClose }: Props) => {
       about: data?.about ?? '',
     },
     onSubmit: async (values) => {
-      console.log(values);
+      const newErrors: string[] = [];
+
+      if (!values.name) {
+        newErrors.push(t('settings.errors.missingNamePlayers'));
+      } else if (values.name.length < 3) {
+        newErrors.push(t('settings.errors.shortNamePlayers'));
+      }
+
+      if (!values.username) {
+        newErrors.push(t('settings.errors.missingUsername'));
+      } else if (values.username.length < 3) {
+        newErrors.push(t('settings.errors.shortUsername'));
+      } else if (values.username.indexOf(' ') >= 0) {
+        newErrors.push(t('settings.errors.usernameWithSpaces'));
+      }
+
+      if (!values.about) {
+        newErrors.push(t('settings.errors.missingAbout'));
+      } else if (values.about.length < 10) {
+        newErrors.push(t('settings.errors.shortAbout'));
+      }
+
+      if (newErrors.length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+
+      updateInfoMutation.mutate(values);
+      handleClose();
     },
     enableReinitialize: true,
   });
@@ -155,7 +187,7 @@ export const PlayerProfileSettings = ({ handleClose }: Props) => {
         </div>
       </div>
 
-      <ActionButtons handleClose={handleClose} />
+      <ActionButtons errors={errors} handleClose={handleClose} />
     </form>
   );
 };

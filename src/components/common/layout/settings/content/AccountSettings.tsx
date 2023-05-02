@@ -1,4 +1,6 @@
 import { useFormik } from 'formik';
+import * as React from 'react';
+
 import { useTranslation } from 'next-i18next';
 
 import { InputField } from '@/components/common/form';
@@ -19,6 +21,7 @@ type Props = {
 
 export const AccountSettings = ({ handleClose }: Props) => {
   const { t } = useTranslation('common');
+  const [errors] = React.useState<string[]>([]);
   const utils = trpc.useContext();
   const { data, isLoading, isError, error } = trpc.settings.getOrgPrivateInfo.useQuery();
   const updateInfoMutation = trpc.settings.updateOrgPrivate.useMutation({
@@ -36,7 +39,8 @@ export const AccountSettings = ({ handleClose }: Props) => {
       zip: data?.zip ?? '',
     },
     onSubmit: async (values) => {
-      console.log(values);
+      updateInfoMutation.mutate(values);
+      handleClose();
     },
     enableReinitialize: true,
   });
@@ -113,7 +117,7 @@ export const AccountSettings = ({ handleClose }: Props) => {
         </div>
       </div>
 
-      <ActionButtons handleClose={handleClose} />
+      <ActionButtons errors={errors} handleClose={handleClose} />
     </form>
   );
 };

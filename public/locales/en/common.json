@@ -48,6 +48,22 @@
       "profile": "Profile",
       "account": "Account",
       "notifications": "Notifications"
+    },
+    "errors": {
+      "title": "There are some errors in your submission",
+      "missingNamePlayers": "Please enter your name.",
+      "shortNamePlayers": "Your name is too short. It must be at least 3 characters long.",
+      "missingNameOrgs": "Please enter your organization's name.",
+      "shortNameOrgs": "Your organization's name is too short. It must be at least 3 characters long.",
+      "missingUsername": "Please enter your account username.",
+      "shortUsername": "Your account username is too short. It must be at least 3 characters long.",
+      "usernameWithSpaces": "Your account username cannot contain spaces.",
+      "missingAbout": "Please enter a description of your profile.",
+      "shortAbout": "Your profile description is too short. It must be at least 10 characters long.",
+      "missingWebsite": "Please enter your organization's website.",
+      "invalidWebsite": "Please enter a valid website URL.",
+      "missingCountry": "Please enter your organization's country.",
+      "shortCountry": "Your organization's country is too short. It must be at least 3 characters long."
     }
   },
   "sidebar": {

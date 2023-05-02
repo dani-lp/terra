@@ -1,10 +1,12 @@
-import { useTranslation } from 'next-i18next';
-
-import { InputField, TextareaField } from '@/components/common/form';
-import { trpc } from '@/utils/trpc';
 import { useFormik } from 'formik';
 import { useSession } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
+import * as React from 'react';
+
+import { InputField, TextareaField } from '@/components/common/form';
+import { urlRegex } from '@/const';
+import { trpc } from '@/utils/trpc';
 import { ActionButtons } from './ActionButtons';
 
 type FormValues = {
@@ -21,6 +23,7 @@ type Props = {
 
 export const OrgProfileSettings = ({ handleClose }: Props) => {
   const { t } = useTranslation('common');
+  const [errors, setErrors] = React.useState<string[]>([]);
   const { data: session } = useSession();
   const utils = trpc.useContext();
   const { data, isLoading, isError, error } = trpc.settings.getOrgProfileInfo.useQuery();
@@ -39,7 +42,47 @@ export const OrgProfileSettings = ({ handleClose }: Props) => {
       country: data?.country ?? '',
     },
     onSubmit: async (values) => {
-      console.log(values);
+      const newErrors: string[] = [];
+
+      if (!values.organizationName) {
+        newErrors.push(t('settings.errors.missingNameOrgs'));
+      } else if (values.organizationName.length < 3) {
+        newErrors.push(t('settings.errors.shortNameOrgs'));
+      }
+
+      if (!values.username) {
+        newErrors.push(t('settings.errors.missingUsername'));
+      } else if (values.username.length < 3) {
+        newErrors.push(t('settings.errors.shortUsername'));
+      } else if (values.username.indexOf(' ') >= 0) {
+        newErrors.push(t('settings.errors.usernameWithSpaces'));
+      }
+
+      if (!values.about) {
+        newErrors.push(t('settings.errors.missingAbout'));
+      } else if (values.about.length < 10) {
+        newErrors.push(t('settings.errors.shortAbout'));
+      }
+
+      if (!values.website) {
+        newErrors.push(t('settings.errors.missingWebsite'));
+      } else if (!urlRegex.test(values.website)) {
+        newErrors.push(t('profile.errors.invalidWebsite'));
+      }
+
+      if (!values.country) {
+        newErrors.push(t('settings.errors.missingCountry'));
+      } else if (values.country.length < 3) {
+        newErrors.push(t('settings.errors.shortCountry'));
+      }
+
+      if (newErrors.length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+
+      updateInfoMutation.mutate(values);
+      handleClose();
     },
     enableReinitialize: true,
   });
@@ -86,7 +129,7 @@ export const OrgProfileSettings = ({ handleClose }: Props) => {
             <TextareaField
               id="about"
               label={t('settings.fields.about') ?? ''}
-              name="About"
+              name="about"
               rows={3}
               value={formik.values.about}
               onChange={formik.handleChange}
@@ -182,7 +225,7 @@ export const OrgProfileSettings = ({ handleClose }: Props) => {
         </div>
       </div>
 
-      <ActionButtons handleClose={handleClose} />
+      <ActionButtons errors={errors} handleClose={handleClose} />
     </form>
   );
 };

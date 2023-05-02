@@ -77,7 +77,7 @@ export const settingsRouter = router({
     };
   }),
 
-  getOrgPrivateInfo: organizationProcedure.query(async ({ ctx, input }) => {
+  getOrgPrivateInfo: organizationProcedure.query(async ({ ctx }) => {
     const userDetails = await ctx.prisma.userDetails.findUnique({
       where: {
         userId: ctx.session.user.id,
@@ -144,6 +144,23 @@ export const settingsRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.userDetails.update({
+        where: {
+          userId: ctx.session.user.id,
+        },
+        data: {
+          username: input.username,
+          about: input.about,
+          organizationData: {
+            update: {
+              name: input.organizationName,
+              website: input.website,
+              country: input.country,
+            },
+          },
+        },
+      });
+
       return null;
     }),
 
@@ -158,6 +175,35 @@ export const settingsRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return null;
+      const userDetails = await ctx.prisma.userDetails.findUnique({
+        where: {
+          userId: ctx.session.user.id,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (!userDetails) {
+        throw new TRPCError({
+          code: 'NOT_FOUND',
+          cause: 'User details not found',
+        });
+      }
+
+      await ctx.prisma.organizationData.update({
+        where: {
+          userDetailsId: userDetails.id,
+        },
+        data: {
+          phone: input.phone,
+          address: input.address,
+          city: input.city,
+          state: input.state,
+          zip: input.zip,
+        },
+      });
+
+      return true;
     }),
 });
