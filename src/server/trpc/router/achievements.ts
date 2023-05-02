@@ -5,7 +5,7 @@ import type { AchievementTier } from '@/types';
 import { TRPCError } from '@trpc/server';
 import { playerProcedure, publicProcedure, router } from '../trpc';
 
-const getAchievementTier = (participationsCount: number): AchievementTier => {
+export const getAchievementTier = (participationsCount: number): AchievementTier => {
   if (participationsCount >= 40) {
     return 'PLATINUM';
   }

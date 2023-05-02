@@ -4,37 +4,25 @@ import { PlayerLevel } from '@/components/common';
 import { Skeleton } from '@/components/common/skeleton';
 import { HomeCard } from '@/components/home/HomeCard';
 import { AchievementCardSmall } from '@/components/users';
-import { trpc } from '@/utils/trpc';
+import type { AchievementTier } from '@/types';
 import { BoltIcon } from '@heroicons/react/20/solid';
+import type { ChallengeTag } from '@prisma/client';
 
-export const LevelCard = () => {
+type DisplayAchievement = {
+  tag: ChallengeTag;
+  entries: number;
+  tier: AchievementTier;
+};
+
+type Props = {
+  achievements: DisplayAchievement[];
+  points: number;
+  isLoading: boolean;
+  isError: boolean;
+};
+
+export const LevelCard = ({ achievements, points, isLoading, isError }: Props) => {
   const { t } = useTranslation('home');
-  const {
-    data: achievementsData,
-    isLoading: isAchievementsLoading,
-    isError: isAchievementsError,
-    error: achievementsError,
-  } = trpc.achievements.getSelf.useQuery();
-  const {
-    data: points,
-    isLoading: isPointsLoading,
-    isError: isPointsError,
-    error: pointsError,
-  } = trpc.user.getSelfPoints.useQuery();
-
-  const isLoading = isAchievementsLoading || isPointsLoading;
-  const isError = isAchievementsError || isPointsError;
-
-  if (isError) {
-    if (isAchievementsError) {
-      console.error(achievementsError);
-    }
-    if (isPointsError) {
-      console.error(pointsError);
-    }
-  }
-
-  const achievements = (achievementsData ?? []).slice(0, 3);
 
   return (
     <HomeCard title={t('players.level.title')} subtitle={t('players.level.subtitle')}>

@@ -1,16 +1,24 @@
-import { Skeleton } from '@/components/common/skeleton';
-import { HomeCard } from '@/components/home/HomeCard';
-import { classNames } from '@/const';
-import { trpc } from '@/utils/trpc';
 import { TrophyIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'next-i18next';
 
-export const LatestActivityCard = () => {
-  const { t } = useTranslation('home');
-  const { data, isLoading, isError, error } = trpc.home.getLatestActivityPlayer.useQuery();
+import { Skeleton } from '@/components/common/skeleton';
+import { HomeCard } from '@/components/home/HomeCard';
+import { classNames } from '@/const';
+import type { Participation } from '@prisma/client';
 
-  const rawParticipations = data ?? [];
-  const participations = rawParticipations.map((participation) => ({
+type Props = {
+  latestParticipations: (Participation & {
+    challenge: {
+      name: string;
+    };
+  })[];
+  isLoading: boolean;
+};
+
+export const LatestActivityCard = ({ latestParticipations, isLoading }: Props) => {
+  const { t } = useTranslation('home');
+
+  const participations = latestParticipations.map((participation) => ({
     id: participation.id,
     challengeName: participation.challenge.name,
     challengeId: participation.challengeId,
@@ -19,10 +27,6 @@ export const LatestActivityCard = () => {
     icon: TrophyIcon,
     iconBackground: participation.isValid ? 'bg-green-500' : 'bg-red-500',
   }));
-
-  if (isError) {
-    console.error(error);
-  }
 
   return (
     <HomeCard

@@ -1,21 +1,26 @@
+import { getAchievementTier } from '@/server/trpc/router/achievements';
+import type { ChallengeTag } from '@prisma/client';
 import { TRPCError } from '@trpc/server';
 import { organizationProcedure, playerProcedure, router } from '../trpc';
 
 export const homeRouter = router({
-  /**
-   * Get a player's self stats for the home page:
-   * - Number of participations in the last month
-   * - Number of active enrolled challenges
-   */
-  getSelfStats: playerProcedure.query(async ({ ctx }) => {
+  // players
+  getSelfPlayerDetails: playerProcedure.query(async ({ ctx }) => {
     const userDetails = await ctx.prisma.userDetails.findUnique({
       where: {
         userId: ctx.session.user.id,
       },
-      select: {
+      include: {
+        user: {
+          select: {
+            email: true,
+            image: true,
+          },
+        },
         playerData: {
           select: {
             id: true,
+            experience: true,
           },
         },
       },
@@ -24,11 +29,63 @@ export const homeRouter = router({
     if (!userDetails) {
       throw new TRPCError({
         code: 'NOT_FOUND',
-        message: 'User details not found',
+        cause: 'User details not found',
       });
     }
 
-    await new Promise((p) => setTimeout(p, 2000));
+    const playerData = userDetails.playerData;
+
+    if (!playerData) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        cause: 'Player details not found',
+      });
+    }
+
+    const participations = await ctx.prisma.participation.findMany({
+      where: {
+        playerDataId: playerData?.id,
+      },
+      select: {
+        challenge: {
+          select: {
+            challengeCategories: {
+              select: {
+                tag: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const tagCounts: Record<ChallengeTag, number> = {
+      FITNESS: 0,
+      RECYCLING: 0,
+      ENVIRONMENT_CLEANING: 0,
+      NUTRITION: 0,
+      MOBILITY: 0,
+      WELLNESS: 0,
+      COMMUNITY_INVOLVEMENT: 0,
+      OTHER: 0,
+    };
+
+    for (const participation of participations) {
+      for (const category of participation.challenge.challengeCategories) {
+        tagCounts[category.tag]++;
+      }
+    }
+
+    const unsortedAchievements = Object.entries(tagCounts)
+      .filter((value) => value[1] >= 10)
+      .map(([tag, count]) => ({
+        tag: tag as ChallengeTag,
+        entries: count,
+        tier: getAchievementTier(count),
+      }));
+
+    // TODO check sorting is carried out properly
+    const achievements = unsortedAchievements.sort((a, b) => b.entries - a.entries);
 
     const today = new Date();
     const oneMonthAgo = new Date();
@@ -58,33 +115,6 @@ export const homeRouter = router({
       },
     });
 
-    return {
-      participationsThisMonth,
-      enrolledChallengesCount,
-    };
-  }),
-
-  getLatestActivityPlayer: playerProcedure.query(async ({ ctx }) => {
-    const userDetails = await ctx.prisma.userDetails.findUnique({
-      where: {
-        userId: ctx.session.user.id,
-      },
-      select: {
-        playerData: {
-          select: {
-            id: true,
-          },
-        },
-      },
-    });
-
-    if (!userDetails) {
-      throw new TRPCError({
-        code: 'NOT_FOUND',
-        message: 'User details not found',
-      });
-    }
-
     const latestParticipations = await ctx.prisma.participation.findMany({
       where: {
         playerDataId: userDetails.playerData?.id,
@@ -102,7 +132,13 @@ export const homeRouter = router({
       take: 3,
     });
 
-    return latestParticipations;
+    return {
+      points: playerData.experience,
+      achievements: achievements.slice(0, 3),
+      participationsThisMonth,
+      enrolledChallengesCount,
+      latestParticipations,
+    };
   }),
 
   // orgs

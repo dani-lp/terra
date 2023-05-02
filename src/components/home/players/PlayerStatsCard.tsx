@@ -1,26 +1,32 @@
 import { Skeleton } from '@/components/common/skeleton';
 import { HomeCard } from '@/components/home/HomeCard';
-import { trpc } from '@/utils/trpc';
 import { useTranslation } from 'next-i18next';
 
-export const PlayerStatsCard = () => {
+type Props = {
+  participationsThisMonth: number;
+  enrolledChallengesCount: number;
+  isLoading: boolean;
+  isError: boolean;
+};
+
+export const PlayerStatsCard = ({
+  participationsThisMonth,
+  enrolledChallengesCount,
+  isLoading,
+  isError,
+}: Props) => {
   const { t } = useTranslation('home');
-  const { data, isLoading, isError, error } = trpc.home.getSelfStats.useQuery();
 
   const stats = [
     {
       name: t('players.stats.participationsThisMonth'),
-      stat: data?.participationsThisMonth ?? (isError ? '<error>' : 0),
+      stat: participationsThisMonth ?? (isError ? '<error>' : 0),
     },
     {
       name: t('players.stats.enrolledChallenges'),
-      stat: data?.enrolledChallengesCount ?? (isError ? '<error>' : 0),
+      stat: enrolledChallengesCount ?? (isError ? '<error>' : 0),
     },
   ];
-
-  if (error) {
-    console.error(error);
-  }
 
   return (
     <HomeCard title={t('players.stats.title')} subtitle={t('players.stats.subtitle')}>

@@ -6,9 +6,15 @@ import {
   PlayerQuickLinksCard,
   PlayerStatsCard,
 } from '@/components/home/players';
+import { trpc } from '@/utils/trpc';
 
 export const PlayersHomeView = () => {
   const { t } = useTranslation('home');
+  const { data, isLoading, isError, error } = trpc.home.getSelfPlayerDetails.useQuery();
+
+  if (isError) {
+    console.error(error);
+  }
 
   return (
     <div className="h-full min-h-full p-4">
@@ -19,10 +25,23 @@ export const PlayersHomeView = () => {
       </div>
 
       <div className="space-y-4 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
-        <LevelCard />
+        <LevelCard
+          points={data?.points ?? 0}
+          achievements={data?.achievements ?? []}
+          isLoading={isLoading}
+          isError={isError}
+        />
         <PlayerQuickLinksCard />
-        <PlayerStatsCard />
-        <LatestActivityCard />
+        <PlayerStatsCard
+          enrolledChallengesCount={data?.enrolledChallengesCount ?? 0}
+          participationsThisMonth={data?.participationsThisMonth ?? 0}
+          isLoading={isLoading}
+          isError={isError}
+        />
+        <LatestActivityCard
+          latestParticipations={data?.latestParticipations ?? []}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );
