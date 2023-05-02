@@ -72,10 +72,11 @@ enum Role {
 
 // User data models
 model UserDetails {
-  id               String            @id @default(cuid())
-  role             Role
-  username         String?           @unique
-  about            String?
+  id       String  @id @default(cuid())
+  role     Role
+  username String? @unique
+  about    String?
+
   user             User              @relation(fields: [id], references: [id], onDelete: Cascade)
   userId           String            @unique
   adminData        AdminData?

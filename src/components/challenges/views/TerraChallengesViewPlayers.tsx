@@ -135,14 +135,13 @@ export const TerraChallengesViewPlayers = () => {
               ))}
             </nav>
 
-            <div className="flex items-center gap-4 text-sm">
+            {/* <div className="flex items-center gap-4 text-sm">
               <p>
-                {/* TODO remove placeholder */}
                 Showing 1 to 10 of 20 results
               </p>
               <Button variant="inverse">Prev</Button>
               <Button variant="inverse">Next</Button>
-            </div>
+            </div> */}
           </div>
 
           <div className="lg:grid lg:grid-cols-7 lg:gap-4 lg:pt-2">

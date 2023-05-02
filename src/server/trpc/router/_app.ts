@@ -5,6 +5,7 @@ import { challengesRouter } from './challenges';
 import { devRouter } from './dev';
 import { homeRouter } from './home';
 import { participationRouter } from './participation';
+import { settingsRouter } from './settings';
 import { userRouter } from './user';
 
 export const appRouter = router({
@@ -15,6 +16,7 @@ export const appRouter = router({
   achievements: achievementsRouter,
   auth: authRouter,
   home: homeRouter,
+  settings: settingsRouter,
 });
 
 // export type definition of API

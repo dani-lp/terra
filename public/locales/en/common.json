@@ -22,17 +22,24 @@
       "cancel": "Cancel"
     },
     "fields": {
+      "name": "Name",
+      "organizationName": "Organization name",
       "username": "Username",
       "about": "About",
       "photo": "Photo",
       "photoOverlay": "Change",
       "photoOverlayA11y": " user photo",
-      "website": "Website URL"
+      "website": "Website URL",
+      "country": "Country",
+      "address": "Address",
+      "city": "City",
+      "state": "State",
+      "zip": "Zip",
+      "phone": "Phone"
     },
     "descriptions": {
       "profileDescription": "This information will be displayed publicly. Be careful what you share!",
       "accountDescription": "Private information, only visible to you.",
-      "notificationsDescription": "",
       "aboutOrg": "Brief description about your organization.",
       "aboutPlayer": "Brief description about yourself.",
       "websiteUrl": "Website URL for your organization."
