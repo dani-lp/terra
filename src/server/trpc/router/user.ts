@@ -32,30 +32,6 @@ export const userRouter = router({
   }),
 
   /**
-   * Get the user's own data
-   */
-  getSelfData: protectedProcedure.query(async ({ ctx }) => {
-    const { user } = ctx.session;
-    const userDetails = await ctx.prisma.userDetails.findUnique({
-      where: {
-        userId: user.id,
-      },
-    });
-    if (!userDetails) {
-      throw new TRPCError({ code: 'NOT_FOUND' });
-    }
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      username: userDetails.username,
-      image: user.image,
-      role: userDetails.role,
-      about: userDetails.about,
-    };
-  }),
-
-  /**
    * Get data of a player to be shown in a overview modal, card, or similar
    */
   getPlayerOverviewData: protectedProcedure

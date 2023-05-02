@@ -55,7 +55,7 @@ export const Modal = ({
               <Dialog.Panel className={classNames(
                 'relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:mx-4',
                 className,
-                fullScreen ? 'h-screen w-screen rounded-none shadow-none sm:h-[620px] sm:shadow-xl sm:w-auto sm:rounded-lg' : '',
+                fullScreen ? 'h-screen w-screen rounded-none shadow-none sm:h-[620px] sm:shadow-xl sm:w-full sm:rounded-lg' : '',
                 smallShadow ? 'shadow-lg' : 'shadow-none',
               )}>
                 {children}
