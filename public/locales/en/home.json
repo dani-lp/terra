@@ -50,7 +50,9 @@
         },
         "stats": {
             "title": "Monthly stats",
-            "subtitle": "Some overview stats about your monthly activity."
+            "subtitle": "Some overview stats about your monthly activity.",
+            "activeChallenges": "Active challenges", 
+            "challengeParticipations": "Challenge participations"
         },
         "recentActivity": {
             "title": "Recent activity",

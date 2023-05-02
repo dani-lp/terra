@@ -141,12 +141,34 @@ export const homeRouter = router({
       });
     }
 
+    const activeChallengesCount = await ctx.prisma.challenge.count({
+      where: {
+        organizationDataId: organizationData.id,
+        startDate: {
+          lte: new Date(),
+        },
+        endDate: {
+          gte: new Date(),
+        },
+      },
+    });
+
+    const totalParticipationCount = await ctx.prisma.participation.count({
+      where: {
+        challenge: {
+          organizationDataId: organizationData.id,
+        },
+      },
+    });
+
     return {
       username: userDetails.username,
       website: organizationData.website,
       country: organizationData.country,
       image: userDetails.user.image,
       joinedOn: organizationData.createdAt,
+      activeChallengesCount,
+      totalParticipationCount,
     };
   }),
 });

@@ -10,7 +10,11 @@ import { trpc } from '@/utils/trpc';
 
 export const OrgsHomeView = () => {
   const { t } = useTranslation('home');
-  const { data, isLoading } = trpc.home.getSelfOrgDetails.useQuery();
+  const { data, isLoading, isError, error } = trpc.home.getSelfOrgDetails.useQuery();
+
+  if (isError) {
+    console.error(error);
+  }
 
   return (
     <div className="h-full min-h-full p-4">
@@ -30,7 +34,12 @@ export const OrgsHomeView = () => {
           loading={isLoading}
         />
         <OrgQuickLinksCard />
-        <OrgStatsCard />
+        <OrgStatsCard
+          activeChallenges={data?.activeChallengesCount ?? 0}
+          totalParticipations={data?.totalParticipationCount ?? 0}
+          isLoading={isLoading}
+          isError={isError}
+        />
         <RecentActivityCard />
       </div>
     </div>
