@@ -40,7 +40,10 @@ export const OrgsHomeView = () => {
           isLoading={isLoading}
           isError={isError}
         />
-        <RecentActivityCard />
+        <RecentActivityCard
+          participations={data?.latestParticipations ?? []}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   );

@@ -56,7 +56,8 @@
         },
         "recentActivity": {
             "title": "Recent activity",
-            "subtitle": "Latest participations in your challenges."
+            "subtitle": "Latest participations in your challenges.",
+            "by": " by "
         }
     }
 }

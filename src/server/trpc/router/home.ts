@@ -161,6 +161,45 @@ export const homeRouter = router({
       },
     });
 
+    const rawLatestParticipations = await ctx.prisma.participation.findMany({
+      where: {
+        challenge: {
+          organizationDataId: organizationData.id,
+        },
+      },
+      orderBy: {
+        date: 'desc',
+      },
+      include: {
+        challenge: {
+          select: {
+            name: true,
+          },
+        },
+        playerData: {
+          select: {
+            id: true,
+            userDetails: {
+              select: {
+                username: true,
+              },
+            },
+          },
+        },
+      },
+      take: 3,
+    });
+
+    const latestParticipations = rawLatestParticipations.map((p) => ({
+      id: p.id,
+      challengeId: p.challengeId,
+      challengeName: p.challenge.name,
+      playerDataId: p.playerData.id,
+      playerUsername: p.playerData.userDetails.username ?? '',
+      date: p.date,
+      isValid: p.isValid,
+    }));
+
     return {
       username: userDetails.username,
       website: organizationData.website,
@@ -169,6 +208,7 @@ export const homeRouter = router({
       joinedOn: organizationData.createdAt,
       activeChallengesCount,
       totalParticipationCount,
+      latestParticipations,
     };
   }),
 });
