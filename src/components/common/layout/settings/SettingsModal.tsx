@@ -61,7 +61,7 @@ export const SettingsModal = () => {
   }, [data, isLoading, isError, error, load]);
 
   return (
-    <Modal open={open} setOpen={setOpen} fullScreen className="sm:w-[600px]">
+    <Modal open={open} setOpen={setOpen} fullScreen className="max-w-2xl">
       <form
         onSubmit={handleSubmit}
         className="flex h-full w-full flex-col items-start justify-between"
