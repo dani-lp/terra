@@ -257,6 +257,12 @@ export const challengesRouter = router({
             },
           },
         },
+        startDate: {
+          lte: new Date(),
+        },
+        endDate: {
+          gte: new Date(),
+        },
       },
       select: {
         id: true,
