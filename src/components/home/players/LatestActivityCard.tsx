@@ -44,8 +44,8 @@ export const LatestActivityCard = ({ latestParticipations, isLoading }: Props) =
                       <Skeleton className="h-8 w-8" rounded />
                     </div>
                     <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
-                      <div className="text-sm text-gray-500">
-                        <Skeleton className="h-3 w-72" />
+                      <div className="text-sm text-gray-500 max-w-xs w-full">
+                        <Skeleton className="h-3" widthFull />
                       </div>
                       <div className="whitespace-nowrap text-right text-sm text-gray-500">
                         <Skeleton className="h-3 w-11" />
