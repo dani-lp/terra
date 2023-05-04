@@ -1,54 +1,18 @@
-import { Alert, Button, DateInputWithIcon } from '@/components/common';
-import { trpc } from '@/utils/trpc';
 import { Dialog, Transition } from '@headlessui/react';
 import { CalendarIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { PhotoIcon } from '@heroicons/react/24/solid';
-import type { Challenge } from '@prisma/client';
+import { generateReactHelpers } from '@uploadthing/react';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import * as React from 'react';
 
-const FileInput = () => {
-  const { t } = useTranslation('challenges');
-  const inputRef = React.useRef<HTMLInputElement>(null);
+import { Alert, Button, DateInputWithIcon } from '@/components/common';
+import type { TerraFileRouter } from '@/server/uploadthing';
+import { trpc } from '@/utils/trpc';
+import type { Challenge } from '@prisma/client';
 
-  const handleContainerClick = () => {
-    inputRef.current?.click();
-  };
-
-  return (
-    <div className="col-span-full">
-      <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 text-gray-900">
-        {t('challenges.participationSlideOver.proof')}
-      </label>
-      <div
-        onClick={handleContainerClick}
-        className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
-      >
-        <div className="text-center">
-          <PhotoIcon className="mx-auto h-12 w-12 text-gray-300" aria-hidden="true" />
-          <div className="mt-4 text-sm leading-6 text-gray-600">
-            <label
-              htmlFor="file-upload"
-              className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-            >
-              <span>{t('challenges.participationSlideOver.uploadFile')}</span>
-              <input
-                id="file-upload"
-                name="file-upload"
-                type="file"
-                className="sr-only"
-                ref={inputRef}
-              />
-            </label>
-          </div>
-          <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF</p>
-        </div>
-      </div>
-    </div>
-  );
-};
+const { useUploadThing } = generateReactHelpers<TerraFileRouter>();
 
 type Props = {
   open: boolean;
@@ -59,6 +23,8 @@ type Props = {
 export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) => {
   const { t } = useTranslation('challenges');
   const utils = trpc.useContext();
+  const { getRootProps, getInputProps, files, startUpload, resetFiles } =
+    useUploadThing('proofUploader');
   const registerParticipationMutation = trpc.participation.register.useMutation({
     onSuccess: async () => {
       await utils.challenges.get.invalidate();
@@ -103,7 +69,16 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
       comments,
     };
 
-    const result = await registerParticipationMutation.mutateAsync(mutationData);
+    let proofUrl: string | undefined;
+    if (files.length > 0) {
+      const uploadResult = await startUpload();
+      proofUrl = uploadResult[0]?.fileUrl;
+    }
+
+    const result = await registerParticipationMutation.mutateAsync({
+      ...mutationData,
+      proofUrl,
+    });
 
     if (result) {
       setOpen(false);
@@ -206,7 +181,50 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
                               </div>
                             </div>
 
-                            <FileInput />
+                            <div className="col-span-full" {...getRootProps()}>
+                              <label
+                                htmlFor="cover-photo"
+                                className="block text-sm font-medium leading-6 text-gray-900"
+                              >
+                                {t('challenges.participationSlideOver.proof')}
+                              </label>
+                              <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                                <div className="text-center">
+                                  <PhotoIcon
+                                    className="mx-auto h-12 w-12 text-gray-300"
+                                    aria-hidden="true"
+                                  />
+                                  <div className="mt-4 text-sm leading-6 text-gray-600">
+                                    <label
+                                      htmlFor="file-upload"
+                                      className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+                                    >
+                                      <span>
+                                        {t('challenges.participationSlideOver.uploadFile')}
+                                      </span>
+                                      <input
+                                        id="file-upload"
+                                        name="file-upload"
+                                        type="file"
+                                        className="sr-only"
+                                        {...getInputProps()}
+                                      />
+                                    </label>
+                                  </div>
+                                  {files.length > 0 ? (
+                                    <p className="text-xs leading-5 text-gray-600">
+                                      {files[0]?.file.name}
+                                    </p>
+                                  ) : (
+                                    <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF</p>
+                                  )}
+                                </div>
+                              </div>
+                              <p className="mt-1 text-sm text-red-500">
+                                <b>{t('challenges.participationSlideOver.attention')}:</b>{' '}
+                                {t('challenges.participationSlideOver.publicProofNotice')}
+                              </p>
+                            </div>
                           </div>
                           <div className="pb-6 pt-4">
                             <div className="flex text-sm">
@@ -242,11 +260,17 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
                           disabled={registerParticipationMutation.isLoading}
                           type="button"
                           variant="inverse"
-                          onClick={() => setOpen(false)}
+                          onClick={() => {
+                            resetFiles();
+                            setOpen(false);
+                          }}
                         >
                           {t('challenges.participationSlideOver.cancel')}
                         </Button>
-                        <Button disabled={registerParticipationMutation.isLoading} type="submit">
+                        <Button
+                          disabled={registerParticipationMutation.isLoading || files.length < 1}
+                          type="submit"
+                        >
                           {t('challenges.participationSlideOver.addParticipation')}
                         </Button>
                       </div>

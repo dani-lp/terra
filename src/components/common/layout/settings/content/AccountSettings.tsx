@@ -45,7 +45,7 @@ export const AccountSettings = ({ handleClose }: Props) => {
     enableReinitialize: true,
   });
 
-  const loading = isLoading;
+  const loading = isLoading || updateInfoMutation.isLoading;
 
   if (isError) {
     console.error(error);
@@ -117,7 +117,7 @@ export const AccountSettings = ({ handleClose }: Props) => {
         </div>
       </div>
 
-      <ActionButtons errors={errors} handleClose={handleClose} />
+      <ActionButtons errors={errors} handleClose={handleClose} loading={loading} />
     </form>
   );
 };

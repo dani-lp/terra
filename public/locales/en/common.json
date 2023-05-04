@@ -16,6 +16,7 @@
   },
   "settings": {
     "title": "Settings",
+    "newImageFile": "New image file: ",
     "buttons": {
       "logout": "Log out",
       "save": "Save",

@@ -93,8 +93,9 @@ model AdminData {
 }
 
 model PlayerData {
-  id         String @id @default(cuid())
-  experience Int    @default(0)
+  id         String  @id @default(cuid())
+  experience Int     @default(0)
+  image      String?
 
   enrolledChallenges Challenge[]
   userDetails        UserDetails     @relation(fields: [userDetailsId], references: [id], onDelete: Cascade)

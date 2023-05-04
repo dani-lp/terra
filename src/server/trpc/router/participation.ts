@@ -15,10 +15,11 @@ export const participationRouter = router({
         challengeId: z.string(),
         comments: z.string().optional(),
         date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        proofUrl: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const { challengeId, comments, date } = input;
+      const { challengeId, comments, date, proofUrl } = input;
       const { session } = ctx;
 
       // 1. Check if the challenge exists and is active
@@ -112,6 +113,7 @@ export const participationRouter = router({
           comments,
           date: new Date(date),
           playerDataId: userDetails?.playerData?.id,
+          proofUrl,
         },
       });
 

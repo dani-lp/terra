@@ -17,6 +17,11 @@ export const settingsRouter = router({
             name: true,
           },
         },
+        playerData: {
+          select: {
+            image: true,
+          },
+        },
       },
     });
 
@@ -27,10 +32,18 @@ export const settingsRouter = router({
       });
     }
 
+    if (!userDetails.playerData) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        cause: 'Player details not found',
+      });
+    }
+
     return {
       name: userDetails.user.name,
       username: userDetails.username,
       about: userDetails.about,
+      image: userDetails.playerData.image,
     };
   }),
 
@@ -47,6 +60,7 @@ export const settingsRouter = router({
             name: true,
             website: true,
             country: true,
+            image: true,
           },
         },
       },
@@ -74,6 +88,7 @@ export const settingsRouter = router({
       about: userDetails.about,
       website: organizationData.website,
       country: organizationData.country,
+      image: organizationData.image,
     };
   }),
 
@@ -112,6 +127,7 @@ export const settingsRouter = router({
         name: z.string().min(3),
         username: z.string().min(3).regex(/^\S+$/),
         about: z.string().optional(),
+        pfpUrl: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -125,6 +141,11 @@ export const settingsRouter = router({
           user: {
             update: {
               name: input.name,
+            },
+          },
+          playerData: {
+            update: {
+              image: input.pfpUrl,
             },
           },
         },
@@ -141,6 +162,7 @@ export const settingsRouter = router({
         about: z.string().optional(),
         website: z.string().regex(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/), // TODO revise this monstrosity
         country: z.string().min(3),
+        pfpUrl: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -156,6 +178,7 @@ export const settingsRouter = router({
               name: input.organizationName,
               website: input.website,
               country: input.country,
+              image: input.pfpUrl,
             },
           },
         },
