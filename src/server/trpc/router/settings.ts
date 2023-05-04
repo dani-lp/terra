@@ -47,6 +47,7 @@ export const settingsRouter = router({
             name: true,
             website: true,
             country: true,
+            image: true,
           },
         },
       },
@@ -74,6 +75,7 @@ export const settingsRouter = router({
       about: userDetails.about,
       website: organizationData.website,
       country: organizationData.country,
+      image: organizationData.image,
     };
   }),
 
@@ -141,6 +143,7 @@ export const settingsRouter = router({
         about: z.string().optional(),
         website: z.string().regex(/^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/), // TODO revise this monstrosity
         country: z.string().min(3),
+        pfpUrl: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -156,6 +159,7 @@ export const settingsRouter = router({
               name: input.organizationName,
               website: input.website,
               country: input.country,
+              image: input.pfpUrl,
             },
           },
         },

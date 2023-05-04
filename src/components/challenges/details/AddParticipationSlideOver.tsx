@@ -69,8 +69,12 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
       comments,
     };
 
-    const res = await startUpload();
-    const proofUrl: string = res[0].fileUrl;
+    let proofUrl: string | undefined;
+    if (files.length > 0) {
+      const uploadResult = await startUpload();
+      proofUrl = uploadResult[0]?.fileUrl;
+    }
+
     const result = await registerParticipationMutation.mutateAsync({
       ...mutationData,
       proofUrl,
