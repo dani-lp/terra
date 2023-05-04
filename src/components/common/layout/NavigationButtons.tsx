@@ -9,6 +9,7 @@ import { Skeleton } from '@/components/common/skeleton';
 import { PlayerDetailsSlideOver } from '@/components/users';
 import { classNames } from '@/const';
 import { trpc } from '@/utils/trpc';
+import { useTranslation } from 'next-i18next';
 
 type Props = {
   hideUser?: boolean;
@@ -17,6 +18,7 @@ type Props = {
 };
 
 export const NavigationButtons = ({ hideUser, hideSettings, className }: Props) => {
+  const { t } = useTranslation('common');
   const [playerDetailsOpen, setPlayerDetailsOpen] = React.useState(false);
   const [settingsModalOpen, setSettingsModalOpen] = useAtom(settingsModalOpenAtom);
   const { data: session, status } = useSession();
@@ -40,18 +42,20 @@ export const NavigationButtons = ({ hideUser, hideSettings, className }: Props) 
     <>
       <div className={classNames('items-center justify-center gap-2 p-2', className)}>
         {session?.user?.role === 'PLAYER' && !isError && playerDataId !== '' && !hideUser && (
-          <div
+          <button
             className="cursor-pointer rounded-lg p-1 transition-colors hover:bg-black hover:text-white"
             onClick={() => setPlayerDetailsOpen(true)}
+            aria-label={t('a11y.profile') ?? 'profile'}
           >
             {isPlayerDataLoading && <Skeleton className="h-6 w-6" />}
             {!isPlayerDataLoading && <UserIcon className="w-6" />}
-          </div>
+          </button>
         )}
         {!hideSettings && (
           <button
             onClick={() => setSettingsModalOpen(!settingsModalOpen)}
             className="cursor-pointer rounded-lg p-1 transition-colors hover:bg-black hover:text-white"
+            aria-label={t('a11y.settings') ?? 'settings'}
           >
             {isLoading && <Skeleton className="h-6 w-6" />}
             {!isLoading && <Cog6ToothIcon className="w-6" />}

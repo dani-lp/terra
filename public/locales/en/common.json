@@ -4,7 +4,10 @@
     "closeSidebar": "Close sidebar",
     "closePanel": "Close panel",
     "selectATab": "Select a tab",
-    "status": "Status"
+    "status": "Status",
+    "settings": "settings",
+    "profile": "profile",
+    "toDevLink": "navigate to developer view"
   },
   "actions": {
     "back": "Back",

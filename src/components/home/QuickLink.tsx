@@ -15,8 +15,8 @@ type Props = {
 
 export const QuickLink = ({ item }: Props) => {
   return (
-    <Link href={item.href}>
-      <li className="flow-root">
+    <li className="flow-root" role="listitem">
+      <Link href={item.href}>
         <div className="relative -m-2 flex items-center space-x-4 rounded-xl p-2 focus-within:ring-2 focus-within:ring-indigo-500 hover:bg-gray-50">
           <div
             className={classNames(
@@ -35,7 +35,7 @@ export const QuickLink = ({ item }: Props) => {
             <p className="mt-1 text-sm text-gray-500">{item.description}</p>
           </div>
         </div>
-      </li>
-    </Link>
+      </Link>
+    </li>
   );
 };

@@ -59,7 +59,7 @@ export const OrgInfoCard = ({
       {!loading && (
         <div className="grid grid-cols-2">
           <div className="col-span-1 flex flex-col">
-            <h6 className="mb-1 font-medium">{t('orgs.info.publicInformation')}</h6>
+            <h4 className="mb-1 font-medium">{t('orgs.info.publicInformation')}</h4>
 
             <div className="flex items-center text-sm text-gray-500">
               <UserIcon className="mr-1.5 h-5 w-5 shrink-0 text-gray-400" aria-hidden="true" />@

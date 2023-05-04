@@ -49,10 +49,10 @@ export const LevelCard = ({ achievements, points, isLoading, isError }: Props) =
           )}
           {!isLoading && achievements.length > 0 && (
             <div className="col-span-3 mt-4">
-              <h6 className="mb-1 font-semibold leading-6 text-gray-900">
+              <h4 className="mb-1 font-semibold leading-6 text-gray-900">
                 {t('players.level.achievements')}
-              </h6>
-              <li className="grid grid-cols-1 gap-2 py-2">
+              </h4>
+              <ul className="grid grid-cols-1 gap-2 py-2">
                 {achievements.map((achievement) => (
                   <AchievementCardSmall
                     key={`${achievement.tag}-${achievement.tier}`}
@@ -62,7 +62,7 @@ export const LevelCard = ({ achievements, points, isLoading, isError }: Props) =
                     noShadow
                   />
                 ))}
-              </li>
+              </ul>
             </div>
           )}
           {!isLoading && achievements.length === 0 && (
