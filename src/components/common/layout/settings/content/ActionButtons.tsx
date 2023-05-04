@@ -5,10 +5,11 @@ import { useTranslation } from 'next-i18next';
 
 type Props = {
   handleClose: () => void;
+  loading: boolean;
   errors: string[];
 };
 
-export const ActionButtons = ({ handleClose, errors }: Props) => {
+export const ActionButtons = ({ handleClose, loading, errors }: Props) => {
   const { t } = useTranslation('common');
 
   return (
@@ -32,7 +33,7 @@ export const ActionButtons = ({ handleClose, errors }: Props) => {
           <Button variant="inverse" onClick={handleClose}>
             {t('settings.buttons.cancel')}
           </Button>
-          <Button type="submit" className="ml-5">
+          <Button type="submit" className="ml-5" disabled={loading}>
             {t('settings.buttons.save')}
           </Button>
         </div>

@@ -131,7 +131,9 @@
       "uploadFile": "Upload a file",
       "other": {
         "closePanel": "Close panel"
-      }
+      },
+      "attention": "Attention",
+      "publicProofNotice": "the images you upload will be public. Be careful with what you share!"
     }
   }
 }

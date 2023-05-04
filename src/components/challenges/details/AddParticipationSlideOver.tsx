@@ -220,6 +220,10 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
                                   )}
                                 </div>
                               </div>
+                              <p className="mt-1 text-sm text-red-500">
+                                <b>{t('challenges.participationSlideOver.attention')}:</b>{' '}
+                                {t('challenges.participationSlideOver.publicProofNotice')}
+                              </p>
                             </div>
                           </div>
                           <div className="pb-6 pt-4">

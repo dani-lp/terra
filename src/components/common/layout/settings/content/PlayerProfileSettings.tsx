@@ -26,6 +26,7 @@ type Props = {
 export const PlayerProfileSettings = ({ handleClose }: Props) => {
   const { t } = useTranslation('common');
   const [errors, setErrors] = React.useState<string[]>([]);
+  const [uploading, setUploading] = React.useState(false);
   const { data: session, status } = useSession();
 
   const { getRootProps, getInputProps, files, startUpload, resetFiles } =
@@ -76,8 +77,10 @@ export const PlayerProfileSettings = ({ handleClose }: Props) => {
 
       let pfpUrl: string | undefined;
       if (files.length > 0) {
+        setUploading(true);
         const uploadResult = await startUpload();
         pfpUrl = uploadResult[0]?.fileUrl;
+        setUploading(false);
       }
 
       updateInfoMutation.mutate({
@@ -89,7 +92,7 @@ export const PlayerProfileSettings = ({ handleClose }: Props) => {
     enableReinitialize: true,
   });
 
-  const loading = isLoading;
+  const loading = isLoading || updateInfoMutation.isLoading || uploading;
   const loadingImages = status === 'loading' && isLoading;
 
   if (isError) {
@@ -238,6 +241,7 @@ export const PlayerProfileSettings = ({ handleClose }: Props) => {
           resetFiles();
           handleClose();
         }}
+        loading={loading}
       />
     </form>
   );
