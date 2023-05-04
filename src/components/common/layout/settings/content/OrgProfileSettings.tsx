@@ -32,7 +32,7 @@ export const OrgProfileSettings = ({ handleClose }: Props) => {
   const { data: session, status } = useSession();
 
   const { getRootProps, getInputProps, files, startUpload, resetFiles } =
-    useUploadThing('proofUploader');
+    useUploadThing('pfpUploader');
 
   const utils = trpc.useContext();
   const { data, isLoading, isError, error } = trpc.settings.getOrgProfileInfo.useQuery();

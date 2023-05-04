@@ -6,7 +6,12 @@ import * as React from 'react';
 
 import { InputField, TextareaField } from '@/components/common/form';
 import { ActionButtons } from '@/components/common/layout/settings/content/ActionButtons';
+import { Skeleton } from '@/components/common/skeleton';
+import type { TerraFileRouter } from '@/server/uploadthing';
 import { trpc } from '@/utils/trpc';
+import { generateReactHelpers } from '@uploadthing/react';
+
+const { useUploadThing } = generateReactHelpers<TerraFileRouter>();
 
 type FormValues = {
   name: string;
@@ -21,7 +26,11 @@ type Props = {
 export const PlayerProfileSettings = ({ handleClose }: Props) => {
   const { t } = useTranslation('common');
   const [errors, setErrors] = React.useState<string[]>([]);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  const { getRootProps, getInputProps, files, startUpload, resetFiles } =
+    useUploadThing('pfpUploader');
+
   const utils = trpc.useContext();
   const { data, isLoading, isError, error } = trpc.settings.getPlayerProfileInfo.useQuery();
   const updateInfoMutation = trpc.settings.updatePlayerProfile.useMutation({
@@ -65,13 +74,23 @@ export const PlayerProfileSettings = ({ handleClose }: Props) => {
         return;
       }
 
-      updateInfoMutation.mutate(values);
+      let pfpUrl: string | undefined;
+      if (files.length > 0) {
+        const uploadResult = await startUpload();
+        pfpUrl = uploadResult[0]?.fileUrl;
+      }
+
+      updateInfoMutation.mutate({
+        ...values,
+        pfpUrl,
+      });
       handleClose();
     },
     enableReinitialize: true,
   });
 
   const loading = isLoading;
+  const loadingImages = status === 'loading' && isLoading;
 
   if (isError) {
     console.error(error);
@@ -134,19 +153,23 @@ export const PlayerProfileSettings = ({ handleClose }: Props) => {
                 className="inline-block h-12 w-12 shrink-0 overflow-hidden rounded-full"
                 aria-hidden="true"
               >
-                <Image
-                  className="h-full w-full rounded-full"
-                  src={session?.user?.image ?? ''}
-                  alt=""
-                  height={128}
-                  width={128}
-                />
+                {loadingImages && <Skeleton rounded className="h-32 w-32" />}
+                {!loadingImages && (
+                  <Image
+                    className="h-full w-full rounded-full"
+                    src={data?.image ?? session?.user?.image ?? ''}
+                    alt=""
+                    height={128}
+                    width={128}
+                  />
+                )}
               </div>
-              <div className="ml-5 rounded-md shadow-sm">
+              {/* mobile "change" button */}
+              <div className="ml-5 rounded-md shadow-sm" {...getRootProps()}>
                 <div className="group relative flex items-center justify-center rounded-lg border border-gray-300 py-2 px-3 focus-within:ring-2 focus-within:ring-black hover:bg-gray-50">
                   <label
                     htmlFor="mobile-user-photo"
-                    className="pointer-events-none relative text-sm font-medium leading-4 text-gray-700"
+                    className="relative text-sm font-medium leading-4 text-gray-700"
                   >
                     <span>{t('settings.fields.photoOverlay')}</span>
                     <span className="sr-only">{t('settings.fields.photoOverlayA11y')}</span>
@@ -156,38 +179,66 @@ export const PlayerProfileSettings = ({ handleClose }: Props) => {
                     name="user-photo"
                     type="file"
                     className="absolute h-full w-full cursor-pointer rounded-md border-gray-300 opacity-0"
+                    {...getInputProps()}
                   />
                 </div>
               </div>
+              {files.length > 0 && (
+                <p className="ml-4 text-xs leading-5 text-gray-600 lg:hidden">
+                  {t('settings.newImageFile')}
+                  {files[0]?.file.name}
+                </p>
+              )}
             </div>
           </div>
 
-          <div className="relative hidden overflow-hidden rounded-full lg:block">
-            <Image
-              className="relative h-40 w-40 rounded-full"
-              src={session?.user?.image ?? ''}
-              alt=""
-              height={160}
-              width={160}
-            />
-            <label
-              htmlFor="desktop-user-photo"
-              className="absolute inset-0 flex h-full w-full items-center justify-center bg-black/75 text-sm font-medium text-white opacity-0 focus-within:opacity-100 hover:opacity-100"
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div
+              className="relative hidden overflow-hidden rounded-full lg:block"
+              {...getRootProps()}
             >
-              <span>{t('settings.fields.photoOverlay')}</span>
-              <span className="sr-only">{t('settings.fields.photoOverlayA11y')}</span>
-              <input
-                type="file"
-                id="desktop-user-photo"
-                name="user-photo"
-                className="absolute inset-0 h-full w-full cursor-pointer rounded-md border-gray-300 opacity-0"
-              />
-            </label>
+              {loadingImages && <Skeleton rounded className="h-40 w-40" />}
+              {!loadingImages && (
+                <Image
+                  className="relative h-40 w-40 rounded-full"
+                  src={data?.image ?? session?.user?.image ?? ''}
+                  alt=""
+                  height={160}
+                  width={160}
+                />
+              )}
+              <label
+                htmlFor="desktop-user-photo"
+                className="absolute inset-0 flex h-full w-full items-center justify-center bg-black/75 text-sm font-medium text-white opacity-0 focus-within:opacity-100 hover:opacity-100"
+              >
+                <span>{t('settings.fields.photoOverlay')}</span>
+                <span className="sr-only">{t('settings.fields.photoOverlayA11y')}</span>
+                <input
+                  type="file"
+                  id="desktop-user-photo"
+                  name="user-photo"
+                  className="absolute inset-0 h-full w-full cursor-pointer rounded-md border-gray-300 opacity-0"
+                  {...getInputProps()}
+                />
+              </label>
+            </div>
+            {files.length > 0 && (
+              <p className="hidden text-xs leading-5 text-gray-600 lg:block">
+                {t('settings.newImageFile')}
+                {files[0]?.file.name}
+              </p>
+            )}
           </div>
         </div>
       </div>
 
-      <ActionButtons errors={errors} handleClose={handleClose} />
+      <ActionButtons
+        errors={errors}
+        handleClose={() => {
+          resetFiles();
+          handleClose();
+        }}
+      />
     </form>
   );
 };

@@ -17,6 +17,11 @@ export const settingsRouter = router({
             name: true,
           },
         },
+        playerData: {
+          select: {
+            image: true,
+          },
+        },
       },
     });
 
@@ -27,10 +32,18 @@ export const settingsRouter = router({
       });
     }
 
+    if (!userDetails.playerData) {
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        cause: 'Player details not found',
+      });
+    }
+
     return {
       name: userDetails.user.name,
       username: userDetails.username,
       about: userDetails.about,
+      image: userDetails.playerData.image,
     };
   }),
 
@@ -114,6 +127,7 @@ export const settingsRouter = router({
         name: z.string().min(3),
         username: z.string().min(3).regex(/^\S+$/),
         about: z.string().optional(),
+        pfpUrl: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -127,6 +141,11 @@ export const settingsRouter = router({
           user: {
             update: {
               name: input.name,
+            },
+          },
+          playerData: {
+            update: {
+              image: input.pfpUrl,
             },
           },
         },
