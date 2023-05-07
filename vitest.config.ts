@@ -3,10 +3,20 @@
 
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vitest/config';
+import { loadEnvConfig } from '@next/env';
 
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: 'jsdom',
-  },
+export default defineConfig(() => {
+  loadEnvConfig(process.cwd());
+  
+  return {
+    plugins: [react()],
+    test: {
+      environment: 'jsdom',
+    },
+    resolve: {
+      alias: {
+        '@': '/src',
+      }
+    }
+  };
 });
