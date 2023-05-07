@@ -12,7 +12,7 @@ export default defineConfig(() => {
     plugins: [react()],
     test: {
       environment: 'jsdom',
-      setupFiles: './src/scripts/setupTests.ts',
+      setupFiles: './src/test/setupTests.ts',
       globals: true,
       mockReset: true,
     },
