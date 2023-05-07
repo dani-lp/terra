@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, test, vitest } from 'vitest';
 import { Chip } from './Chip';
 
 describe('<Chip />', () => {
@@ -13,7 +12,7 @@ describe('<Chip />', () => {
   });
 
   test('renders with a close button if onCloseClick is passed', () => {
-    const onCloseClick = vitest.fn();
+    const onCloseClick = jest.fn();
     render(<Chip label={testLabel} onCloseClick={onCloseClick} onCloseLabel={testButtonLabel} />);
     const closeButton = screen.getByRole('button', { name: testButtonLabel });
     expect(closeButton).toBeInTheDocument();

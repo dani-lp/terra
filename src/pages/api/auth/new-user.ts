@@ -1,9 +1,10 @@
+import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getServerAuthSession } from '../../../server/common/get-server-auth-session';
+import { getServerSession } from 'next-auth';
 import { prisma } from '../../../server/db/client';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerAuthSession({ req, res });
+  const session = await getServerSession(req, res, authOptions);
 
   const rawCallbackUrl = req.query.callbackUrl;
   const unknownCallbackUrl = Array.isArray(rawCallbackUrl) ? rawCallbackUrl[0] : rawCallbackUrl;

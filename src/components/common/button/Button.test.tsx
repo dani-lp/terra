@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, test, vitest } from 'vitest';
 import { Button } from './Button';
 
 describe('<Button />', () => {
@@ -18,7 +17,7 @@ describe('<Button />', () => {
   });
 
   test('calls onClick when clicked', () => {
-    const onClick = vitest.fn();
+    const onClick = jest.fn();
     render(<Button aria-label={testLabel} onClick={onClick} />);
     userEvent.click(screen.getByLabelText(testLabel));
     expect(onClick).toHaveBeenCalled();
@@ -30,7 +29,7 @@ describe('<Button />', () => {
   });
 
   test('does not call onClick when disabled', () => {
-    const onClick = vitest.fn();
+    const onClick = jest.fn();
     render(<Button aria-label={testLabel} onClick={onClick} disabled />);
     userEvent.click(screen.getByLabelText(testLabel));
     expect(onClick).not.toHaveBeenCalled();

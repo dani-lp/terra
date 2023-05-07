@@ -1,4 +1,3 @@
-import { expect, test } from 'vitest';
 import { getLevelProgression } from './gamification';
 
 test('getLevelProgression returns level 1 and the same currentPoints for xpPoints less than 10', () => {
