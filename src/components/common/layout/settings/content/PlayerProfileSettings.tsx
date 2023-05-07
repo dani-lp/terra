@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { InputField, TextareaField } from '@/components/common/form';
 import { ActionButtons } from '@/components/common/layout/settings/content/ActionButtons';
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 import type { TerraFileRouter } from '@/server/uploadthing';
 import { trpc } from '@/utils/trpc';
 import { generateReactHelpers } from '@uploadthing/react';

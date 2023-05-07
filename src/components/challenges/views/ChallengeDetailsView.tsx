@@ -11,8 +11,7 @@ import {
   LeaderBoardList,
 } from '@/components/challenges/details';
 import { AddParticipationSlideOver } from '@/components/challenges/details/AddParticipationSlideOver';
-import { Button } from '@/components/common';
-import { Skeleton } from '@/components/common/skeleton';
+import { Button, Skeleton } from '@/components/common';
 import { trpc } from '@/utils/trpc';
 import Head from 'next/head';
 

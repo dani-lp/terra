@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
 import { LeaderBoardList } from '@/components/challenges/details/';
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 import { classNames } from '@/const';
 import type { Challenge } from '@prisma/client';
 

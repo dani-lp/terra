@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 import { HomeCard } from '@/components/home/HomeCard';
 import { PlayerDetailsSlideOver } from '@/components/users';
 import { classNames } from '@/const';
@@ -40,7 +40,7 @@ export const RecentActivityCard = ({ isLoading, participations }: Props) => {
                         <Skeleton className="h-8 w-8" rounded />
                       </div>
                       <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
-                        <div className="text-sm text-gray-500 max-w-xs w-full">
+                        <div className="w-full max-w-xs text-sm text-gray-500">
                           <Skeleton className="h-3" widthFull />
                         </div>
                         <div className="whitespace-nowrap text-right text-sm text-gray-500">

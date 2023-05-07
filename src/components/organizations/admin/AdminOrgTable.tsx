@@ -3,8 +3,7 @@ import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import * as React from 'react';
 
-import { Chip } from '@/components/common';
-import { Skeleton } from '@/components/common/skeleton';
+import { Chip, Skeleton } from '@/components/common';
 import { OrganizationDetailsSlideOver } from '@/components/organizations/admin/OrganizationDetailsSlideOver';
 import { submissionStatusColors } from '@/const';
 import { trpc } from '@/utils/trpc';
