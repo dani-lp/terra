@@ -4,7 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
-import { MainLayout } from '@/components/common';
+import { MainLayout } from '@/components/common/layout';
 import { OrgDetailsView } from '@/components/organizations';
 import { QUERY_PARAM_CALLBACK_URL } from '@/const/queryParams';
 import { prisma } from '@/server/db/client';

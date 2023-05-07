@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
 import { ChallengeDetailsView } from '@/components/challenges';
-import { MainLayout } from '@/components/common';
+import { MainLayout } from '@/components/common/layout';
 import { QUERY_PARAM_CALLBACK_URL } from '@/const/queryParams';
 import { prisma } from '@/server/db/client';
 import type { NextPageWithLayout } from '../_app';

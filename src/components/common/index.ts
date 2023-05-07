@@ -4,7 +4,6 @@ export * from './challenge-difficulty-selector';
 export * from './challenge-tag-selector';
 export * from './chip';
 export * from './form';
-export * from './layout';
 export * from './modal';
 export * from './options-button';
 export * from './player-level';
