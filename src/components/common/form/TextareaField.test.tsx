@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, test, vitest } from 'vitest';
 import { TextareaField } from './TextareaField';
 
 describe('<TextareaField />', () => {
@@ -11,7 +12,7 @@ describe('<TextareaField />', () => {
   });
 
   test('calls onChange handler when textarea value changes', () => {
-    const onChange = jest.fn();
+    const onChange = vitest.fn();
     render(<TextareaField aria-label={testLabel} onChange={onChange} />);
     const textarea = screen.getByLabelText(testLabel) as HTMLTextAreaElement;
     const newValue = 'new value';
@@ -20,7 +21,7 @@ describe('<TextareaField />', () => {
   });
 
   test('disables the textarea when disabled prop is true', () => {
-    const onChange = jest.fn();
+    const onChange = vitest.fn();
     render(<TextareaField aria-label={testLabel} disabled />);
     const textarea = screen.getByLabelText(testLabel) as HTMLTextAreaElement;
     const newValue = 'new value';

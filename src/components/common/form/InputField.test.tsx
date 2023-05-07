@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { describe, expect, test, vitest } from 'vitest';
 import { InputField } from './InputField';
 
 describe('<InputField />', () => {
@@ -11,7 +12,7 @@ describe('<InputField />', () => {
   });
 
   test('calls onChange handler when input value changes', () => {
-    const onChange = jest.fn();
+    const onChange = vitest.fn();
     render(<InputField aria-label={testLabel} onChange={onChange} />);
     const input = screen.getByLabelText(testLabel) as HTMLInputElement;
     const newValue = 'new value';
@@ -20,7 +21,7 @@ describe('<InputField />', () => {
   });
 
   test('disables the input when disabled prop is true', () => {
-    const onChange = jest.fn();
+    const onChange = vitest.fn();
     render(<InputField aria-label={testLabel} disabled />);
     const input = screen.getByLabelText(testLabel) as HTMLInputElement;
     const newValue = 'new value';
