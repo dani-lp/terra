@@ -15,6 +15,9 @@ export default defineConfig(() => {
       setupFiles: './src/test/setupTests.ts',
       globals: true,
       mockReset: true,
+      deps: {
+        inline: ['react-dropzone'],
+      },
     },
     resolve: {
       alias: {

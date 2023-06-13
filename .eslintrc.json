@@ -3,7 +3,7 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
-  "plugins": ["react", "react-hooks", "prettier", "@typescript-eslint", "tailwindcss"],
+  "plugins": ["react", "react-hooks", "prettier", "@typescript-eslint", "tailwindcss", "cypress"],
   "extends": [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
@@ -11,7 +11,8 @@
     "prettier",
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
+    "plugin:react-hooks/recommended",
+    "plugin:cypress/recommended"
   ],
   "rules": {
     "react/react-in-jsx-scope": "off",
@@ -39,5 +40,8 @@
   "globals": {
     "React": true,
     "JSX": true
+  },
+  "env": {
+    "cypress/globals": true
   }
 }
