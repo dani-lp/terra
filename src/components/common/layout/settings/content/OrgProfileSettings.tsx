@@ -5,7 +5,7 @@ import Image from 'next/image';
 import * as React from 'react';
 
 import { InputField, TextareaField } from '@/components/common/form';
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 import { urlRegex } from '@/const';
 import type { TerraFileRouter } from '@/server/uploadthing';
 import { trpc } from '@/utils/trpc';

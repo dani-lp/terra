@@ -5,9 +5,10 @@ type Props = {
   className?: string;
   dotColor?: string;
   onCloseClick?: () => void;
+  onCloseLabel?: string;
 };
 
-export const Chip = ({ label, className = '', dotColor, onCloseClick }: Props) => {
+export const Chip = ({ label, className = '', dotColor, onCloseClick, onCloseLabel }: Props) => {
   return (
     <div
       className={classNames(
@@ -22,6 +23,7 @@ export const Chip = ({ label, className = '', dotColor, onCloseClick }: Props) =
           type="button"
           className="group relative ml-1 -mr-1 h-3.5 w-3.5 rounded-full hover:bg-neutral-600/20"
           onClick={onCloseClick}
+          aria-label={onCloseLabel}
         >
           <svg
             viewBox="0 0 14 14"

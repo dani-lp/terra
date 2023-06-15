@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 
 import { HomeCard } from '@/components/home/HomeCard';
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 
 type Props = {
   activeChallenges: number;

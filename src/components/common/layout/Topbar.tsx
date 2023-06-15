@@ -10,7 +10,7 @@ import { useRouter } from 'next/router';
 import { useNavigation } from '@/components/common/layout/context/NavigationContext';
 import { NavigationButtons } from '@/components/common/layout/NavigationButtons';
 import { filterNavigationItems } from '@/components/common/layout/utils';
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 import { classNames } from '@/const';
 
 const inter = Inter({ subsets: ['latin'] });

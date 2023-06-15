@@ -6,7 +6,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';
 
 import nextI18nConfig from '@/../next-i18next.config.mjs';
-import { MainLayout } from '@/components/common';
+import { MainLayout } from '@/components/common/layout';
 import { LandingView, OrgsHomeView, PlayersHomeView } from '@/components/home';
 import { authOptions } from '@/pages/api/auth/[...nextauth]';
 import type { Role } from '@prisma/client';

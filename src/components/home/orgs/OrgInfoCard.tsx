@@ -1,7 +1,7 @@
 import { LinkIcon, MapPinIcon, UserIcon } from '@heroicons/react/20/solid';
 import { Trans, useTranslation } from 'next-i18next';
 
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 import { HomeCard } from '@/components/home/HomeCard';
 import Image from 'next/image';
 

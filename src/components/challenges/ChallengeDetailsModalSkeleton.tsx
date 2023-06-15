@@ -1,6 +1,6 @@
 import { CalendarIcon, UserGroupIcon } from '@heroicons/react/20/solid';
 
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 
 export const ChallengeDetailsModalSkeleton = () => {
   return (
