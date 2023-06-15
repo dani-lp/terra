@@ -1,31 +1,24 @@
 import { LeaderBoardList } from '@/components/challenges/details/LeaderBoardList';
 import { ParticipationList } from '@/components/challenges/details/ParticipationList';
+import {
+  tabs,
+  useChallengeTabStoreActions,
+  useSelectedTab,
+} from '@/components/challenges/store/useChallengeTabStore';
 import { classNames } from '@/const';
-import { CheckBadgeIcon, TrophyIcon } from '@heroicons/react/20/solid';
 import { useSession } from 'next-auth/react';
 import { useTranslation } from 'next-i18next';
-import * as React from 'react';
 
 type Props = {
   challengeId: string;
   isLoading: boolean;
 };
 
-const tabs = [
-  {
-    key: 'leaderboard',
-    icon: TrophyIcon,
-  },
-  {
-    key: 'participations',
-    icon: CheckBadgeIcon,
-  },
-] as const;
-
 export const ChallengeDetailsDesktopContent = ({ challengeId, isLoading }: Props) => {
   const { t } = useTranslation('challenges');
   const { data: session, status } = useSession();
-  const [selectedTab, setSelectedTab] = React.useState<typeof tabs[number]['key']>(tabs[0].key);
+  const selectedTab = useSelectedTab();
+  const { setSelectedTab } = useChallengeTabStoreActions();
 
   const isSessionLoaded = status !== 'loading';
 
