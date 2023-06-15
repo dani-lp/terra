@@ -234,6 +234,7 @@ export const homeRouter = router({
       playerUsername: p.playerData.userDetails.username ?? '',
       date: p.date,
       isValid: p.isValid,
+      proof: p.proofUrl,
     }));
 
     return {

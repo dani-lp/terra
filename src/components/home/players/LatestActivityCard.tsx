@@ -26,6 +26,7 @@ export const LatestActivityCard = ({ latestParticipations, isLoading }: Props) =
     isValid: participation.isValid,
     icon: TrophyIcon,
     iconBackground: participation.isValid ? 'bg-green-500' : 'bg-red-500',
+    proof: participation.proofUrl,
   }));
 
   return (
@@ -44,7 +45,7 @@ export const LatestActivityCard = ({ latestParticipations, isLoading }: Props) =
                       <Skeleton className="h-8 w-8" rounded />
                     </div>
                     <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
-                      <div className="text-sm text-gray-500 max-w-xs w-full">
+                      <div className="w-full max-w-xs text-sm text-gray-500">
                         <Skeleton className="h-3" widthFull />
                       </div>
                       <div className="whitespace-nowrap text-right text-sm text-gray-500">
@@ -93,6 +94,19 @@ export const LatestActivityCard = ({ latestParticipations, isLoading }: Props) =
                           >
                             {participation.challengeName}
                           </a>
+                          {participation.proof && (
+                            <>
+                              {' '}
+                              <a
+                                href={participation.proof}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="underline"
+                              >
+                                ({t('players.latestActivity.proof')})
+                              </a>
+                            </>
+                          )}
                         </p>
                       </div>
                       <div className="whitespace-nowrap text-right text-sm text-gray-500">

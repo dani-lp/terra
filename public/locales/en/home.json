@@ -27,7 +27,8 @@
             "title": "Latest activity",
             "subtitle": "A feed with your latest activity on challenge registration and participations.",
             "participatedOn": "Participated on ",
-            "participatedOnInvalid": "Invalid participation on "
+            "participatedOnInvalid": "Invalid participation on ",
+            "proof": "proof"
         }
     },
     "orgs": {
@@ -57,7 +58,8 @@
         "recentActivity": {
             "title": "Recent activity",
             "subtitle": "Latest participations in your challenges.",
-            "by": " by "
+            "by": " by ",
+            "proof": "proof"
         }
     }
 }

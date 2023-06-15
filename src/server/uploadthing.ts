@@ -1,15 +1,13 @@
-import { createFilething, type FileRouter } from 'uploadthing/server';
+import { createUploadthing, type FileRouter } from 'uploadthing/server';
 
-const f = createFilething();
+const f = createUploadthing();
 
 const auth = (req: Request) => {
   return { id: 'fakeId' };
 }; // fake auth function
 
 export const terraFileRouter = {
-  proofUploader: f
-    .fileTypes(['image'])
-    .maxSize('2MB')
+  proofUploader: f({ image: { maxFileSize: '2MB' } })
     .middleware(async (req) => {
       const user = await auth(req);
 
@@ -23,9 +21,7 @@ export const terraFileRouter = {
       console.log('Upload complete for userId: ', metadata.userId);
     }),
   
-  pfpUploader: f
-    .fileTypes(['image'])
-    .maxSize('1MB')
+  pfpUploader: f({ image: { maxFileSize: '2MB' } })
     .middleware(async (req) => {
       const user = await auth(req);
 
