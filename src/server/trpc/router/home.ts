@@ -241,7 +241,7 @@ export const homeRouter = router({
       username: userDetails.username,
       website: organizationData.website,
       country: organizationData.country,
-      image: userDetails.user.image,
+      image: organizationData.image ?? userDetails.user.image,
       joinedOn: organizationData.createdAt,
       activeChallengesCount,
       totalParticipationCount,
