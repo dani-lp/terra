@@ -30,11 +30,18 @@ export const ChallengeDetailsHeaderSkeleton = () => {
       <div className="mb-2">
         <Skeleton className="h-5 w-20" />
       </div>
-      
-      <div className="mb-3 flex flex-wrap gap-2">
+
+      <div className="mb-4 flex flex-wrap gap-2">
         <Skeleton className="h-4 w-16" rounded />
         <Skeleton className="h-4 w-28" rounded />
         <Skeleton className="h-4 w-12" rounded />
+      </div>
+
+      <div className="mb-2">
+        <Skeleton className="h-5 w-20" />
+      </div>
+      <div className="mb-3">
+        <Skeleton className="h-16 w-96" />
       </div>
     </div>
   );

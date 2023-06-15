@@ -1,6 +1,11 @@
 import { z } from 'zod';
 
-import { playerProcedure, protectedProcedure, router } from '@/server/trpc/trpc';
+import {
+  organizationProcedure,
+  playerProcedure,
+  protectedProcedure,
+  router,
+} from '@/server/trpc/trpc';
 import { TRPCError } from '@trpc/server';
 
 export const participationRouter = router({
@@ -181,5 +186,88 @@ export const participationRouter = router({
       );
 
       return participationsWithUserData;
+    }),
+
+  getAllByChallenge: organizationProcedure
+    .input(
+      z.object({
+        challengeId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { challengeId } = input;
+
+      const rawParticipations = await ctx.prisma.participation.findMany({
+        where: {
+          challengeId,
+        },
+        include: {
+          playerData: {
+            include: {
+              userDetails: {
+                select: {
+                  user: {
+                    select: {
+                      name: true,
+                      image: true,
+                    },
+                  },
+                  username: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const participations = rawParticipations.map((p) => ({
+        participation: {
+          id: p.id,
+          playerDataId: p.playerDataId,
+          challengeId: p.challengeId,
+          isValid: p.isValid,
+          comments: p.comments,
+          date: p.date,
+          proofUrl: p.proofUrl,
+        },
+        playerData: {
+          id: p.playerData.id,
+          image: p.playerData.image ?? p.playerData.userDetails.user.image,
+          username: p.playerData.userDetails.username,
+          name: p.playerData.userDetails.user.name,
+        },
+      }));
+
+      return participations;
+    }),
+  
+  updateValidityOfMany: organizationProcedure
+    .input(
+      z.object({
+        participations: z.array(
+          z.object({
+            id: z.string(),
+            isValid: z.boolean(),
+          }),
+        ),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { participations } = input;
+
+      await Promise.all(
+        participations.map(async (p) => {
+          await ctx.prisma.participation.update({
+            where: {
+              id: p.id,
+            },
+            data: {
+              isValid: p.isValid,
+            },
+          });
+        }),
+      );
+
+      return true;
     }),
 });

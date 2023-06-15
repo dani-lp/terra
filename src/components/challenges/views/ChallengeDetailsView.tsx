@@ -8,9 +8,9 @@ import {
   ChallengeDetailsMobileContent,
   EditChallengeSlideOver,
   EnrollModal,
-  LeaderBoardList,
 } from '@/components/challenges/details';
 import { AddParticipationSlideOver } from '@/components/challenges/details/AddParticipationSlideOver';
+import { ChallengeDetailsDesktopContent } from '@/components/challenges/details/ChallengeDetailsDesktopContent';
 import { Button } from '@/components/common';
 import { Skeleton } from '@/components/common/skeleton';
 import { trpc } from '@/utils/trpc';
@@ -88,6 +88,7 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
                 challengeTags={data.challengeTags}
                 enrolledPlayers={data.enrolledPlayerCount}
                 authorName={data.organizationName ?? ''}
+                withDescription
               />
             )}
             {userCanAct && (
@@ -110,19 +111,10 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
             </div>
           </div>
 
-          <div className="hidden rounded-lg bg-white px-4 py-6 shadow md:col-span-1 md:block">
-            <h3 className="mb-2 ml-3 text-lg font-semibold leading-5 text-gray-900">
-              {t('challenges.details.leaderboard')}
-            </h3>
-            <LeaderBoardList challengeId={challengeId} loading={isLoading} />
-          </div>
+          <ChallengeDetailsDesktopContent challengeId={challengeId} isLoading={isLoading} />
         </div>
 
-        <ChallengeDetailsMobileContent
-          challengeId={challengeId}
-          challenge={data?.challenge}
-          loading={isLoading}
-        />
+        <ChallengeDetailsMobileContent challengeId={challengeId} loading={isLoading} />
 
         {userCanAct && (
           <div className="fixed bottom-0 flex h-16 w-screen items-center justify-between gap-2 border-t-2 border-neutral-200 p-3 shadow md:hidden">

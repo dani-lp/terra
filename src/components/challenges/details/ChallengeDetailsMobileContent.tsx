@@ -1,15 +1,14 @@
-import { InformationCircleIcon, TrophyIcon } from '@heroicons/react/20/solid';
+import { CheckBadgeIcon, TrophyIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import * as React from 'react';
 
 import { LeaderBoardList } from '@/components/challenges/details/';
-import { Skeleton } from '@/components/common/skeleton';
+import { ParticipationList } from '@/components/challenges/details/ParticipationList';
 import { classNames } from '@/const';
-import type { Challenge } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 
 type Props = {
   challengeId: string;
-  challenge: Challenge | undefined;
   loading: boolean;
 };
 
@@ -19,20 +18,32 @@ const tabs = [
     icon: TrophyIcon,
   },
   {
-    key: 'overview',
-    icon: InformationCircleIcon,
+    key: 'participations',
+    icon: CheckBadgeIcon,
   },
 ] as const;
 
-export const ChallengeDetailsMobileContent = ({ challengeId, challenge, loading }: Props) => {
+export const ChallengeDetailsMobileContent = ({ challengeId, loading }: Props) => {
   const { t } = useTranslation('challenges');
-  const [selectedTab, setSelectedTab] = useState<typeof tabs[number]['key']>(tabs[0].key);
+  const { data: session, status } = useSession();
+  const [selectedTab, setSelectedTab] = React.useState<typeof tabs[number]['key']>(tabs[0].key);
+
+  const isSessionLoaded = status !== 'loading';
+
+  const filteredTabs = isSessionLoaded
+    ? tabs.filter((tab) => {
+        if (tab.key === 'participations') {
+          return session?.user?.role !== 'PLAYER';
+        }
+        return true;
+      })
+    : [tabs[0]];
 
   return (
     <div className="w-full px-3 md:hidden">
       <div className="mb-2 border-b border-gray-200">
         <nav className="flex justify-around" aria-label="Tabs">
-          {tabs.map((tab) => (
+          {filteredTabs.map((tab) => (
             <button
               key={tab.key}
               className={classNames(
@@ -59,15 +70,7 @@ export const ChallengeDetailsMobileContent = ({ challengeId, challenge, loading 
         </nav>
       </div>
 
-      {selectedTab === 'overview' && (
-        <>
-          {loading ? (
-            <Skeleton className="h-48" />
-          ) : (
-            <p className="text-sm sm:text-base">{challenge?.description ?? ''}</p>
-          )}
-        </>
-      )}
+      {selectedTab === 'participations' && <ParticipationList challengeId={challengeId} />}
 
       {selectedTab === 'leaderboard' && (
         <LeaderBoardList challengeId={challengeId} loading={loading} />

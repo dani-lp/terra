@@ -85,12 +85,17 @@
       },
       "tabs": {
         "leaderboard": "Leaderboard",
-        "overview": "Overview"
+        "participations": "Participations"
       },
       "leaderboard": "Leaderboard",
       "noPlayers": "No players",
       "noPlayersDescription": "No players have participated in this challenge yet!",
-      "searchChallenges": "Search your challenges..."
+      "searchChallenges": "Search your challenges...",
+      "proof": "Check proof",
+      "valid": "Valid",
+      "enableEdition": "Enable edition",
+      "save": "Save",
+      "unknown": "Unknown"
     },
     "enrollModal": {
       "title": "Join challenge",
