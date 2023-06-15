@@ -11,6 +11,7 @@ type Props = {
   challengeTags: ChallengeTag[];
   enrolledPlayers: number;
   authorName: string;
+  withDescription?: boolean;
 };
 
 export const ChallengeDetailsHeader = ({
@@ -18,6 +19,7 @@ export const ChallengeDetailsHeader = ({
   challengeTags,
   enrolledPlayers,
   authorName,
+  withDescription = false,
 }: Props) => {
   const { t } = useTranslation('challenges');
 
@@ -81,6 +83,17 @@ export const ChallengeDetailsHeader = ({
             {tags.map((tag) => (
               <Chip key={tag.name} label={tag.name} className={tag.color} />
             ))}
+          </div>
+        </>
+      )}
+
+      {withDescription && (
+        <>
+          <h3 className="mb-1 mt-2 text-base font-semibold leading-6 text-gray-900 md:text-lg">
+            {t('challenges.creation.description')}
+          </h3>
+          <div className="mb-2 flex flex-wrap gap-2">
+            <p className="text-sm sm:text-base">{challenge?.description ?? ''}</p>
           </div>
         </>
       )}

@@ -9,7 +9,8 @@ import { Skeleton } from '@/components/common';
 import { urlRegex } from '@/const';
 import type { TerraFileRouter } from '@/server/uploadthing';
 import { trpc } from '@/utils/trpc';
-import { generateReactHelpers } from '@uploadthing/react';
+import { generateReactHelpers } from '@uploadthing/react/hooks';
+import { type FileWithPath, useDropzone } from 'react-dropzone';
 import { ActionButtons } from './ActionButtons';
 
 const { useUploadThing } = generateReactHelpers<TerraFileRouter>();
@@ -28,12 +29,22 @@ type Props = {
 
 export const OrgProfileSettings = ({ handleClose }: Props) => {
   const { t } = useTranslation('common');
+  const [files, setFiles] = React.useState<File[]>([]);
   const [errors, setErrors] = React.useState<string[]>([]);
   const [uploading, setUploading] = React.useState(false);
   const { data: session, status } = useSession();
 
-  const { getRootProps, getInputProps, files, startUpload, resetFiles } =
-    useUploadThing('pfpUploader');
+  const onDrop = React.useCallback((acceptedFiles: FileWithPath[]) => {
+    setFiles(acceptedFiles);
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+  });
+
+  const { startUpload } = useUploadThing({
+    endpoint: 'pfpUploader',
+  });
 
   const utils = trpc.useContext();
   const { data, isLoading, isError, error } = trpc.settings.getOrgProfileInfo.useQuery();
@@ -94,8 +105,10 @@ export const OrgProfileSettings = ({ handleClose }: Props) => {
       let pfpUrl: string | undefined;
       if (files.length > 0) {
         setUploading(true);
-        const uploadResult = await startUpload();
-        pfpUrl = uploadResult[0]?.fileUrl;
+        const uploadResult = await startUpload(files);
+        if (uploadResult) {
+          pfpUrl = uploadResult[0]?.fileUrl;
+        }
         setUploading(false);
       }
 
@@ -107,6 +120,10 @@ export const OrgProfileSettings = ({ handleClose }: Props) => {
     },
     enableReinitialize: true,
   });
+
+  const resetFiles = () => {
+    setFiles([]);
+  };
 
   if (isError) {
     console.error(error);
@@ -227,7 +244,7 @@ export const OrgProfileSettings = ({ handleClose }: Props) => {
               {files.length > 0 && (
                 <p className="ml-4 text-xs leading-5 text-gray-600 lg:hidden">
                   {t('settings.newImageFile')}
-                  {files[0]?.file.name}
+                  {files[0]?.name}
                 </p>
               )}
             </div>
@@ -266,7 +283,7 @@ export const OrgProfileSettings = ({ handleClose }: Props) => {
             {files.length > 0 && (
               <p className="hidden text-xs leading-5 text-gray-600 lg:block">
                 {t('settings.newImageFile')}
-                {files[0]?.file.name}
+                {files[0]?.name}
               </p>
             )}
           </div>

@@ -26,6 +26,7 @@ export const LatestActivityCard = ({ latestParticipations, isLoading }: Props) =
     isValid: participation.isValid,
     icon: TrophyIcon,
     iconBackground: participation.isValid ? 'bg-green-500' : 'bg-red-500',
+    proof: participation.proofUrl,
   }));
 
   return (
@@ -93,6 +94,19 @@ export const LatestActivityCard = ({ latestParticipations, isLoading }: Props) =
                           >
                             {participation.challengeName}
                           </a>
+                          {participation.proof && (
+                            <>
+                              {' '}
+                              <a
+                                href={participation.proof}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="underline"
+                              >
+                                ({t('players.latestActivity.proof')})
+                              </a>
+                            </>
+                          )}
                         </p>
                       </div>
                       <div className="whitespace-nowrap text-right text-sm text-gray-500">

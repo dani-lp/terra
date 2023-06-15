@@ -20,7 +20,7 @@ const navigationItems: NavItem[] = [
   { key: 'home', to: urls.HOME, icon: HomeIcon },
   { key: 'challenges', to: urls.CHALLENGES, icon: RocketLaunchIcon },
   { key: 'organizations', to: urls.ORGANIZATIONS, icon: BuildingOffice2Icon },
-  { key: 'drafts', to: urls.DRAFTS, icon: PaperClipIcon },
+  // { key: 'drafts', to: urls.DRAFTS, icon: PaperClipIcon },
   { key: 'development', to: urls.DEVELOPMENT, icon: BugAntIcon },
 ];
 

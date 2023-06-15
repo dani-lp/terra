@@ -15,6 +15,7 @@ type DisplayParticipation = {
   isValid: boolean;
   playerDataId: string;
   playerUsername: string;
+  proof: string | null;
 };
 
 type Props = {
@@ -93,6 +94,20 @@ export const RecentActivityCard = ({ isLoading, participations }: Props) => {
                             >
                               @{participation.playerUsername}
                             </button>
+                            
+                          {participation.proof && (
+                            <>
+                              {' '}
+                              <a
+                                href={participation.proof}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="underline"
+                              >
+                                ({t('orgs.recentActivity.proof')})
+                              </a>
+                            </>
+                          )}
                           </p>
                         </div>
                         <div className="whitespace-nowrap text-right text-sm text-gray-500">

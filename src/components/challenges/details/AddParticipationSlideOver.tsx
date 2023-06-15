@@ -2,10 +2,11 @@ import { Dialog, Transition } from '@headlessui/react';
 import { CalendarIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { PhotoIcon } from '@heroicons/react/24/solid';
-import { generateReactHelpers } from '@uploadthing/react';
+import { generateReactHelpers } from '@uploadthing/react/hooks';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import * as React from 'react';
+import { type FileWithPath, useDropzone } from 'react-dropzone';
 
 import { Alert, Button, DateInputWithIcon } from '@/components/common';
 import type { TerraFileRouter } from '@/server/uploadthing';
@@ -22,9 +23,21 @@ type Props = {
 
 export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) => {
   const { t } = useTranslation('challenges');
+  const [files, setFiles] = React.useState<File[]>([]);
   const utils = trpc.useContext();
-  const { getRootProps, getInputProps, files, startUpload, resetFiles } =
-    useUploadThing('proofUploader');
+
+  const onDrop = React.useCallback((acceptedFiles: FileWithPath[]) => {
+    setFiles(acceptedFiles);
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+  });
+
+  const { startUpload } = useUploadThing({
+    endpoint: 'proofUploader',
+  });
+
   const registerParticipationMutation = trpc.participation.register.useMutation({
     onSuccess: async () => {
       await utils.challenges.get.invalidate();
@@ -71,8 +84,10 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
 
     let proofUrl: string | undefined;
     if (files.length > 0) {
-      const uploadResult = await startUpload();
-      proofUrl = uploadResult[0]?.fileUrl;
+      const uploadResult = await startUpload(files);
+      if (uploadResult) {
+        proofUrl = uploadResult[0]?.fileUrl;
+      }
     }
 
     const result = await registerParticipationMutation.mutateAsync({
@@ -84,6 +99,10 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
       setOpen(false);
     }
   };
+
+  const resetFiles = () => {
+    setFiles([]);
+  }
 
   return (
     <Transition.Root show={open} as={React.Fragment}>
@@ -213,7 +232,7 @@ export const AddParticipationSlideOver = ({ open, setOpen, challenge }: Props) =
                                   </div>
                                   {files.length > 0 ? (
                                     <p className="text-xs leading-5 text-gray-600">
-                                      {files[0]?.file.name}
+                                      {files[0]?.name}
                                     </p>
                                   ) : (
                                     <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF</p>

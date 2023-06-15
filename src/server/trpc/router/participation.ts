@@ -182,4 +182,95 @@ export const participationRouter = router({
 
       return participationsWithUserData;
     }),
+
+  getAllByChallenge: protectedProcedure
+    .input(
+      z.object({
+        challengeId: z.string(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { challengeId } = input;
+
+      if (ctx.session.user.role === 'PLAYER') {
+        return [];
+      }
+
+      const rawParticipations = await ctx.prisma.participation.findMany({
+        where: {
+          challengeId,
+        },
+        include: {
+          playerData: {
+            include: {
+              userDetails: {
+                select: {
+                  user: {
+                    select: {
+                      name: true,
+                      image: true,
+                    },
+                  },
+                  username: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const participations = rawParticipations.map((p) => ({
+        participation: {
+          id: p.id,
+          playerDataId: p.playerDataId,
+          challengeId: p.challengeId,
+          isValid: p.isValid,
+          comments: p.comments,
+          date: p.date,
+          proofUrl: p.proofUrl,
+        },
+        playerData: {
+          id: p.playerData.id,
+          image: p.playerData.image ?? p.playerData.userDetails.user.image,
+          username: p.playerData.userDetails.username,
+          name: p.playerData.userDetails.user.name,
+        },
+      }));
+
+      return participations;
+    }),
+
+  updateValidityOfMany: protectedProcedure
+    .input(
+      z.object({
+        participations: z.array(
+          z.object({
+            id: z.string(),
+            isValid: z.boolean(),
+          }),
+        ),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { participations } = input;
+
+      if (ctx.session.user.role === 'PLAYER') {
+        return false;
+      }
+
+      await Promise.all(
+        participations.map(async (p) => {
+          await ctx.prisma.participation.update({
+            where: {
+              id: p.id,
+            },
+            data: {
+              isValid: p.isValid,
+            },
+          });
+        }),
+      );
+
+      return true;
+    }),
 });

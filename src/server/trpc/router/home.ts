@@ -234,13 +234,14 @@ export const homeRouter = router({
       playerUsername: p.playerData.userDetails.username ?? '',
       date: p.date,
       isValid: p.isValid,
+      proof: p.proofUrl,
     }));
 
     return {
       username: userDetails.username,
       website: organizationData.website,
       country: organizationData.country,
-      image: userDetails.user.image,
+      image: organizationData.image ?? userDetails.user.image,
       joinedOn: organizationData.createdAt,
       activeChallengesCount,
       totalParticipationCount,

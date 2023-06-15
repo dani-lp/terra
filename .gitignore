@@ -44,5 +44,5 @@ yarn-error.log*
 # editor
 .vscode/
 
-# cypress
+# Cypress
 cypress.env.json
