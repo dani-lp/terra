@@ -48,3 +48,5 @@ Cypress.Commands.add('adhocLogin', () => {
   cy.setCookie("next-auth.session-token", Cypress.env("SESSION_TOKEN"));
   // Cypress.Cookies.preserveOnce("next-auth.session-token");
 });
+
+export {}

@@ -1,7 +1,13 @@
-const { GoogleSocialLogin } = require('cypress-social-logins').plugins;
+import { plugins } from 'cypress-social-logins';
 
-module.exports = (on, config) => {
+module.exports = (
+  on: (
+    arg0: string,
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    arg1: { GoogleSocialLogin: (options?: {}) => Promise<{ cookies: any; lsd: any; ssd: any }> },
+  ) => void,
+) => {
   on('task', {
-    GoogleSocialLogin: GoogleSocialLogin,
+    GoogleSocialLogin: plugins.GoogleSocialLogin,
   });
 };
