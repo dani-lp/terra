@@ -1,4 +1,5 @@
-import { Button, MainLayout, SelectField, type SelectOption } from '@/components/common';
+import { Button, SelectField, type SelectOption } from '@/components/common';
+import { MainLayout } from '@/components/common/layout';
 import { trpc } from '@/utils/trpc';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Head from 'next/head';

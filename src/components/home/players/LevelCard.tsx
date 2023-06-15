@@ -1,7 +1,6 @@
 import { useTranslation } from 'next-i18next';
 
-import { PlayerLevel } from '@/components/common';
-import { Skeleton } from '@/components/common/skeleton';
+import { PlayerLevel, Skeleton } from '@/components/common';
 import { HomeCard } from '@/components/home/HomeCard';
 import { AchievementCardSmall } from '@/components/users';
 import type { AchievementTier } from '@/types';

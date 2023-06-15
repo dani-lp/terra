@@ -1,6 +1,6 @@
 import { CalendarIcon, MapPinIcon, UsersIcon } from '@heroicons/react/20/solid';
 
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 
 export const ChallengeDetailsHeaderSkeleton = () => {
   return (

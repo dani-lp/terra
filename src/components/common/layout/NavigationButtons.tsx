@@ -5,7 +5,7 @@ import { useAtom } from 'jotai';
 import { useSession } from 'next-auth/react';
 
 import { settingsModalOpenAtom } from '@/components/common/layout/utils/atoms';
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 import { PlayerDetailsSlideOver } from '@/components/users';
 import { classNames } from '@/const';
 import { trpc } from '@/utils/trpc';

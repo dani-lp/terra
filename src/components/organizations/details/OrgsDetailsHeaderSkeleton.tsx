@@ -1,4 +1,4 @@
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 import { LinkIcon, MapPinIcon, UsersIcon } from '@heroicons/react/20/solid';
 
 const HeaderTitleSkeleton = () => {

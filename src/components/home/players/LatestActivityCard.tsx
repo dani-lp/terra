@@ -1,7 +1,7 @@
 import { TrophyIcon } from '@heroicons/react/20/solid';
 import { useTranslation } from 'next-i18next';
 
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 import { HomeCard } from '@/components/home/HomeCard';
 import { classNames } from '@/const';
 import type { Participation } from '@prisma/client';

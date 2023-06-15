@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { Button } from '@/components/common';
+import { DataTestIds } from '@/const/dataTestIds';
 import { useTranslation } from 'next-i18next';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -21,7 +22,11 @@ export const LandingView = () => {
             </a>
           </div>
           <div className="flex flex-1 justify-end">
-            <Link href="/auth/signin" className="text-sm font-semibold leading-6 text-gray-900">
+            <Link
+              href="/auth/signin"
+              className="text-sm font-semibold leading-6 text-gray-900"
+              data-cy={DataTestIds.home.signInButton}
+            >
               {t('landing.links.signIn')} <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>
@@ -81,13 +86,17 @@ export const LandingView = () => {
                     {t('landing.description')}
                   </p>
                   <div className="mt-10 flex items-center gap-x-6">
-                    <Link
-                      href="/auth/signin"
-                    >
+                    <Link href="/auth/signin">
                       <Button>{t('landing.links.getStarted')}</Button>
                     </Link>
-                    <Link href="/auth/orgs" className="text-sm font-semibold leading-6 text-gray-900">
-                      {t('landing.links.registerAsOrg')}<span className="ml-2" aria-hidden="true">→</span>
+                    <Link
+                      href="/auth/orgs"
+                      className="text-sm font-semibold leading-6 text-gray-900"
+                    >
+                      {t('landing.links.registerAsOrg')}
+                      <span className="ml-2" aria-hidden="true">
+                        →
+                      </span>
                     </Link>
                   </div>
                 </div>

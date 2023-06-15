@@ -1,4 +1,4 @@
-import { Skeleton } from '@/components/common/skeleton';
+import { Skeleton } from '@/components/common';
 import { HomeCard } from '@/components/home/HomeCard';
 import { useTranslation } from 'next-i18next';
 
