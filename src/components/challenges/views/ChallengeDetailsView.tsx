@@ -12,7 +12,6 @@ import {
 import { AddParticipationSlideOver } from '@/components/challenges/details/AddParticipationSlideOver';
 import { ChallengeDetailsDesktopContent } from '@/components/challenges/details/ChallengeDetailsDesktopContent';
 import { Button } from '@/components/common';
-import { Skeleton } from '@/components/common/skeleton';
 import { trpc } from '@/utils/trpc';
 import Head from 'next/head';
 
@@ -102,13 +101,6 @@ export const ChallengeDetailsView = ({ challengeId }: Props) => {
                 </Button>
               </div>
             )}
-            <div className="hidden px-4 py-3 md:block">
-              {isLoading ? (
-                <Skeleton className="h-48" />
-              ) : (
-                <p className="text-sm sm:text-base">{data?.challenge?.description ?? ''}</p>
-              )}
-            </div>
           </div>
 
           <ChallengeDetailsDesktopContent challengeId={challengeId} isLoading={isLoading} />

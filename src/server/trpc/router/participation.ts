@@ -1,11 +1,6 @@
 import { z } from 'zod';
 
-import {
-  organizationProcedure,
-  playerProcedure,
-  protectedProcedure,
-  router,
-} from '@/server/trpc/trpc';
+import { playerProcedure, protectedProcedure, router } from '@/server/trpc/trpc';
 import { TRPCError } from '@trpc/server';
 
 export const participationRouter = router({
@@ -188,7 +183,7 @@ export const participationRouter = router({
       return participationsWithUserData;
     }),
 
-  getAllByChallenge: organizationProcedure
+  getAllByChallenge: protectedProcedure
     .input(
       z.object({
         challengeId: z.string(),
@@ -196,6 +191,10 @@ export const participationRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const { challengeId } = input;
+
+      if (ctx.session.user.role === 'PLAYER') {
+        return [];
+      }
 
       const rawParticipations = await ctx.prisma.participation.findMany({
         where: {
@@ -240,8 +239,8 @@ export const participationRouter = router({
 
       return participations;
     }),
-  
-  updateValidityOfMany: organizationProcedure
+
+  updateValidityOfMany: protectedProcedure
     .input(
       z.object({
         participations: z.array(
@@ -254,6 +253,10 @@ export const participationRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const { participations } = input;
+
+      if (ctx.session.user.role === 'PLAYER') {
+        return false;
+      }
 
       await Promise.all(
         participations.map(async (p) => {

@@ -14,7 +14,7 @@ import { prisma } from '@/server/db/client';
 import type { NextPageWithLayout } from '../_app';
 
 const RoleViews = {
-  ADMIN: TerraChallengesViewOrgs,
+  ADMIN: React.Fragment,
   PLAYER: TerraChallengesViewPlayers,
   ORGANIZATION: TerraChallengesViewOrgs,
 } satisfies { [key in keyof typeof Role]: React.FC };
@@ -25,8 +25,8 @@ const Challenges: NextPageWithLayout = () => {
 
   // TODO use EmptyView component
   const RoleView = session?.user?.role
-    ? RoleViews[session.user.role] ?? TerraChallengesViewOrgs
-    : TerraChallengesViewOrgs;
+    ? RoleViews[session.user.role] ?? React.Fragment
+    : React.Fragment;
 
   const isLoading = status === 'loading';
 
