@@ -17,3 +17,4 @@ challenges that need them.
 - Next.js
 - Tailwind CSS
 - tRPC
+- TypeScript
